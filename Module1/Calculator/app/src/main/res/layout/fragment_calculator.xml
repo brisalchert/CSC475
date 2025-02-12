@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".CalculatorFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,7 +48,7 @@
                     android:textSize="36sp"
                     android:layout_margin="10dp"
                     android:textColor="@color/white"
-                    android:text="0"
+                    android:text="@string/currentNumberDefault"
                     tools:layout_editor_absoluteY="325dp" />
 
             </LinearLayout>
@@ -59,22 +60,22 @@
                 <Button
                     android:id="@+id/button1"
                     style="@style/CalculatorButton"
-                    android:text="1" />
+                    android:text="@string/one" />
 
                 <Button
                     android:id="@+id/button2"
                     style="@style/CalculatorButton"
-                    android:text="2" />
+                    android:text="@string/two" />
 
                 <Button
                     android:id="@+id/button3"
                     style="@style/CalculatorButton"
-                    android:text="3" />
+                    android:text="@string/three" />
 
                 <Button
                     android:id="@+id/buttonPlus"
                     style="@style/CalculatorButton"
-                    android:text="+" />
+                    android:text="@string/plus" />
 
             </LinearLayout>
 
@@ -85,22 +86,22 @@
                 <Button
                     android:id="@+id/button4"
                     style="@style/CalculatorButton"
-                    android:text="4" />
+                    android:text="@string/four" />
 
                 <Button
                     android:id="@+id/button5"
                     style="@style/CalculatorButton"
-                    android:text="5" />
+                    android:text="@string/five" />
 
                 <Button
                     android:id="@+id/button6"
                     style="@style/CalculatorButton"
-                    android:text="6" />
+                    android:text="@string/six" />
 
                 <Button
                     android:id="@+id/buttonMinus"
                     style="@style/CalculatorButton"
-                    android:text="-" />
+                    android:text="@string/minus" />
 
             </LinearLayout>
 
@@ -111,22 +112,22 @@
                 <Button
                     android:id="@+id/button7"
                     style="@style/CalculatorButton"
-                    android:text="7" />
+                    android:text="@string/seven" />
 
                 <Button
                     android:id="@+id/button8"
                     style="@style/CalculatorButton"
-                    android:text="8" />
+                    android:text="@string/eight" />
 
                 <Button
                     android:id="@+id/button9"
                     style="@style/CalculatorButton"
-                    android:text="9" />
+                    android:text="@string/nine" />
 
                 <Button
                     android:id="@+id/buttonMult"
                     style="@style/CalculatorButton"
-                    android:text="*" />
+                    android:text="@string/multiply" />
 
             </LinearLayout>
 
@@ -137,22 +138,22 @@
                 <Button
                     android:id="@+id/buttonC"
                     style="@style/CalculatorButton"
-                    android:text="C" />
+                    android:text="@string/clear" />
 
                 <Button
                     android:id="@+id/button0"
                     style="@style/CalculatorButton"
-                    android:text="0" />
+                    android:text="@string/zero" />
 
                 <Button
                     android:id="@+id/buttonDecimal"
                     style="@style/CalculatorButton"
-                    android:text="." />
+                    android:text="@string/decimal" />
 
                 <Button
                     android:id="@+id/buttonDivide"
                     style="@style/CalculatorButton"
-                    android:text="/" />
+                    android:text="@string/divide" />
 
             </LinearLayout>
 
@@ -164,17 +165,17 @@
                 <Button
                     android:id="@+id/buttonSign"
                     style="@style/CalculatorButton"
-                    android:text="+/-" />
+                    android:text="@string/sign" />
 
                 <Button
                     android:id="@+id/buttonPercent"
                     style="@style/CalculatorButton"
-                    android:text="%" />
+                    android:text="@string/percent" />
 
                 <Button
                     android:id="@+id/buttonEquals"
                     style="@style/CalculatorButton"
-                    android:text="=" />
+                    android:text="@string/equals" />
 
             </LinearLayout>
 
