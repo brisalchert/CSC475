@@ -11,25 +11,133 @@
         android:layout_height="match_parent"
         android:padding="16dp">
 
-        <Button
-            android:id="@+id/button_first"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next"
-            app:layout_constraintBottom_toTopOf="@id/textview_first"
+            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textview_first"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/lorem_ipsum"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_first" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button1"
+                    style="@style/CalculatorButton"
+                    android:text="1" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/CalculatorButton"
+                    android:text="2" />
+
+                <Button
+                    android:id="@+id/button3"
+                    style="@style/CalculatorButton"
+                    android:text="3" />
+
+                <Button
+                    android:id="@+id/buttonPlus"
+                    style="@style/CalculatorButton"
+                    android:text="+" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button4"
+                    style="@style/CalculatorButton"
+                    android:text="4" />
+
+                <Button
+                    android:id="@+id/button5"
+                    style="@style/CalculatorButton"
+                    android:text="5" />
+
+                <Button
+                    android:id="@+id/button6"
+                    style="@style/CalculatorButton"
+                    android:text="6" />
+
+                <Button
+                    android:id="@+id/buttonMinus"
+                    style="@style/CalculatorButton"
+                    android:text="-" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/button7"
+                    style="@style/CalculatorButton"
+                    android:text="7" />
+
+                <Button
+                    android:id="@+id/button8"
+                    style="@style/CalculatorButton"
+                    android:text="8" />
+
+                <Button
+                    android:id="@+id/button9"
+                    style="@style/CalculatorButton"
+                    android:text="9" />
+
+                <Button
+                    android:id="@+id/buttonMult"
+                    style="@style/CalculatorButton"
+                    android:text="*" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/buttonC"
+                    style="@style/CalculatorButton"
+                    android:text="C" />
+
+                <Button
+                    android:id="@+id/button0"
+                    style="@style/CalculatorButton"
+                    android:text="0" />
+
+                <Button
+                    android:id="@+id/buttonDecimal"
+                    style="@style/CalculatorButton"
+                    android:text="." />
+
+                <Button
+                    android:id="@+id/buttonDivide"
+                    style="@style/CalculatorButton"
+                    android:text="/" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+
+                <Button
+                    android:id="@+id/buttonEquals"
+                    style="@style/CalculatorButton"
+                    android:text="=" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
