@@ -22,6 +22,38 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+                <TextView
+                    android:id="@+id/expression"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/gray"
+                    tools:layout_editor_absoluteY="325dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+                <TextView
+                    android:id="@+id/currentNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="36sp"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/white"
+                    android:text="0"
+                    tools:layout_editor_absoluteY="325dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <Button
@@ -129,6 +161,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end">
 
+                <Button
+                    android:id="@+id/buttonSign"
+                    style="@style/CalculatorButton"
+                    android:text="+/-" />
+
+                <Button
+                    android:id="@+id/buttonPercent"
+                    style="@style/CalculatorButton"
+                    android:text="%" />
 
                 <Button
                     android:id="@+id/buttonEquals"
