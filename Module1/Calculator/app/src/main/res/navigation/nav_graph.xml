@@ -9,6 +9,6 @@
         android:id="@+id/CalculatorFragment"
         android:name="com.example.calculator.FirstFragment"
         android:label="@string/calculator_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/fragment_calculator">
     </fragment>
 </navigation>
