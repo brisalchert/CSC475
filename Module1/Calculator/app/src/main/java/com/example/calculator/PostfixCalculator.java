@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-//  PostfixCalculator.java
+//  PostfixCalculator.java (Brian Salchert -- CSC400)
 //
 //  A calculator for evaluating postfix expressions. Postfix expressions affix binary operators after the operands
 //  rather than between them. For example, x + y becomes xy+. The benefit of this is that parentheses are not
