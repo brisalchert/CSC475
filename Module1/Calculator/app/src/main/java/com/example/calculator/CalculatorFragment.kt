@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.calculator.databinding.FragmentCalculatorBinding
+import kotlin.math.abs
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -123,14 +124,25 @@ class CalculatorFragment : Fragment() {
             val result = longOrDouble(postfixCalculator.evaluatePostfix(postfixExpression)).toString()
 
             // Set currentNumber to result, bounding at the maximum display length
-            if (result.toDouble() > maxNumber) {
-                val max = maxNumber.toString()
-                binding.currentNumber.text = max
+            if (abs(result.toDouble()) > maxNumber) {
+                val toastText: String
+                val displayValue: String
 
-                // Notify the user that maximum value is displayed
+                // Check if max or min was exceeded
+                if (result.toDouble() > 0) {
+                    toastText = "Maximum"
+                    displayValue = maxNumber.toString()
+                    binding.currentNumber.text = displayValue
+                } else {
+                    toastText = "Minimum"
+                    displayValue = (-maxNumber).toString()
+                    binding.currentNumber.text = displayValue
+                }
+
+                // Notify the user
                 Toast.makeText(
                     requireContext(),
-                    "Maximum value exceeded.\nDisplaying maximum instead.",
+                    "$toastText value exceeded.\nDisplaying ${toastText.lowercase()} instead.",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
