@@ -123,6 +123,21 @@ class CalculatorFragment : Fragment() {
             // Evaluate postfix expression, converting to integer if possible
             val result = longOrDouble(postfixCalculator.evaluatePostfix(postfixExpression)).toString()
 
+            // Reset calculator on division by 0
+            if (result == "Infinity" || result == "-Infinity") {
+                binding.expression.text = ""
+                binding.currentNumber.text = "0"
+
+                // Notify the user
+                Toast.makeText(
+                    requireContext(),
+                    "Cannot divide by 0.",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+
             // Set currentNumber to result, bounding at the maximum display length
             if (abs(result.toDouble()) > maxNumber) {
                 val toastText: String
