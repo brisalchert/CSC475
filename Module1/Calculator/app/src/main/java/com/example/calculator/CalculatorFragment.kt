@@ -1,6 +1,5 @@
 package com.example.calculator
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -82,7 +81,7 @@ class CalculatorFragment : Fragment() {
             extendCurrentNumber("9")
         }
 
-        binding.buttonDecimal.setOnClickListener() {
+        binding.buttonDecimal.setOnClickListener {
             if (lastWasOperator || !binding.currentNumber.text.contains('.')) {
                 // Clear to 0 if necessary to prevent a leading decimal
                 if (lastWasOperator) {
@@ -231,9 +230,9 @@ class CalculatorFragment : Fragment() {
         } else if (lastWasOperator) {
             // Remove previous operator if no new number was provided
             val operatorLength = 3
-            val explength = binding.expression.length()
+            val expressionLength = binding.expression.length()
             val currentNumLength = binding.currentNumber.length()
-            binding.expression.text = binding.expression.text.substring(0, explength - currentNumLength - operatorLength)
+            binding.expression.text = binding.expression.text.substring(0, expressionLength - currentNumLength - operatorLength)
         }
 
         percent = false
