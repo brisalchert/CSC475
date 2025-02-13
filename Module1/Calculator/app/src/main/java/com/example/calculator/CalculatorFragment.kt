@@ -1,10 +1,12 @@
 package com.example.calculator
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.calculator.databinding.FragmentCalculatorBinding
 
 /**
@@ -18,11 +20,14 @@ class CalculatorFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val postFixStack = ArrayDeque<Char>()
+    // Use Java Postfix Calculator
+    private val postfixCalculator = PostfixCalculator()
+
+    private val maxNumber = 999999999999
 
     private var lastWasOperator = false
-
     private var percent = false
+    private var evaluated = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -105,8 +110,35 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonEquals.setOnClickListener {
-            // Split expression on spaces, add operators and values to stacks, calculate result and display
+            // Finish the expression with the equals sign
             extendExpression('=')
+            val expression = binding.expression.text.toString()
+
+            // Convert expression to postfix form, removing the equals sign
+            val infixExpression = expression.substring(0, expression.length - 2)
+
+            val postfixExpression = infixToPostfix(infixExpression)
+
+            // Evaluate postfix expression, converting to integer if possible
+            val result = longOrDouble(postfixCalculator.evaluatePostfix(postfixExpression)).toString()
+
+            // Set currentNumber to result, bounding at the maximum display length
+            if (result.toDouble() > maxNumber) {
+                val max = maxNumber.toString()
+                binding.currentNumber.text = max
+
+                // Notify the user that maximum value is displayed
+                Toast.makeText(
+                    requireContext(),
+                    "Maximum value exceeded.\nDisplaying maximum instead.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                binding.currentNumber.text = result
+            }
+
+            // Update evaluated state
+            evaluated = true
         }
 
         binding.buttonClear.setOnClickListener {
@@ -115,7 +147,7 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonSign.setOnClickListener {
-            if (lastWasOperator) {
+            if (lastWasOperator && !evaluated) {
                 return@setOnClickListener
             }
 
@@ -128,7 +160,7 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonPercent.setOnClickListener {
-            if (lastWasOperator) {
+            if (lastWasOperator && !evaluated) {
                 return@setOnClickListener
             }
 
@@ -151,7 +183,7 @@ class CalculatorFragment : Fragment() {
 
         val next: String
 
-        // Reset currentNumber after selecting an operator or clearing
+        // Reset currentNumber after selecting an operator, evaluating an expression, or clearing
         if (lastWasOperator) {
             next = number
             lastWasOperator = false
@@ -165,20 +197,74 @@ class CalculatorFragment : Fragment() {
     }
 
     private fun extendExpression(operator: Char) {
-        // Remove previous operator if no new number was provided
-        if (lastWasOperator) {
+        if (evaluated) {
+            // Reset expression if last expression was evaluated
+            binding.expression.text = ""
+            evaluated = false
+        } else if (lastWasOperator) {
+            // Remove previous operator if no new number was provided
             val operatorLength = 3
             val explength = binding.expression.length()
             val currentNumLength = binding.currentNumber.length()
             binding.expression.text = binding.expression.text.substring(0, explength - currentNumLength - operatorLength)
-            percent = false
         }
+
+        percent = false
 
         var currentNumber: String = binding.currentNumber.text.toString()
         currentNumber += " $operator "
 
         binding.expression.append(currentNumber)
         lastWasOperator = true
+    }
+
+    private fun precedence(operator: String): Int {
+        // Return higher precedence for division and multiplication
+        return if (operator == "/" || operator == "*") {
+            1
+        } else {
+            0
+        }
+    }
+
+    private fun infixToPostfix(expression: String): String {
+        val operatorStack = ArrayDeque<String>()
+        val result = StringBuilder()
+
+        // Split string on spaces
+        val expressionList = expression.split(" ")
+
+        for (element in expressionList) {
+            if (element.toDoubleOrNull() != null) {
+                // Add operands to the result
+                result.append(element)
+                result.append(" ")
+            } else {
+                // Add operator to the stack, respecting operator precedence
+                while (!operatorStack.isEmpty() && precedence(element) <= precedence(operatorStack.last())) {
+                    result.append(operatorStack.removeLast())
+                    result.append(" ")
+                }
+
+                operatorStack.add(element)
+            }
+        }
+
+        // Add remaining operators
+        while (!operatorStack.isEmpty()) {
+            result.append(operatorStack.removeLast())
+            result.append(" ")
+        }
+
+        return result.toString()
+    }
+
+    private fun longOrDouble(number: Double): Number {
+        if (number % 1 == 0.0) {
+            return number.toLong()
+        }
+
+        return number
     }
 
     override fun onDestroyView() {
