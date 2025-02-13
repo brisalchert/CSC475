@@ -82,6 +82,7 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonDecimal.setOnClickListener {
+            // Ensure decimal is a valid input
             if (lastWasOperator || !binding.currentNumber.text.contains('.')) {
                 // Clear to 0 if necessary to prevent a leading decimal
                 if (lastWasOperator) {
@@ -173,10 +174,12 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonSign.setOnClickListener {
+            // Don't allow sign changes on an operator
             if (lastWasOperator && !evaluated) {
                 return@setOnClickListener
             }
 
+            // Swap sign from negative to positive or vice versa
             if (binding.currentNumber.text.first() == '-') {
                 binding.currentNumber.text = binding.currentNumber.text.substring(1)
             } else if (binding.currentNumber.text.toString() != "0") {
@@ -186,10 +189,12 @@ class CalculatorFragment : Fragment() {
         }
 
         binding.buttonPercent.setOnClickListener {
+            // Don't allow percentage on an operator
             if (lastWasOperator && !evaluated) {
                 return@setOnClickListener
             }
 
+            // Toggle between percentage and decimal representation
             if (!percent) {
                 val numPercent = (binding.currentNumber.text.toString().toDouble() / 100).toString()
                 binding.currentNumber.text = numPercent
@@ -202,7 +207,11 @@ class CalculatorFragment : Fragment() {
         }
     }
 
+    /**
+     * Extends the input number displayed by the calculator, resetting it if necessary
+     */
     private fun extendCurrentNumber(number: String) {
+        // Prevent values larger than maxNumber
         if (!lastWasOperator && binding.currentNumber.text.length >= 12) {
             return
         }
@@ -222,17 +231,23 @@ class CalculatorFragment : Fragment() {
         binding.currentNumber.text = next
     }
 
+    /**
+     * Extends the current expression displayed above the input based on the operands
+     * and operators chosen by the user.
+     */
     private fun extendExpression(operator: Char) {
         if (evaluated) {
             // Reset expression if last expression was evaluated
             binding.expression.text = ""
             evaluated = false
         } else if (lastWasOperator) {
-            // Remove previous operator if no new number was provided
+            // Replace previous operator if no new operand was provided
             val operatorLength = 3
             val expressionLength = binding.expression.length()
             val currentNumLength = binding.currentNumber.length()
-            binding.expression.text = binding.expression.text.substring(0, expressionLength - currentNumLength - operatorLength)
+            binding.expression.text = binding.expression.text.substring(
+                0, expressionLength - currentNumLength - operatorLength
+            )
         }
 
         percent = false
@@ -244,6 +259,9 @@ class CalculatorFragment : Fragment() {
         lastWasOperator = true
     }
 
+    /**
+     * Returns a value corresponding to the precedence of an operator (higher = more precedence)
+     */
     private fun precedence(operator: String): Int {
         // Return higher precedence for division and multiplication
         return if (operator == "/" || operator == "*") {
@@ -253,6 +271,9 @@ class CalculatorFragment : Fragment() {
         }
     }
 
+    /**
+     * Converts an infix expression to a valid postfix expression
+     */
     private fun infixToPostfix(expression: String): String {
         val operatorStack = ArrayDeque<String>()
         val result = StringBuilder()
@@ -267,7 +288,8 @@ class CalculatorFragment : Fragment() {
                 result.append(" ")
             } else {
                 // Add operator to the stack, respecting operator precedence
-                while (!operatorStack.isEmpty() && precedence(element) <= precedence(operatorStack.last())) {
+                while (!operatorStack.isEmpty()
+                        && precedence(element) <= precedence(operatorStack.last())) {
                     result.append(operatorStack.removeLast())
                     result.append(" ")
                 }
@@ -285,6 +307,9 @@ class CalculatorFragment : Fragment() {
         return result.toString()
     }
 
+    /**
+     * Converts a floating-point number to an integer if it has no fractional component
+     */
     private fun longOrDouble(number: Double): Number {
         if (number % 1 == 0.0) {
             return number.toLong()
