@@ -10,7 +10,6 @@ import com.example.calculator.databinding.FragmentCalculatorBinding
 import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.min
-import kotlin.reflect.typeOf
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
