@@ -161,7 +161,7 @@ class CalculatorFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.currentNumber.text = result
+                binding.currentNumber.text = result.substring(0, 12)
             }
 
             // Update evaluated state
