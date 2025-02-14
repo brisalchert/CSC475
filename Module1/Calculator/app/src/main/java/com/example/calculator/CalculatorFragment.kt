@@ -10,6 +10,7 @@ import com.example.calculator.databinding.FragmentCalculatorBinding
 import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.reflect.typeOf
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -164,8 +165,8 @@ class CalculatorFragment : Fragment() {
                 ).show()
             } else {
                 // Convert to integer if there is no decimal component
-                val decimalResult = longOrDecimal(result.toBigDecimal()).toString()
-                binding.currentNumber.text = decimalResult.substring(0, min(decimalResult.length, 12))
+                val decimalResult = cleanNumber(longOrDecimal(result.toBigDecimal()))
+                binding.currentNumber.text = decimalResult
             }
 
             // Update evaluated state
@@ -200,11 +201,11 @@ class CalculatorFragment : Fragment() {
 
             // Toggle between percentage and decimal representation
             if (!percent) {
-                val numPercent = (binding.currentNumber.text.toString().toDouble() / 100).toString()
+                val numPercent = cleanNumber(binding.currentNumber.text.toString().toDouble() / 100)
                 binding.currentNumber.text = numPercent
                 percent = true
             } else {
-                val num = (binding.currentNumber.text.toString().toDouble() * 100).toString()
+                val num = cleanNumber(binding.currentNumber.text.toString().toDouble() * 100)
                 binding.currentNumber.text = num
                 percent = false
             }
@@ -320,6 +321,15 @@ class CalculatorFragment : Fragment() {
         }
 
         return number
+    }
+
+    /**
+     * Cleans up a number for consistent display appearance
+     */
+    private fun cleanNumber(number: Number): String {
+        val numberString = number.toString().toBigDecimal().toPlainString()
+
+        return numberString.substring(0, min(numberString.length, 12))
     }
 
     override fun onDestroyView() {
