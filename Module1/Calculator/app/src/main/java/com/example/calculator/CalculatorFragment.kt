@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.calculator.databinding.FragmentCalculatorBinding
 import kotlin.math.abs
+import kotlin.math.min
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -161,7 +162,7 @@ class CalculatorFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.currentNumber.text = result.substring(0, 12)
+                binding.currentNumber.text = result.substring(0, min(result.length, 12))
             }
 
             // Update evaluated state
