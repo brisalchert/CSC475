@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.calculator.databinding.FragmentCalculatorBinding
+import java.math.BigDecimal
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -121,11 +122,11 @@ class CalculatorFragment : Fragment() {
 
             val postfixExpression = infixToPostfix(infixExpression)
 
-            // Evaluate postfix expression, converting to integer if possible
-            val result = longOrDouble(postfixCalculator.evaluatePostfix(postfixExpression)).toString()
+            // Evaluate postfix expression
+            val result = postfixCalculator.evaluatePostfix(postfixExpression)
 
             // Reset calculator on division by 0
-            if (result == "Infinity" || result == "-Infinity") {
+            if (result.toString() == "Infinity" || result.toString() == "-Infinity") {
                 binding.expression.text = ""
                 binding.currentNumber.text = "0"
 
@@ -140,12 +141,12 @@ class CalculatorFragment : Fragment() {
             }
 
             // Set currentNumber to result, bounding at the maximum display length
-            if (abs(result.toDouble()) > maxNumber) {
+            if (abs(result) > maxNumber) {
                 val toastText: String
                 val displayValue: String
 
                 // Check if max or min was exceeded
-                if (result.toDouble() > 0) {
+                if (result > 0) {
                     toastText = "Maximum"
                     displayValue = maxNumber.toString()
                     binding.currentNumber.text = displayValue
@@ -162,7 +163,9 @@ class CalculatorFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                binding.currentNumber.text = result.substring(0, min(result.length, 12))
+                // Convert to integer if there is no decimal component
+                val decimalResult = longOrDecimal(result.toBigDecimal()).toString()
+                binding.currentNumber.text = decimalResult.substring(0, min(decimalResult.length, 12))
             }
 
             // Update evaluated state
@@ -311,8 +314,8 @@ class CalculatorFragment : Fragment() {
     /**
      * Converts a floating-point number to an integer if it has no fractional component
      */
-    private fun longOrDouble(number: Double): Number {
-        if (number % 1 == 0.0) {
+    private fun longOrDecimal(number: BigDecimal): Number {
+        if (number.toDouble() % 1 == 0.0) {
             return number.toLong()
         }
 
