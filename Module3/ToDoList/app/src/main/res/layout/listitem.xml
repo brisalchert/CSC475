@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:weightSum="10">
 
     <CheckBox
         android:id="@+id/checkBoxCompleted"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -36,4 +41,16 @@
             android:textColor="?attr/colorOnSecondaryFixed" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@drawable/ripple_rounded_corners"
+        android:contentDescription="@string/action_delete"
+        app:srcCompat="@android:drawable/ic_delete"
+        app:tint="?attr/colorOnSecondaryContainer" />
+
 </LinearLayout>
