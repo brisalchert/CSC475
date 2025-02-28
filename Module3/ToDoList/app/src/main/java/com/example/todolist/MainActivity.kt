@@ -1,16 +1,24 @@
 package com.example.todolist
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val todoList = ArrayList<ListItem>()
+    private var recyclerView: RecyclerView? = null
+    private var adapter: TodoAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +31,23 @@ class MainActivity : AppCompatActivity() {
         // Ensure the status bar icons have proper contrast
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
-        binding.newNoteButton.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.newNoteButton).show()
+        binding.fab.setOnClickListener { view ->
+            val dialog = DialogNewListItem()
+            dialog.show(supportFragmentManager, "")
         }
+
+        recyclerView = findViewById<View>(R.id.recyclerView) as RecyclerView
+        adapter = TodoAdapter(this, todoList)
+        val layoutManager = LinearLayoutManager(applicationContext)
+
+        recyclerView!!.layoutManager = layoutManager
+        recyclerView!!.itemAnimator = DefaultItemAnimator()
+
+        // Divider for list items
+        recyclerView!!.addItemDecoration(
+            DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+
+        recyclerView!!.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -44,5 +64,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun createNewListItem(item: ListItem) {
+        todoList.add(item)
+        adapter!!.notifyItemInserted(todoList.indexOf(item))
     }
 }
