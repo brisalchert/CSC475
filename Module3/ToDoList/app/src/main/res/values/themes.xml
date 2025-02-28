@@ -2,7 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.ToDoList" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDay</item>
+        <item name="android:textColorPrimary">?attr/colorOnPrimary</item>
+        <item name="statusBarBackground">?attr/colorPrimaryDark</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
     </style>
 
     <style name="Theme.ToDoList" parent="Base.Theme.ToDoList" />
