@@ -19,8 +19,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newNoteButton"
         android:layout_width="wrap_content"
@@ -28,7 +26,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/new_note_button_margin"
         android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_new_note"
+        android:contentDescription="@string/action_add"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
