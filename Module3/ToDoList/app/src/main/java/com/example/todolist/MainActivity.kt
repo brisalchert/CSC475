@@ -70,4 +70,21 @@ class MainActivity : AppCompatActivity() {
         todoList.add(item)
         adapter!!.notifyItemInserted(todoList.indexOf(item))
     }
+
+    fun updateCompletion(item: ListItem) {
+        val oldIndex = todoList.indexOf(item)
+
+        val newIndex = if (!item.completed) {
+            // Move item to the top of the list
+            0
+        } else {
+            // Move item to the bottom of the list
+            todoList.size - 1
+        }
+
+        todoList.remove(item)
+        todoList.add(newIndex, item)
+
+        adapter!!.notifyItemMoved(oldIndex, newIndex)
+    }
 }
