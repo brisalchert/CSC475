@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Ensure the status bar icons have proper contrast
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
-        binding.fab.setOnClickListener { view ->
+        binding.fab.setOnClickListener {
             val dialog = DialogNewListItem()
             dialog.show(supportFragmentManager, "")
         }
