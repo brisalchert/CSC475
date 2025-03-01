@@ -2,6 +2,7 @@ package com.example.todolist
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
 
 class TodoAdapter (
     private val mainActivity: MainActivity,
@@ -26,16 +28,21 @@ class TodoAdapter (
     override fun onBindViewHolder(holder: ListItemHolder, position: Int) {
         val todo = todoList[position]
 
-        // Reset holder values
-        holder.title.text = ""
-        holder.description.text = ""
-        holder.important.text = ""
-
         // Set new holder values
         holder.title.text = todo.title
         holder.description.text = todo.description
         if (todo.important) {
-            holder.important.text = mainActivity.resources.getString(R.string.important_text)
+            val backgroundColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorTertiaryContainer, Color.WHITE)
+            val textColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorOnTertiaryContainer, Color.BLACK)
+            holder.itemView.setBackgroundColor(backgroundColor)
+            holder.title.setTextColor(textColor)
+            holder.description.setTextColor(textColor)
+        } else {
+            val backgroundColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorSurface, Color.WHITE)
+            val textColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorOnSurface, Color.BLACK)
+            holder.itemView.setBackgroundColor(backgroundColor)
+            holder.title.setTextColor(textColor)
+            holder.description.setTextColor(textColor)
         }
 
         // Reset completion change listener for reuse
@@ -93,7 +100,6 @@ class TodoAdapter (
     inner class ListItemHolder(view: View): RecyclerView.ViewHolder(view) {
         internal var title: TextView = view.findViewById(R.id.textViewTitle)
         internal var description: TextView = view.findViewById(R.id.textViewDescription)
-        internal var important: TextView = view.findViewById(R.id.textViewImportant)
         internal var completedBox: CheckBox = view.findViewById(R.id.checkBoxCompleted)
         internal var deleteButton: ImageButton = view.findViewById(R.id.deleteButton)
     }

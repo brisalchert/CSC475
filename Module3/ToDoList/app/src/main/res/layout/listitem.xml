@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    android:padding="5dp"
     android:weightSum="10">
 
     <CheckBox
@@ -25,13 +26,6 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textColor="?attr/colorOnSecondaryFixed"/>
-
-        <TextView
-            android:id="@+id/textViewImportant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="?attr/colorOnTertiaryFixedVariant"/>
 
         <TextView
             android:id="@+id/textViewDescription"
