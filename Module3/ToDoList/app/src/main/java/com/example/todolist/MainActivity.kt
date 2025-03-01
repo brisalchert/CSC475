@@ -1,6 +1,8 @@
 package com.example.todolist
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -68,11 +70,24 @@ class MainActivity : AppCompatActivity() {
 
     fun createNewListItem(item: ListItem) {
         todoList.add(item)
-        adapter!!.notifyItemInserted(todoList.indexOf(item))
+        adapter!!.notifyItemInserted(todoList.size - 1)
+    }
+
+    fun deleteListItem(item: ListItem) {
+        val index = todoList.indexOf(item)
+        if (index != -1) {
+            todoList.remove(item)
+
+            // Prevent concurrent RecyclerView updates with list modification
+            Handler(Looper.getMainLooper()).post {
+                adapter!!.notifyItemRemoved(index)
+            }
+        }
     }
 
     fun updateCompletion(item: ListItem) {
         val oldIndex = todoList.indexOf(item)
+        if (oldIndex == -1) return // Prevent crash when item not found
 
         val newIndex = if (!item.completed) {
             // Move item to the top of the list
@@ -82,9 +97,16 @@ class MainActivity : AppCompatActivity() {
             todoList.size - 1
         }
 
-        todoList.remove(item)
-        todoList.add(newIndex, item)
+        if (oldIndex != newIndex) {
+            val removedItem = todoList.removeAt(oldIndex)
 
-        adapter!!.notifyItemMoved(oldIndex, newIndex)
+            todoList.add(newIndex, removedItem)
+
+            // Prevent concurrent RecyclerView updates with list modification
+            Handler(Looper.getMainLooper()).post {
+                adapter!!.notifyItemMoved(oldIndex, newIndex)
+                adapter!!.notifyItemChanged(newIndex)
+            }
+        }
     }
 }
