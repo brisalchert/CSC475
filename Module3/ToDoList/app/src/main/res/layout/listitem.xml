@@ -9,16 +9,15 @@
 
     <CheckBox
         android:id="@+id/checkBoxCompleted"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"/>
+        android:layout_gravity="center"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="8">
+        android:layout_weight="10">
 
         <TextView
             android:id="@+id/textViewTitle"
@@ -44,10 +43,9 @@
 
     <ImageButton
         android:id="@+id/deleteButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:background="@drawable/ripple_rounded_corners"
         android:contentDescription="@string/action_delete"
         app:srcCompat="@android:drawable/ic_delete"
