@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val todoList = ArrayList<ListItem>()
+    private var numCompleted = 0 // Used to track position of last uncompleted item
     private var recyclerView: RecyclerView? = null
     private var adapter: TodoAdapter? = null
 
@@ -69,8 +70,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun createNewListItem(item: ListItem) {
-        todoList.add(item)
-        adapter!!.notifyItemInserted(todoList.size - 1)
+        // Add item before completed items
+        val index = todoList.size - numCompleted
+        todoList.add(index, item)
+        adapter!!.notifyItemInserted(index)
     }
 
     fun deleteListItem(item: ListItem) {
@@ -87,14 +90,17 @@ class MainActivity : AppCompatActivity() {
 
     fun updateCompletion(item: ListItem) {
         val oldIndex = todoList.indexOf(item)
+        val newIndex: Int
         if (oldIndex == -1) return // Prevent crash when item not found
 
-        val newIndex = if (!item.completed) {
+        if (!item.completed) {
             // Move item to the top of the list
-            0
+            newIndex = 0
+            numCompleted--
         } else {
             // Move item to the bottom of the list
-            todoList.size - 1
+            newIndex = todoList.size - 1
+            numCompleted++
         }
 
         if (oldIndex != newIndex) {
