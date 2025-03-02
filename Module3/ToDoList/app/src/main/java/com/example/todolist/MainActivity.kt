@@ -18,8 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: ListItemViewModel by viewModels()
-
-    private var numCompleted = 0 // Used to track position of last uncompleted item
     private var recyclerView: RecyclerView? = null
     private var adapter: TodoAdapter? = null
 
@@ -77,9 +75,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun createNewListItem(item: ListItem) {
+        if (viewModel.numCompleted.value == null) viewModel.initNumCompleted()
+
         // Add item before completed items
         val index = if (adapter!!.currentList.isNotEmpty()) {
-            adapter!!.currentList.size - numCompleted
+            adapter!!.currentList.size - viewModel.numCompleted.value!!
         } else {
             0
         }
@@ -96,6 +96,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun deleteListItem(item: ListItem) {
+        if (viewModel.numCompleted.value == null) viewModel.initNumCompleted()
+
         // Update database
         viewModel.delete(item)
 
@@ -107,25 +109,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateCompletion(item: ListItem) {
+        if (viewModel.numCompleted.value == null) viewModel.initNumCompleted()
+
         // Update item completion in database
         viewModel.update(item)
-
-        runOnUiThread {
-            val updatedList = ArrayList(adapter!!.currentList)
-            val newIndex: Int
-
-            updatedList.remove(item)
-
-            if (item.completed) {
-                numCompleted++
-                newIndex = updatedList.size
-            } else {
-                numCompleted--
-                newIndex = 0
-            }
-
-            updatedList.add(newIndex, item)
-            adapter!!.submitList(updatedList)
-        }
     }
 }
