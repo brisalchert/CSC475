@@ -10,13 +10,13 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 
 class TodoAdapter (
-    private val mainActivity: MainActivity,
-    private val todoList: List<ListItem>
-): RecyclerView.Adapter<TodoAdapter.ListItemHolder>() {
+    private val mainActivity: MainActivity
+): ListAdapter<ListItem, TodoAdapter.ListItemHolder>(TodoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListItemHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -26,18 +26,20 @@ class TodoAdapter (
     }
 
     override fun onBindViewHolder(holder: ListItemHolder, position: Int) {
-        val todo = todoList[position]
+        val todo = getItem(position)
 
         // Set new holder values
         holder.title.text = todo.title
         holder.description.text = todo.description
         if (todo.important) {
+            // Update important colors
             val backgroundColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorTertiaryContainer, Color.WHITE)
             val textColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorOnTertiaryContainer, Color.BLACK)
             holder.itemView.setBackgroundColor(backgroundColor)
             holder.title.setTextColor(textColor)
             holder.description.setTextColor(textColor)
         } else {
+            // Use regular colors
             val backgroundColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorSurface, Color.WHITE)
             val textColor = MaterialColors.getColor(mainActivity, com.google.android.material.R.attr.colorOnSurface, Color.BLACK)
             holder.itemView.setBackgroundColor(backgroundColor)
@@ -65,14 +67,6 @@ class TodoAdapter (
                 mainActivity.deleteListItem(todo)
             }
         }
-    }
-
-    override fun getItemCount(): Int {
-        if (todoList != null) {
-            return todoList.size
-        }
-
-        return -1
     }
 
     /**

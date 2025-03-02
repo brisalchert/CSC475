@@ -33,12 +33,12 @@ class DialogNewListItem : DialogFragment() {
         // Set the OK button to create a new list item
         buttonOK.setOnClickListener {
             // Create a list item
-            val newListItem = ListItem()
-
-            // Set properties
-            newListItem.title = editTitle.text.toString()
-            newListItem.description = editDescription.text.toString()
-            newListItem.important = checkBoxImportant.isChecked
+            val newListItem = ListItem(
+                title = editTitle.text.toString(),
+                description = editDescription.text.toString(),
+                completed = false,
+                important = checkBoxImportant.isChecked
+            )
 
             // Get reference to MainActivity
             val callingActivity = activity as MainActivity?

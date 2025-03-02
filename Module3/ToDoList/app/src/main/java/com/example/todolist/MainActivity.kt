@@ -1,28 +1,30 @@
 package com.example.todolist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.databinding.ActivityMainBinding
+import java.util.Collections
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: ListItemViewModel by viewModels()
 
-    private val todoList = ArrayList<ListItem>()
     private var numCompleted = 0 // Used to track position of last uncompleted item
     private var recyclerView: RecyclerView? = null
     private var adapter: TodoAdapter? = null
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,11 +41,11 @@ class MainActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "")
         }
 
+        // Set up RecyclerView
         recyclerView = findViewById<View>(R.id.recyclerView) as RecyclerView
-        adapter = TodoAdapter(this, todoList)
-        val layoutManager = LinearLayoutManager(applicationContext)
+        adapter = TodoAdapter(this)
 
-        recyclerView!!.layoutManager = layoutManager
+        recyclerView!!.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView!!.itemAnimator = DefaultItemAnimator()
 
         // Divider for list items
@@ -51,6 +53,12 @@ class MainActivity : AppCompatActivity() {
             DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
 
         recyclerView!!.adapter = adapter
+
+        // Observe LiveData from ViewModel
+        viewModel.allItems.observe(this) { items ->
+            val sortedItems = items.map { it.toListItem() }.sortedBy { it.completed }
+            adapter!!.submitList(sortedItems)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -71,48 +79,54 @@ class MainActivity : AppCompatActivity() {
 
     fun createNewListItem(item: ListItem) {
         // Add item before completed items
-        val index = todoList.size - numCompleted
-        todoList.add(index, item)
-        adapter!!.notifyItemInserted(index)
+        val index = if (adapter!!.currentList.isNotEmpty()) {
+            adapter!!.currentList.size - numCompleted
+        } else {
+            0
+        }
+
+        // Update database and todoList
+        viewModel.insert(item) { newId ->
+            runOnUiThread {
+                item.id = newId // Use database's auto-generated ID value
+                val updatedList = ArrayList(adapter!!.currentList)
+                updatedList.add(index, item)
+                adapter!!.submitList(updatedList)
+            }
+        }
     }
 
     fun deleteListItem(item: ListItem) {
-        val index = todoList.indexOf(item)
-        if (index != -1) {
-            todoList.remove(item)
+        // Update database
+        viewModel.delete(item)
 
-            // Prevent concurrent RecyclerView updates with list modification
-            Handler(Looper.getMainLooper()).post {
-                adapter!!.notifyItemRemoved(index)
-            }
+        runOnUiThread {
+            val updatedList = ArrayList(adapter!!.currentList)
+            updatedList.remove(item)
+            adapter!!.submitList(updatedList)
         }
     }
 
     fun updateCompletion(item: ListItem) {
-        val oldIndex = todoList.indexOf(item)
-        val newIndex: Int
-        if (oldIndex == -1) return // Prevent crash when item not found
+        // Update item completion in database
+        viewModel.update(item)
 
-        if (!item.completed) {
-            // Move item to the top of the list
-            newIndex = 0
-            numCompleted--
-        } else {
-            // Move item to the bottom of the list
-            newIndex = todoList.size - 1
-            numCompleted++
-        }
+        runOnUiThread {
+            val updatedList = ArrayList(adapter!!.currentList)
+            val newIndex: Int
 
-        if (oldIndex != newIndex) {
-            val removedItem = todoList.removeAt(oldIndex)
+            updatedList.remove(item)
 
-            todoList.add(newIndex, removedItem)
-
-            // Prevent concurrent RecyclerView updates with list modification
-            Handler(Looper.getMainLooper()).post {
-                adapter!!.notifyItemMoved(oldIndex, newIndex)
-                adapter!!.notifyItemChanged(newIndex)
+            if (item.completed) {
+                numCompleted++
+                newIndex = updatedList.size
+            } else {
+                numCompleted--
+                newIndex = 0
             }
+
+            updatedList.add(newIndex, item)
+            adapter!!.submitList(updatedList)
         }
     }
 }
