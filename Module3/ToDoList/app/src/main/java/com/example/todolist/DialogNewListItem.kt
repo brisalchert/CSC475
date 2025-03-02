@@ -22,8 +22,8 @@ class DialogNewListItem : DialogFragment() {
         val buttonCancel: Button = dialogView.findViewById(R.id.buttonCancel)
         val buttonOK: Button = dialogView.findViewById(R.id.buttonOK)
 
-        // Set the dialog message
-        builder.setView(dialogView).setMessage("Add a new to-do list item")
+        // Set the dialog view
+        builder.setView(dialogView)
 
         // Set cancel button to close the dialog
         buttonCancel.setOnClickListener {
