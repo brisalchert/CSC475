@@ -17,7 +17,7 @@ private val retrofit = Retrofit.Builder()
 
 interface GalleryApiService {
     @GET("photos")
-    suspend fun getPhotos(): List<GalleryPhoto>
+    suspend fun getGalleryPhotos(): List<GalleryPhoto>
 }
 
 object GalleryApi {

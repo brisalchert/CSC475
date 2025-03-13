@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.photogallery.network.GalleryApi
+import com.example.photogallery.data.NetworkGalleryPhotosRepository
 import com.example.photogallery.model.GalleryPhoto
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -37,7 +37,8 @@ class GalleryViewModel : ViewModel() {
         viewModelScope.launch {
             galleryUiState = GalleryUiState.Loading
             galleryUiState = try {
-                val listResult = GalleryApi.retrofitService.getPhotos()
+                val galleryPhotosRepository = NetworkGalleryPhotosRepository()
+                val listResult = galleryPhotosRepository.getGalleryPhotos()
                 GalleryUiState.Success(
                     "Success: ${listResult.size} photos retrieved"
                 )
