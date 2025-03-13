@@ -19,9 +19,3 @@ interface GalleryApiService {
     @GET("photos")
     suspend fun getGalleryPhotos(): List<GalleryPhoto>
 }
-
-object GalleryApi {
-    val retrofitService: GalleryApiService by lazy {
-        retrofit.create(GalleryApiService::class.java)
-    }
-}

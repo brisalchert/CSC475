@@ -4,8 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.photogallery.data.NetworkGalleryPhotosRepository
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import com.example.photogallery.PhotoGalleryApplication
+import com.example.photogallery.data.GalleryPhotosRepository
 import com.example.photogallery.model.GalleryPhoto
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -17,7 +22,9 @@ sealed interface GalleryUiState {
     object Loading : GalleryUiState
 }
 
-class GalleryViewModel : ViewModel() {
+class GalleryViewModel(
+    private val galleryPhotosRepository: GalleryPhotosRepository
+) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var galleryUiState: GalleryUiState by mutableStateOf(GalleryUiState.Loading)
         private set
@@ -37,7 +44,6 @@ class GalleryViewModel : ViewModel() {
         viewModelScope.launch {
             galleryUiState = GalleryUiState.Loading
             galleryUiState = try {
-                val galleryPhotosRepository = NetworkGalleryPhotosRepository()
                 val listResult = galleryPhotosRepository.getGalleryPhotos()
                 GalleryUiState.Success(
                     "Success: ${listResult.size} photos retrieved"
@@ -46,6 +52,16 @@ class GalleryViewModel : ViewModel() {
                 GalleryUiState.Error
             } catch (e: HttpException) {
                 GalleryUiState.Error
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as PhotoGalleryApplication)
+                val galleryPhotosRepository = application.container.galleryPhotosRepository
+                GalleryViewModel(galleryPhotosRepository = galleryPhotosRepository)
             }
         }
     }

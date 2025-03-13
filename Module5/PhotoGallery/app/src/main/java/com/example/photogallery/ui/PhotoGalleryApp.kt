@@ -30,7 +30,7 @@ fun PhotoGalleryApp() {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            val galleryViewModel: GalleryViewModel = viewModel()
+            val galleryViewModel: GalleryViewModel = viewModel(factory = GalleryViewModel.Factory)
             HomeScreen(
                 galleryUiState = galleryViewModel.galleryUiState,
                 contentPadding = it,
