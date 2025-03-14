@@ -11,7 +11,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer: AppContainer {
-    private val baseURL = "https://android-kotlin-fun-mars-server.appspot.com"
+    private val baseURL = "https://store.steampowered.com/api/"
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter

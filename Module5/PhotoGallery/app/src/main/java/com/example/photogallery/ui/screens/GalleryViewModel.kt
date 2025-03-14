@@ -12,12 +12,13 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import com.example.photogallery.PhotoGalleryApplication
 import com.example.photogallery.data.GalleryPhotosRepository
 import com.example.photogallery.model.GalleryPhoto
+import com.example.photogallery.model.Screenshot
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface GalleryUiState {
-    data class Success(val photos: List<GalleryPhoto>) : GalleryUiState
+    data class Success(val photos: List<Screenshot>) : GalleryUiState
     object Error : GalleryUiState
     object Loading : GalleryUiState
 }

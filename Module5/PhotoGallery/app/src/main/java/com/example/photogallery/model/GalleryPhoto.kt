@@ -5,7 +5,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GalleryPhoto(
-    val id: String,
-    @SerialName(value = "img_src")
-    val imgSrc: String
+    val success: Boolean,
+    val data: Data
+)
+
+@Serializable
+data class Data(
+    val screenshots: List<Screenshot>
+)
+
+@Serializable
+data class Screenshot(
+    val id: Int,
+    @SerialName(value = "path_thumbnail")
+    val pathThumbnail: String,
+    @SerialName(value = "path_full")
+    val pathFull: String
 )

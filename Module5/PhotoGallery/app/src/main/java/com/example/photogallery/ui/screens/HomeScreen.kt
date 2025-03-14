@@ -30,6 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.photogallery.R
 import com.example.photogallery.model.GalleryPhoto
+import com.example.photogallery.model.Screenshot
 import com.example.photogallery.ui.theme.PhotoGalleryTheme
 
 @Composable
@@ -100,20 +101,20 @@ fun ErrorScreenPreview() {
 @Composable
 fun PhotosGridScreenPreview() {
     PhotoGalleryTheme {
-        val mockData = List(10) { GalleryPhoto("$it", "") }
+        val mockData = List(10) { Screenshot(it, "", "") }
         PhotosGridScreen(mockData)
     }
 }
 
 @Composable
-fun GalleryPhotoCard(photo: GalleryPhoto, modifier: Modifier = Modifier) {
+fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data(photo.imgSrc)
+                .data(photo.pathThumbnail)
                 .crossfade(true)
                 .build(),
             error = painterResource(R.drawable.ic_broken_image),
@@ -127,7 +128,7 @@ fun GalleryPhotoCard(photo: GalleryPhoto, modifier: Modifier = Modifier) {
 
 @Composable
 fun PhotosGridScreen(
-    photos: List<GalleryPhoto>,
+    photos: List<Screenshot>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
