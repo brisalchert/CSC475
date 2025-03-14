@@ -41,7 +41,9 @@ fun HomeScreen(
 ) {
     when (galleryUiState) {
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is GalleryUiState.Success -> PhotosGridScreen(galleryUiState.photos, modifier.padding())
+        is GalleryUiState.Success -> PhotosGridScreen(
+            galleryUiState.photos, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
+        )
 
         is GalleryUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
