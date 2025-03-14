@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -34,6 +35,7 @@ import com.example.photogallery.ui.theme.PhotoGalleryTheme
 @Composable
 fun HomeScreen(
     galleryUiState: GalleryUiState,
+    retryAction: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -41,7 +43,7 @@ fun HomeScreen(
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is GalleryUiState.Success -> PhotosGridScreen(galleryUiState.photos, modifier.padding())
 
-        is GalleryUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
+        is GalleryUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
     }
 }
 
@@ -68,7 +70,7 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier) {
+fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -78,6 +80,17 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
             painter = painterResource(id = R.drawable.ic_connection_error), contentDescription = ""
         )
         Text(text = stringResource(R.string.loading_failed), modifier = Modifier.padding(16.dp))
+        Button(onClick = retryAction) {
+            Text(stringResource(R.string.retry))
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorScreenPreview() {
+    PhotoGalleryTheme {
+        ErrorScreen({})
     }
 }
 

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.photogallery.ui
+package com.example.photogallery.ui.theme
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -33,6 +33,7 @@ fun PhotoGalleryApp() {
             val galleryViewModel: GalleryViewModel = viewModel(factory = GalleryViewModel.Factory)
             HomeScreen(
                 galleryUiState = galleryViewModel.galleryUiState,
+                retryAction = galleryViewModel::getGalleryPhotos,
                 contentPadding = it,
             )
         }

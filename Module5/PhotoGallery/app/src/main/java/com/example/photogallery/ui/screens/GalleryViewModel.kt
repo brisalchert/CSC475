@@ -40,7 +40,7 @@ class GalleryViewModel(
      * Gets gallery photos information from the gallery API Retrofit service and updates the
      * [GalleryPhoto] [List] [MutableList].
      */
-    private fun getGalleryPhotos() {
+    fun getGalleryPhotos() {
         viewModelScope.launch {
             galleryUiState = GalleryUiState.Loading
             galleryUiState = try {
