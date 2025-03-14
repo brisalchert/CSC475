@@ -5,19 +5,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.photogallery.R
+import com.example.photogallery.model.GalleryPhoto
 import com.example.photogallery.ui.theme.PhotoGalleryTheme
 
 @Composable
@@ -28,13 +39,10 @@ fun HomeScreen(
 ) {
     when (galleryUiState) {
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is GalleryUiState.Success -> ResultScreen(
-            galleryUiState.photos, modifier.padding(top = contentPadding.calculateTopPadding())
-        )
+        is GalleryUiState.Success -> PhotosGridScreen(galleryUiState.photos, modifier.padding())
 
-        is GalleryUiState.Error -> ErrorScreen(modifier = modifier.fillMaxWidth())
+        is GalleryUiState.Error -> ErrorScreen(modifier = modifier.fillMaxSize())
     }
-
 }
 
 @Composable
@@ -75,8 +83,52 @@ fun ErrorScreen(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun ResultScreenPreview() {
+fun PhotosGridScreenPreview() {
     PhotoGalleryTheme {
-        ResultScreen(stringResource(R.string.placeholder_result))
+        val mockData = List(10) { GalleryPhoto("$it", "") }
+        PhotosGridScreen(mockData)
+    }
+}
+
+@Composable
+fun GalleryPhotoCard(photo: GalleryPhoto, modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(photo.imgSrc)
+                .crossfade(true)
+                .build(),
+            error = painterResource(R.drawable.ic_broken_image),
+            placeholder = painterResource(R.drawable.loading_img),
+            contentDescription = stringResource(R.string.photo),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun PhotosGridScreen(
+    photos: List<GalleryPhoto>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(128.dp),
+        modifier = modifier.padding(horizontal = 4.dp),
+        contentPadding = contentPadding
+    ) {
+        items(items = photos, key = { photo -> photo.id }) { photo ->
+            GalleryPhotoCard(
+                photo,
+                modifier = modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(1.5f)
+            )
+        }
     }
 }
