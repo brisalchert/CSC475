@@ -20,7 +20,7 @@ class GalleryViewModelTest {
             )
 
             assertEquals(
-                GalleryUiState.Success("Success: ${FakeDataSource.photosList.size} photos retrieved"),
+                GalleryUiState.Success(FakeDataSource.photosList),
                 galleryViewModel.galleryUiState
             )
         }
