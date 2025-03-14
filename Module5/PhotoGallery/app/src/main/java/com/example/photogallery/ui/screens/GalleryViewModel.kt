@@ -37,7 +37,7 @@ class GalleryViewModel(
     }
 
     /**
-     * Gets Mars photos information from the Mars API Retrofit service and updates the
+     * Gets gallery photos information from the gallery API Retrofit service and updates the
      * [GalleryPhoto] [List] [MutableList].
      */
     private fun getGalleryPhotos() {
