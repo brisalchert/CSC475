@@ -13,14 +13,16 @@ class GalleryViewModelTest {
     val testDispatcher = TestDispatcherRule()
 
     @Test
-    fun galleryViewModel_getGalleryPhotos_verifyGameUiStateSuccess() =
+    fun galleryViewModel_getGamePhotos_verifyGameUiStateSuccess() =
         runTest {
             val galleryViewModel = GalleryViewModel(
                 galleryPhotosRepository = FakeNetworkGalleryPhotosRepository()
             )
 
             assertEquals(
-                GalleryUiState.Success(FakeDataSource.photosList),
+                GalleryUiState.Success(
+                    FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList()
+                ),
                 galleryViewModel.galleryUiState
             )
         }
