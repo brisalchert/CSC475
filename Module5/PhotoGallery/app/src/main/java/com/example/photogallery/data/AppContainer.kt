@@ -15,8 +15,7 @@ class DefaultAppContainer: AppContainer {
     private val gameIdsToNames = linkedMapOf(
         1245620 to "Elden Ring",
         374320 to "Dark Souls 3",
-        814380 to "Sekiro: Shadows Die Twice",
-        2727272 to "Null"
+        814380 to "Sekiro: Shadows Die Twice"
     )
 
     /**
