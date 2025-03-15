@@ -14,7 +14,8 @@ class DefaultAppContainer: AppContainer {
     private val baseURL = "https://store.steampowered.com/api/"
     private val gameIds = listOf(
         1245620,
-        374320
+        374320,
+        814380
     )
 
     /**

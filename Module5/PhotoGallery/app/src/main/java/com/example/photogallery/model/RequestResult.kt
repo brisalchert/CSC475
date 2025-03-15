@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RequestResult(
     val success: Boolean,
-    val data: Data
+    val data: Data? = null
 )
 
 @Serializable

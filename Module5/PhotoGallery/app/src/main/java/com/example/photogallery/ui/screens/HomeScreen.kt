@@ -131,19 +131,23 @@ fun PhotosGrid(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(128.dp),
-        modifier = modifier.padding(horizontal = 4.dp),
-        contentPadding = contentPadding
-    ) {
-        items(items = photos, key = { photo -> photo.id }) { photo ->
-            GalleryPhotoCard(
-                photo,
-                modifier = modifier
-                    .padding(4.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(1.5f)
-            )
+    if (photos.isEmpty()) {
+        Text("Game not found")
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(128.dp),
+            modifier = modifier.padding(horizontal = 4.dp),
+            contentPadding = contentPadding
+        ) {
+            items(items = photos, key = { photo -> photo.id }) { photo ->
+                GalleryPhotoCard(
+                    photo,
+                    modifier = modifier
+                        .padding(4.dp)
+                        .fillMaxWidth()
+                        .aspectRatio(1.5f)
+                )
+            }
         }
     }
 }
