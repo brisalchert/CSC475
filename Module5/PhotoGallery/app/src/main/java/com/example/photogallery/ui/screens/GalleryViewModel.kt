@@ -18,7 +18,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface GalleryUiState {
-    data class Success(val photos: List<Screenshot>) : GalleryUiState
+    data class Success(val photos: List<List<Screenshot>>) : GalleryUiState
     data object Error : GalleryUiState
     data object Loading : GalleryUiState
 }
@@ -45,7 +45,7 @@ class GalleryViewModel(
         viewModelScope.launch {
             galleryUiState = GalleryUiState.Loading
             galleryUiState = try {
-                GalleryUiState.Success(galleryPhotosRepository.getGamePhotos(1245620))
+                GalleryUiState.Success(galleryPhotosRepository.getGamePhotos())
             } catch (e: IOException) {
                 GalleryUiState.Error
             } catch (e: HttpException) {

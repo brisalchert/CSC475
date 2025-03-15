@@ -11,12 +11,16 @@ class NetworkGalleryRepositoryTest {
     fun networkGalleryPhotosRepository_getGamePhotos_verifyPhotoList() =
         runTest {
             val repository = NetworkGalleryPhotosRepository(
-                galleryApiService = FakeGalleryApiService()
+                galleryApiService = FakeGalleryApiService(),
+                FakeDataSource.gameIds
             )
 
             assertEquals(
-                FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList<Screenshot>(),
-                repository.getGamePhotos(1)
+                listOf(
+                    FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList(),
+                    FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList()
+                ),
+                repository.getGamePhotos()
             )
         }
 }

@@ -41,7 +41,7 @@ fun HomeScreen(
 ) {
     when (galleryUiState) {
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is GalleryUiState.Success -> PhotosGrid(
+        is GalleryUiState.Success -> GameList(
             galleryUiState.photos, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
         )
 
@@ -143,6 +143,27 @@ fun PhotosGrid(
                     .padding(4.dp)
                     .fillMaxWidth()
                     .aspectRatio(1.5f)
+            )
+        }
+    }
+}
+
+@Composable
+fun GameList(
+    photosList: List<List<Screenshot>>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        for (photos: List<Screenshot> in photosList) {
+            PhotosGrid(
+                photos = photos,
+                modifier = modifier,
+                contentPadding = contentPadding
             )
         }
     }

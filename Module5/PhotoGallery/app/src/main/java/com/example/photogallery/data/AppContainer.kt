@@ -12,6 +12,10 @@ interface AppContainer {
 
 class DefaultAppContainer: AppContainer {
     private val baseURL = "https://store.steampowered.com/api/"
+    private val gameIds = listOf(
+        1245620,
+        374320
+    )
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -26,6 +30,6 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val galleryPhotosRepository: GalleryPhotosRepository by lazy {
-        NetworkGalleryPhotosRepository(retrofitService)
+        NetworkGalleryPhotosRepository(retrofitService, gameIds)
     }
 }

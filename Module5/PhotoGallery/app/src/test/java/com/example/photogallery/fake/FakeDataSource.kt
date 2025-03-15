@@ -13,6 +13,7 @@ object FakeDataSource {
     const val pathFullOne = "url.1.full"
     const val pathFullTwo = "url.2.full"
     val response = HashMap<String, RequestResult>()
+    val gameIds = listOf(1, 2)
 
     init {
         response["gameId"] = RequestResult(
