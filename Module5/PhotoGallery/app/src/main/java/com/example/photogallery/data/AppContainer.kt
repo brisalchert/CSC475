@@ -15,7 +15,8 @@ class DefaultAppContainer: AppContainer {
     private val gameIds = listOf(
         1245620,
         374320,
-        814380
+        814380,
+        2727272
     )
 
     /**

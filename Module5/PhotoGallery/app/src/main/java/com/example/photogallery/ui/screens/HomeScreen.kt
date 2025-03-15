@@ -5,16 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,14 +25,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.photogallery.R
 import com.example.photogallery.model.Screenshot
 import com.example.photogallery.ui.theme.PhotoGalleryTheme
-import kotlin.math.ceil
 
 @Composable
 fun HomeScreen(
@@ -132,29 +131,53 @@ fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
 @Composable
 fun PhotosGrid(
     photos: List<Screenshot>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
-    if (photos.isEmpty()) {
-        Text("Game not found")
-    } else {
-        val height = (ceil(photos.size / 3.0) * 128).toInt()
+    Column(
+        modifier = modifier.padding(vertical = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (photos.isEmpty()) {
+            Text(
+                text = "Game not found",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
+            )
+        } else {
+            Text(
+                text = "Game Name",
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
+            )
 
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(128.dp),
-            modifier = modifier
-                .padding(horizontal = 4.dp)
-                .height(height.dp),
-            contentPadding = contentPadding
-        ) {
-            items(items = photos, key = { photo -> photo.id }) { photo ->
-                GalleryPhotoCard(
-                    photo,
-                    modifier = modifier
-                        .padding(4.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(1.5f)
-                )
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                photos.chunked(3).forEach { photoRow ->
+                    Row(
+                        modifier = modifier
+                    ) {
+                        photoRow.forEach { photo ->
+                            GalleryPhotoCard(
+                                photo,
+                                modifier = modifier
+                                    .padding(4.dp)
+                                    .weight(1f)
+                                    .aspectRatio(1.5f)
+                            )
+                        }
+
+                        // Fill last row with empty space if fewer than 3 images
+                        repeat(3 - photoRow.size) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
             }
         }
     }
@@ -175,8 +198,7 @@ fun GameList(
         items(items = photosList) { photos ->
             PhotosGrid(
                 photos = photos,
-                modifier = modifier,
-                contentPadding = contentPadding
+                modifier = modifier
             )
         }
     }
