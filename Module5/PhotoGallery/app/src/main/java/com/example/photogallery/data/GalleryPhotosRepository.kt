@@ -19,12 +19,8 @@ class NetworkGalleryPhotosRepository(
             responses.add(galleryApiService.getGamePhotos(gameId))
         }
 
-        val responseLists = ArrayList<List<Screenshot>>()
-
-        for (response: Map<String, RequestResult> in responses) {
-            responseLists.add(response.values.firstOrNull()?.data?.screenshots?: emptyList())
+        return responses.map {
+            it.values.firstOrNull()?.data?.screenshots?: emptyList()
         }
-
-        return responseLists
     }
 }
