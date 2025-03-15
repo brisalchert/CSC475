@@ -1,6 +1,6 @@
 package com.example.photogallery.fake
 
-import com.example.photogallery.model.GalleryPhoto
+import com.example.photogallery.model.RequestResult
 
 object FakeDataSource {
     const val idOne = "img1"
@@ -8,11 +8,11 @@ object FakeDataSource {
     const val imgOne = "url.1"
     const val imgTwo = "url.2"
     val photosList = listOf(
-        GalleryPhoto(
+        RequestResult(
             id = idOne,
             imgSrc = imgOne
         ),
-        GalleryPhoto(
+        RequestResult(
             id = idTwo,
             imgSrc = imgTwo
         )

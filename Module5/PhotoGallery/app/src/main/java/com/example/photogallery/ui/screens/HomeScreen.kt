@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.photogallery.R
-import com.example.photogallery.model.GalleryPhoto
 import com.example.photogallery.model.Screenshot
 import com.example.photogallery.ui.theme.PhotoGalleryTheme
 
@@ -42,7 +41,7 @@ fun HomeScreen(
 ) {
     when (galleryUiState) {
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is GalleryUiState.Success -> PhotosGridScreen(
+        is GalleryUiState.Success -> PhotosGrid(
             galleryUiState.photos, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
         )
 
@@ -102,7 +101,7 @@ fun ErrorScreenPreview() {
 fun PhotosGridScreenPreview() {
     PhotoGalleryTheme {
         val mockData = List(10) { Screenshot(it, "", "") }
-        PhotosGridScreen(mockData)
+        PhotosGrid(mockData)
     }
 }
 
@@ -127,7 +126,7 @@ fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PhotosGridScreen(
+fun PhotosGrid(
     photos: List<Screenshot>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)

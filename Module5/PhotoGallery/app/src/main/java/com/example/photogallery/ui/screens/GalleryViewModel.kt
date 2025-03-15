@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import com.example.photogallery.PhotoGalleryApplication
 import com.example.photogallery.data.GalleryPhotosRepository
-import com.example.photogallery.model.GalleryPhoto
+import com.example.photogallery.model.RequestResult
 import com.example.photogallery.model.Screenshot
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -39,7 +39,7 @@ class GalleryViewModel(
 
     /**
      * Gets gallery photos information from the gallery API Retrofit service and updates the
-     * [GalleryPhoto] [List] [MutableList].
+     * [RequestResult] [List] [MutableList].
      */
     fun getGalleryPhotos() {
         viewModelScope.launch {
