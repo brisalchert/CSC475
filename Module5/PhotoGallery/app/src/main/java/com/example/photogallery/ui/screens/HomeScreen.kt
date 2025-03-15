@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,6 +34,7 @@ import coil.request.ImageRequest
 import com.example.photogallery.R
 import com.example.photogallery.model.Screenshot
 import com.example.photogallery.ui.theme.PhotoGalleryTheme
+import kotlin.math.ceil
 
 @Composable
 fun HomeScreen(
@@ -134,9 +138,13 @@ fun PhotosGrid(
     if (photos.isEmpty()) {
         Text("Game not found")
     } else {
+        val height = (ceil(photos.size / 3.0) * 128).toInt()
+
         LazyVerticalGrid(
             columns = GridCells.Adaptive(128.dp),
-            modifier = modifier.padding(horizontal = 4.dp),
+            modifier = modifier
+                .padding(horizontal = 4.dp)
+                .height(height.dp),
             contentPadding = contentPadding
         ) {
             items(items = photos, key = { photo -> photo.id }) { photo ->
@@ -158,12 +166,13 @@ fun GameList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        for (photos: List<Screenshot> in photosList) {
+        items(items = photosList) { photos ->
             PhotosGrid(
                 photos = photos,
                 modifier = modifier,
