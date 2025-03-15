@@ -12,11 +12,11 @@ interface AppContainer {
 
 class DefaultAppContainer: AppContainer {
     private val baseURL = "https://store.steampowered.com/api/"
-    private val gameIds = listOf(
-        1245620,
-        374320,
-        814380,
-        2727272
+    private val gameIdsToNames = linkedMapOf(
+        1245620 to "Elden Ring",
+        374320 to "Dark Souls 3",
+        814380 to "Sekiro: Shadows Die Twice",
+        2727272 to "Null"
     )
 
     /**
@@ -32,6 +32,6 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val galleryPhotosRepository: GalleryPhotosRepository by lazy {
-        NetworkGalleryPhotosRepository(retrofitService, gameIds)
+        NetworkGalleryPhotosRepository(retrofitService, gameIdsToNames)
     }
 }

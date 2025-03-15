@@ -5,22 +5,26 @@ import com.example.photogallery.model.Screenshot
 import com.example.photogallery.network.GalleryApiService
 
 interface GalleryPhotosRepository {
-    suspend fun getGamePhotos(): List<List<Screenshot>>
+    suspend fun getGamePhotos(): List<Pair<String, List<Screenshot>>>
 }
 
 class NetworkGalleryPhotosRepository(
     private val galleryApiService: GalleryApiService,
-    private val gameIds: List<Int>
+    private val gameIdsToNames: Map<Int, String>
 ): GalleryPhotosRepository {
-    override suspend fun getGamePhotos(): List<List<Screenshot>> {
+    override suspend fun getGamePhotos(): List<Pair<String, List<Screenshot>>> {
         val responses = ArrayList<Map<String, RequestResult>>()
 
-        for (gameId: Int in gameIds) {
+        for (gameId: Int in gameIdsToNames.keys) {
             responses.add(galleryApiService.getGamePhotos(gameId))
         }
 
-        return responses.map {
-            it.values.firstOrNull()?.data?.screenshots?: emptyList()
+        return ArrayList<Pair<String, List<Screenshot>>>().apply {
+            gameIdsToNames.values.zip(
+                responses.map {it.values.firstOrNull()?.data?.screenshots?: emptyList()}
+            ).forEach {
+                (game, photos) -> add(Pair(game, photos))
+            }
         }
     }
 }

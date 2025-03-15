@@ -18,7 +18,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface GalleryUiState {
-    data class Success(val photos: List<List<Screenshot>>) : GalleryUiState
+    data class Success(val photos: List<Pair<String, List<Screenshot>>>) : GalleryUiState
     data object Error : GalleryUiState
     data object Loading : GalleryUiState
 }

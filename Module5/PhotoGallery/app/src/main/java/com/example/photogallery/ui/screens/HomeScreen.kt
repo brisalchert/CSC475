@@ -103,8 +103,9 @@ fun ErrorScreenPreview() {
 @Composable
 fun PhotosGridScreenPreview() {
     PhotoGalleryTheme {
-        val mockData = List(10) { Screenshot(it, "", "") }
-        PhotosGrid(mockData)
+        val mockGame = ""
+        val mockPhotos = List(10) { Screenshot(it, "", "") }
+        PhotosGrid(mockGame, mockPhotos)
     }
 }
 
@@ -130,6 +131,7 @@ fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
 
 @Composable
 fun PhotosGrid(
+    game: String,
     photos: List<Screenshot>,
     modifier: Modifier = Modifier
 ) {
@@ -146,7 +148,7 @@ fun PhotosGrid(
             )
         } else {
             Text(
-                text = "Game Name",
+                text = game,
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp
             )
@@ -185,7 +187,7 @@ fun PhotosGrid(
 
 @Composable
 fun GameList(
-    photosList: List<List<Screenshot>>,
+    gameList: List<Pair<String, List<Screenshot>>>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -195,8 +197,9 @@ fun GameList(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(items = photosList) { photos ->
+        items(items = gameList) { (game, photos) ->
             PhotosGrid(
+                game = game,
                 photos = photos,
                 modifier = modifier
             )

@@ -22,7 +22,10 @@ class GalleryViewModelTest {
             assertEquals(
                 GalleryUiState.Success(
                     listOf(
-                        FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList()
+                        Pair(
+                            "Game",
+                            FakeDataSource.response.values.firstOrNull()?.data?.screenshots?: emptyList()
+                        )
                     )
                 ),
                 galleryViewModel.galleryUiState
