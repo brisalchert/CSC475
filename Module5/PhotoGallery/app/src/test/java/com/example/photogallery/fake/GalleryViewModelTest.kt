@@ -13,7 +13,7 @@ class GalleryViewModelTest {
     val testDispatcher = TestDispatcherRule()
 
     @Test
-    fun galleryViewModel_getGalleryPhotos_verifyGalleryUiStateSuccess() =
+    fun galleryViewModel_getGalleryPhotos_verifyGameUiStateSuccess() =
         runTest {
             val galleryViewModel = GalleryViewModel(
                 galleryPhotosRepository = FakeNetworkGalleryPhotosRepository()

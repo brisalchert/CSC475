@@ -13,6 +13,6 @@ class NetworkGalleryRepositoryTest {
                 galleryApiService = FakeGalleryApiService()
             )
 
-            assertEquals(FakeDataSource.photosList, repository.getGalleryPhotos())
+            assertEquals(FakeDataSource.photosList, repository.getGamePhotos())
         }
 }

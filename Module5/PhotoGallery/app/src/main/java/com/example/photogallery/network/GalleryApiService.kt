@@ -2,8 +2,9 @@ package com.example.photogallery.network
 
 import com.example.photogallery.model.RequestResult
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface GalleryApiService {
-    @GET("appdetails?appids=1245620&filters=screenshots")
-    suspend fun getGalleryPhotos(): Map<String, RequestResult>
+    @GET("appdetails?filters=screenshots")
+    suspend fun getGamePhotos(@Query("appids") gameID: Int): Map<String, RequestResult>
 }

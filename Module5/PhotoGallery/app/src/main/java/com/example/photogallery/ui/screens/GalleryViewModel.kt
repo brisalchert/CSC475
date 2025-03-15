@@ -19,8 +19,8 @@ import java.io.IOException
 
 sealed interface GalleryUiState {
     data class Success(val photos: List<Screenshot>) : GalleryUiState
-    object Error : GalleryUiState
-    object Loading : GalleryUiState
+    data object Error : GalleryUiState
+    data object Loading : GalleryUiState
 }
 
 class GalleryViewModel(
@@ -34,18 +34,18 @@ class GalleryViewModel(
      * Call getGalleryPhotos() on init so we can display status immediately.
      */
     init {
-        getGalleryPhotos()
+        getGamePhotos()
     }
 
     /**
      * Gets gallery photos information from the gallery API Retrofit service and updates the
      * [RequestResult] [List] [MutableList].
      */
-    fun getGalleryPhotos() {
+    fun getGamePhotos() {
         viewModelScope.launch {
             galleryUiState = GalleryUiState.Loading
             galleryUiState = try {
-                GalleryUiState.Success(galleryPhotosRepository.getGalleryPhotos())
+                GalleryUiState.Success(galleryPhotosRepository.getGamePhotos(1245620))
             } catch (e: IOException) {
                 GalleryUiState.Error
             } catch (e: HttpException) {

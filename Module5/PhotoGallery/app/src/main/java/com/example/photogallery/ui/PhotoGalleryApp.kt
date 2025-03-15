@@ -33,7 +33,7 @@ fun PhotoGalleryApp() {
             val galleryViewModel: GalleryViewModel = viewModel(factory = GalleryViewModel.Factory)
             HomeScreen(
                 galleryUiState = galleryViewModel.galleryUiState,
-                retryAction = galleryViewModel::getGalleryPhotos,
+                retryAction = galleryViewModel::getGamePhotos,
                 contentPadding = it,
             )
         }
