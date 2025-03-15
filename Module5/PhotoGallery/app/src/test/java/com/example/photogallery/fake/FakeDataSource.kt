@@ -15,7 +15,7 @@ object FakeDataSource {
     val response = HashMap<String, RequestResult>()
 
     init {
-        response["gameID"] = RequestResult(
+        response["gameId"] = RequestResult(
             success = true,
             data = Data(
                 listOf(

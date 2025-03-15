@@ -6,5 +6,5 @@ import retrofit2.http.Query
 
 interface GalleryApiService {
     @GET("appdetails?filters=screenshots")
-    suspend fun getGamePhotos(@Query("appids") gameID: Int): Map<String, RequestResult>
+    suspend fun getGamePhotos(@Query("appids") gameId: Int): Map<String, RequestResult>
 }
