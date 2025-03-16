@@ -40,6 +40,10 @@ import com.example.photogallery.ui.screens.HomeScreen
 import com.example.photogallery.ui.screens.GalleryViewModel
 import com.example.photogallery.ui.screens.ImageScreen
 
+/**
+ * Enum for navigation destinations. Helps to prevent typing errors when coding
+ * navigation features.
+ */
 enum class GalleryScreen {
     Home,
     Image
@@ -55,6 +59,7 @@ fun PhotoGalleryApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     var canNavigateBack by remember { mutableStateOf(false) }
 
+    // Dynamically update navigation status based on current navigation destination
     LaunchedEffect(backStackEntry) {
         canNavigateBack = navController.previousBackStackEntry != null
     }
@@ -105,6 +110,7 @@ fun PhotoGalleryApp(
                     route = "${GalleryScreen.Image.name}/{imageUri}",
                     arguments = listOf(navArgument("imageUri") { type = NavType.StringType })
                 ) { backStackEntry ->
+                    // Create a backStackEntry to enable the back arrow on the top app bar
                     val imageUri = backStackEntry.arguments?.getString("imageUri")?: ""
                     ImageScreen(
                         imageUri = imageUri
@@ -132,7 +138,7 @@ fun GalleryTopAppBar(
         },
         modifier = modifier,
         navigationIcon = {
-            if (canNavigateBack) {
+            if (canNavigateBack) { // Only allow back navigation if an image is fullscreen
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,

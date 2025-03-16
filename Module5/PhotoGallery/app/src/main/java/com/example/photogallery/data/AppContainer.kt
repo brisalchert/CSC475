@@ -10,6 +10,10 @@ interface AppContainer {
     val galleryPhotosRepository: GalleryPhotosRepository
 }
 
+/**
+ * The App Container holds important data so that it can be accessed across the application.
+ * In this case, the repository that provides the data is contained within.
+ */
 class DefaultAppContainer: AppContainer {
     private val baseURL = "https://store.steampowered.com/api/"
     private val gameIdsToNames = linkedMapOf(

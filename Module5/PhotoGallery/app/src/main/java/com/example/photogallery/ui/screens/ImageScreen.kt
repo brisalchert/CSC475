@@ -31,7 +31,7 @@ fun ImageScreen(
         Card(
             modifier = Modifier
                 .padding(8.dp)
-                .wrapContentSize(),
+                .wrapContentSize(), // Match card size to image size
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             AsyncImage(

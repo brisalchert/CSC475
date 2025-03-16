@@ -9,9 +9,12 @@ interface GalleryPhotosRepository {
 }
 
 class NetworkGalleryPhotosRepository(
-    private val galleryApiService: GalleryApiService,
+    private val galleryApiService: GalleryApiService, // API service for getting photos
     private val gameIdsToNames: Map<Int, String>
 ): GalleryPhotosRepository {
+    /**
+     * Returns pairs of game names and their respective lists of screenshots
+     */
     override suspend fun getGamePhotos(): List<Pair<String, List<Screenshot>>> {
         val responses = ArrayList<Map<String, RequestResult>>()
 
@@ -19,6 +22,7 @@ class NetworkGalleryPhotosRepository(
             responses.add(galleryApiService.getGamePhotos(gameId))
         }
 
+        // Reformat responses, extracting necessary information for the gallery
         return ArrayList<Pair<String, List<Screenshot>>>().apply {
             gameIdsToNames.values.zip(
                 responses.map {it.values.firstOrNull()?.data?.screenshots?: emptyList()}

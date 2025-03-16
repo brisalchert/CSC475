@@ -39,8 +39,8 @@ import com.example.photogallery.ui.theme.PhotoGalleryTheme
 @Composable
 fun HomeScreen(
     galleryUiState: GalleryUiState,
-    retryAction: () -> Unit,
-    onImageClicked: (imageUri: String) -> Unit,
+    retryAction: () -> Unit, // Retry function for the error screen
+    onImageClicked: (imageUri: String) -> Unit, // Navigation function for clicking images
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -64,19 +64,6 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         painter = painterResource(R.drawable.loading_img),
         contentDescription = stringResource(R.string.loading)
     )
-}
-
-/**
- * ResultScreen displaying number of photos retrieved.
- */
-@Composable
-fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-    ) {
-        Text(text = photos)
-    }
 }
 
 @Composable
@@ -114,6 +101,9 @@ fun PhotosGridScreenPreview() {
     }
 }
 
+/**
+ * Card for a single screenshot in the gallery
+ */
 @Composable
 fun GalleryPhotoCard(
     photo: Screenshot,
@@ -123,7 +113,7 @@ fun GalleryPhotoCard(
     Card(
         modifier = modifier
             .clickable {
-                onImageClicked(photo.pathFull)
+                onImageClicked(photo.pathFull) // Use high-res screenshot for fullscreen viewing
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -141,6 +131,9 @@ fun GalleryPhotoCard(
     }
 }
 
+/**
+ * Grid of photos for a particular game
+ */
 @Composable
 fun PhotosGrid(
     game: String,
@@ -155,7 +148,7 @@ fun PhotosGrid(
     ) {
         if (photos.isEmpty()) {
             Text(
-                text = "Game not found",
+                text = "Game not found", // For invalid game ID values
                 textAlign = TextAlign.Center,
                 fontSize = 24.sp
             )
@@ -199,6 +192,10 @@ fun PhotosGrid(
     }
 }
 
+/**
+ * The main body of the home screen. Creates a list of games with their screenshots
+ * to scroll through.
+ */
 @Composable
 fun GameList(
     gameList: List<Pair<String, List<Screenshot>>>,
