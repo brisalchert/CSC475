@@ -51,6 +51,7 @@ fun PhotoGalleryApp(
     navController: NavHostController = rememberNavController()
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
     val backStackEntry by navController.currentBackStackEntryAsState()
     var canNavigateBack by remember { mutableStateOf(false) }
 
@@ -77,7 +78,7 @@ fun PhotoGalleryApp(
             NavHost(
                 navController = navController,
                 startDestination = GalleryScreen.Home.name,
-                modifier = Modifier,
+                modifier = Modifier
             ) {
                 composable(
                     route = GalleryScreen.Home.name
@@ -86,10 +87,16 @@ fun PhotoGalleryApp(
                         galleryUiState = galleryViewModel.galleryUiState,
                         retryAction = galleryViewModel::getGamePhotos,
                         onImageClicked = { imageUri ->
-                            // Reset Top App Bar scrolling before navigating
-                            scrollBehavior.state.heightOffset = 0f
+                            // Prevent repeat navigation to image screen instances
+                            if (!currentDestination.startsWith(GalleryScreen.Image.name)) {
+                                // Reset Top App Bar scrolling before navigating
+                                scrollBehavior.state.heightOffset = 0f
 
-                            navController.navigate("${GalleryScreen.Image.name}/${Uri.encode(imageUri)}")
+
+                                navController.navigate("${GalleryScreen.Image.name}/${Uri.encode(imageUri)}") {
+                                    popUpTo(GalleryScreen.Image.name) { inclusive = true }
+                                }
+                            }
                         },
                         contentPadding = PaddingValues()
                     )
