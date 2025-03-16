@@ -2,8 +2,8 @@ package com.example.photogallery.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -30,7 +30,8 @@ fun ImageScreen(
     ) {
         Card(
             modifier = Modifier
-                .padding(8.dp),
+                .padding(8.dp)
+                .wrapContentSize(),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             AsyncImage(
@@ -41,7 +42,7 @@ fun ImageScreen(
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = stringResource(R.string.photo),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
             )
         }
     }

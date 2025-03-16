@@ -123,7 +123,7 @@ fun GalleryPhotoCard(
     Card(
         modifier = modifier
             .clickable {
-                onImageClicked(photo.pathThumbnail)
+                onImageClicked(photo.pathFull)
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
