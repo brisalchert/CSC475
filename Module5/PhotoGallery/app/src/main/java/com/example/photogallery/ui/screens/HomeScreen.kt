@@ -1,6 +1,7 @@
 package com.example.photogallery.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,13 +40,17 @@ import com.example.photogallery.ui.theme.PhotoGalleryTheme
 fun HomeScreen(
     galleryUiState: GalleryUiState,
     retryAction: () -> Unit,
+    onImageClicked: (imageUri: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     when (galleryUiState) {
         is GalleryUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is GalleryUiState.Success -> GameList(
-            galleryUiState.photos, contentPadding = contentPadding, modifier = modifier.fillMaxWidth()
+            galleryUiState.photos,
+            onImageClicked = onImageClicked,
+            contentPadding = contentPadding,
+            modifier = modifier.fillMaxWidth()
         )
 
         is GalleryUiState.Error -> ErrorScreen(retryAction, modifier = modifier.fillMaxSize())
@@ -105,14 +110,21 @@ fun PhotosGridScreenPreview() {
     PhotoGalleryTheme {
         val mockGame = ""
         val mockPhotos = List(10) { Screenshot(it, "", "") }
-        PhotosGrid(mockGame, mockPhotos)
+        PhotosGrid(mockGame, mockPhotos, {})
     }
 }
 
 @Composable
-fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
+fun GalleryPhotoCard(
+    photo: Screenshot,
+    onImageClicked: (imageUri: String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {
+                onImageClicked(photo.pathThumbnail)
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         AsyncImage(
@@ -133,6 +145,7 @@ fun GalleryPhotoCard(photo: Screenshot, modifier: Modifier = Modifier) {
 fun PhotosGrid(
     game: String,
     photos: List<Screenshot>,
+    onImageClicked: (imageUri: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -167,6 +180,7 @@ fun PhotosGrid(
                         photoRow.forEach { photo ->
                             GalleryPhotoCard(
                                 photo,
+                                onImageClicked = onImageClicked,
                                 modifier = modifier
                                     .padding(4.dp)
                                     .weight(1f)
@@ -188,6 +202,7 @@ fun PhotosGrid(
 @Composable
 fun GameList(
     gameList: List<Pair<String, List<Screenshot>>>,
+    onImageClicked: (imageUri: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -201,6 +216,7 @@ fun GameList(
             PhotosGrid(
                 game = game,
                 photos = photos,
+                onImageClicked = onImageClicked,
                 modifier = modifier
             )
         }
