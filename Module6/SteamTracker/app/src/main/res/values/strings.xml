@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Steam Tracker</string>
     <string name="back_button">Back Button</string>
+    <string name="retry">Retry</string>
+    <string name="loading_failed">Failed to load</string>
+    <string name="loading">Loading</string>
 </resources>

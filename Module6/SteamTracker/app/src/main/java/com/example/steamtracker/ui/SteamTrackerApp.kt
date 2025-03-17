@@ -38,6 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
+import com.example.steamtracker.ui.screens.FeaturedScreen
 
 enum class TrackerScreens {
     Featured,
@@ -88,7 +89,7 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerScreens.Featured.name
                 ) {
-                    Icon(Icons.Filled.Image, contentDescription = "Nothing")
+                    FeaturedScreen()
                 }
             }
         }
