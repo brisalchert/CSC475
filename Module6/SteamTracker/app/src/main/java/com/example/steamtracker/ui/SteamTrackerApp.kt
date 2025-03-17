@@ -2,6 +2,7 @@
 
 package com.example.steamtracker.ui
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -39,6 +40,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
 import com.example.steamtracker.ui.screens.FeaturedScreen
+import com.example.steamtracker.ui.screens.TrackerUiState
+import com.example.steamtracker.ui.screens.TrackerViewModel
 
 enum class TrackerScreens {
     Featured,
@@ -89,7 +92,11 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerScreens.Featured.name
                 ) {
-                    FeaturedScreen()
+                    FeaturedScreen(
+                        trackerUiState = TrackerUiState.Success,
+                        retryAction = {},
+                        contentPadding = PaddingValues()
+                    )
                 }
             }
         }
