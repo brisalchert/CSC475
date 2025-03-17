@@ -27,7 +27,7 @@ import com.example.steamtracker.R
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun FeaturedScreen(
+fun StoreScreen(
     trackerUiState: TrackerUiState,
     retryAction: () -> Unit, // Retry function for the error screen
     modifier: Modifier = Modifier,

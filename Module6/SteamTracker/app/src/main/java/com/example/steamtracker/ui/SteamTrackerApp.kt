@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Feed
 import androidx.compose.material.icons.filled.CollectionsBookmark
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Notifications
@@ -39,12 +38,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
-import com.example.steamtracker.ui.screens.FeaturedScreen
+import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.screens.TrackerUiState
-import com.example.steamtracker.ui.screens.TrackerViewModel
 
 enum class TrackerScreens {
-    Featured,
+    Store,
     News,
     Collections,
     Notifications,
@@ -86,13 +84,13 @@ fun SteamTrackerApp(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = TrackerScreens.Featured.name,
+                startDestination = TrackerScreens.Store.name,
                 modifier = Modifier
             ) {
                 composable(
-                    route = TrackerScreens.Featured.name
+                    route = TrackerScreens.Store.name
                 ) {
-                    FeaturedScreen(
+                    StoreScreen(
                         trackerUiState = TrackerUiState.Success,
                         retryAction = {},
                         contentPadding = PaddingValues()
