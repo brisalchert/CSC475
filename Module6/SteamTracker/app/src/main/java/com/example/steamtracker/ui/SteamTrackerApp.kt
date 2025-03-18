@@ -2,6 +2,7 @@
 
 package com.example.steamtracker.ui
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -53,6 +56,7 @@ enum class TrackerScreens {
 fun SteamTrackerApp(
     navController: NavHostController = rememberNavController()
 ) {
+    val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -65,6 +69,9 @@ fun SteamTrackerApp(
 
     Scaffold(
         modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures { focusManager.clearFocus() }
+            }
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TrackerTopAppBar(
