@@ -2,6 +2,8 @@
 
 package com.example.steamtracker.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,16 +28,19 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,6 +68,7 @@ fun SteamTrackerApp(
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
     val backStackEntry by navController.currentBackStackEntryAsState()
     var canNavigateBack by remember { mutableStateOf(false) }
+    val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
 
     // Dynamically update navigation status based on current navigation destination
     LaunchedEffect(backStackEntry) {
@@ -79,11 +85,22 @@ fun SteamTrackerApp(
             TrackerTopAppBar(
                 scrollBehavior = scrollBehavior,
                 canNavigateBack = canNavigateBack,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = { navController.popBackStack() },
+                previousBackStackEntry = navController.previousBackStackEntry,
+                selectedScreen = selectedScreen
             )
         },
         bottomBar = {
-            TrackerBottomAppBar()
+            TrackerBottomAppBar(
+                destinations = mapOf(
+                    TrackerScreens.Store.name to { navController.navigate(TrackerScreens.Store.name) },
+                    TrackerScreens.News.name to { navController.navigate(TrackerScreens.News.name) },
+                    TrackerScreens.Collections.name to { navController.navigate(TrackerScreens.Collections.name) },
+                    TrackerScreens.Notifications.name to { navController.navigate(TrackerScreens.Notifications.name) },
+                    TrackerScreens.Menu.name to { navController.navigate(TrackerScreens.Menu.name) },
+                ),
+                selectedScreen = selectedScreen
+            )
         }
     ) { padding ->
         Surface(
@@ -94,6 +111,10 @@ fun SteamTrackerApp(
             NavHost(
                 navController = navController,
                 startDestination = TrackerScreens.Store.name,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None },
                 modifier = Modifier
             ) {
                 composable(
@@ -105,6 +126,26 @@ fun SteamTrackerApp(
                         contentPadding = PaddingValues()
                     )
                 }
+                composable(
+                    route = TrackerScreens.News.name
+                ) {
+
+                }
+                composable(
+                    route = TrackerScreens.Collections.name
+                ) {
+
+                }
+                composable(
+                    route = TrackerScreens.Notifications.name
+                ) {
+
+                }
+                composable(
+                    route = TrackerScreens.Menu.name
+                ) {
+
+                }
             }
         }
     }
@@ -115,7 +156,9 @@ fun TrackerTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    previousBackStackEntry: NavBackStackEntry?,
+    selectedScreen: MutableState<String>
 ) {
     CenterAlignedTopAppBar(
         scrollBehavior = scrollBehavior,
@@ -128,7 +171,10 @@ fun TrackerTopAppBar(
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
+                IconButton(onClick = {
+                    selectedScreen.value = previousBackStackEntry!!.destination.route!!
+                    navigateUp()
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
@@ -141,41 +187,43 @@ fun TrackerTopAppBar(
 
 @Composable
 fun TrackerBottomAppBar(
+    destinations: Map<String, () -> Unit>,
+    selectedScreen: MutableState<String>,
     modifier: Modifier = Modifier
 ) {
-    BottomAppBar(
-        actions = {
-            IconButton(
-                onClick = {},
-                modifier = modifier.weight(1f)
-            ) {
-                Icon(Icons.AutoMirrored.Filled.Feed, contentDescription = "Featured")
-            }
-            IconButton(
-                onClick = {},
-                modifier = modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Newspaper, contentDescription = "News")
-            }
-            IconButton(
-                onClick = {},
-                modifier = modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.CollectionsBookmark, contentDescription = "Collections")
-            }
-            IconButton(
-                onClick = {},
-                modifier = modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Notifications, contentDescription = "Notifications")
-            }
-            IconButton(
-                onClick = {},
-                modifier = modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Menu, contentDescription = "Menu")
-            }
-        },
-        modifier = modifier
+    val icons = mapOf(
+        TrackerScreens.Store.name to Icons.AutoMirrored.Filled.Feed,
+        TrackerScreens.News.name to Icons.Filled.Newspaper,
+        TrackerScreens.Collections.name to Icons.Filled.CollectionsBookmark,
+        TrackerScreens.Notifications.name to Icons.Filled.Notifications,
+        TrackerScreens.Menu.name to Icons.Filled.Menu
     )
+
+    BottomAppBar(
+        modifier = modifier
+    ) {
+        destinations.forEach { (screen, destination) ->
+            val isSelected = selectedScreen.value == (screen)
+
+            IconButton(
+                onClick = {
+                    if (!isSelected) {
+                        selectedScreen.value = screen
+                        destination()
+                    }
+                },
+                modifier = modifier.weight(1f)
+            ) {
+                Icon(
+                    icons[screen]!!,
+                    contentDescription = screen,
+                    tint = if (isSelected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Unspecified
+                    }
+                )
+            }
+        }
+    }
 }
