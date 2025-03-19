@@ -35,6 +35,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,7 +43,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
 import com.example.steamtracker.ui.screens.StoreScreen
-import com.example.steamtracker.ui.screens.TrackerUiState
+import com.example.steamtracker.ui.screens.TrackerViewModel
 
 enum class TrackerScreens {
     Store,
@@ -54,10 +55,11 @@ enum class TrackerScreens {
 
 @Composable
 fun SteamTrackerApp(
+    trackerViewModel: TrackerViewModel = viewModel(factory = TrackerViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val focusManager = LocalFocusManager.current
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
     val backStackEntry by navController.currentBackStackEntryAsState()
     var canNavigateBack by remember { mutableStateOf(false) }
@@ -98,8 +100,8 @@ fun SteamTrackerApp(
                     route = TrackerScreens.Store.name
                 ) {
                     StoreScreen(
-                        trackerUiState = TrackerUiState.Success,
-                        retryAction = {},
+                        trackerUiState = trackerViewModel.trackerUiState,
+                        retryAction = trackerViewModel::getGamePhotos,
                         contentPadding = PaddingValues()
                     )
                 }
