@@ -10,11 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Feed
 import androidx.compose.material.icons.filled.CollectionsBookmark
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -92,13 +92,11 @@ fun SteamTrackerApp(
         },
         bottomBar = {
             TrackerBottomAppBar(
-                destinations = mapOf(
-                    TrackerScreens.Store.name to { navController.navigate(TrackerScreens.Store.name) },
-                    TrackerScreens.News.name to { navController.navigate(TrackerScreens.News.name) },
-                    TrackerScreens.Collections.name to { navController.navigate(TrackerScreens.Collections.name) },
-                    TrackerScreens.Notifications.name to { navController.navigate(TrackerScreens.Notifications.name) },
-                    TrackerScreens.Menu.name to { navController.navigate(TrackerScreens.Menu.name) },
-                ),
+                // Prevent bottom app bar navigation from adding back stack entries. Instead,
+                // replace the start destination with the current tab.
+                destinations = TrackerScreens.entries.associate { screen ->
+                    screen.name to { navController.navigate(screen.name) { popUpTo(0) { inclusive = true } } }
+                },
                 selectedScreen = selectedScreen
             )
         }
@@ -192,7 +190,7 @@ fun TrackerBottomAppBar(
     modifier: Modifier = Modifier
 ) {
     val icons = mapOf(
-        TrackerScreens.Store.name to Icons.AutoMirrored.Filled.Feed,
+        TrackerScreens.Store.name to Icons.Filled.Store,
         TrackerScreens.News.name to Icons.Filled.Newspaper,
         TrackerScreens.Collections.name to Icons.Filled.CollectionsBookmark,
         TrackerScreens.Notifications.name to Icons.Filled.Notifications,
