@@ -1,11 +1,14 @@
 package com.example.steamtracker.data
 
+import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.model.FeaturedGamesRequest
 import com.example.steamtracker.model.GamePhotosRequest
 import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.network.TrackerApiService
 
 interface TrackerRepository {
     suspend fun getGamePhotos(): List<Pair<String, List<Screenshot>>>
+    suspend fun getFeaturedGames(): List<FeaturedGame>
 }
 
 class NetworkTrackerRepository(
@@ -30,5 +33,16 @@ class NetworkTrackerRepository(
                     (game, photos) -> add(Pair(game, photos))
             }
         }
+    }
+
+    /**
+     * Returns a list of the Steam store's current featured games
+     */
+    override suspend fun getFeaturedGames(): List<FeaturedGame> {
+        val response = trackerApiService.getFeaturedGames()
+
+        // Return only featured Windows games, since all games are Windows
+        // compatible and other categories contain duplicates
+        return response.featuredWin
     }
 }

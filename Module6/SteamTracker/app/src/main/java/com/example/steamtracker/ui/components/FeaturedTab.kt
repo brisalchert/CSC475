@@ -1,6 +1,5 @@
 package com.example.steamtracker.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -29,12 +27,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
-import com.example.steamtracker.model.Screenshot
+import com.example.steamtracker.model.FeaturedGame
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun FeaturedTab(
-    photos: List<Pair<String, List<Screenshot>>>,
+    featuredGames: List<FeaturedGame>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -44,10 +42,14 @@ fun FeaturedTab(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(items = photos) { (game, photos) ->
+        items(items = featuredGames) { game ->
             PhotosGrid(
-                game = game,
-                photos = photos,
+                game = game.name,
+                photoPaths = listOf(
+                    game.headerImage,
+                    game.largeCapsuleImage,
+                    game.smallCapsuleImage
+                ),
                 modifier = modifier
             )
         }
@@ -58,7 +60,25 @@ fun FeaturedTab(
 @Composable
 fun FeaturedTabPreview() {
     SteamTrackerTheme {
-        FeaturedTab(listOf(Pair("Game Title", listOf(Screenshot(2, "url", "urlFull")))))
+        FeaturedTab(listOf(
+            FeaturedGame(
+                id = 0,
+                type = 0,
+                name = "Game Name",
+                discounted = false,
+                discountPercent = 0,
+                originalPrice = 5999,
+                finalPrice = 5999,
+                currency = "USD",
+                largeCapsuleImage = "pathLarge",
+                smallCapsuleImage = "pathSmall",
+                windowsAvailable = true,
+                macAvailable = true,
+                linuxAvailable = true,
+                streamingVideoAvailable = true,
+                headerImage = "pathHeader"
+            )
+        ))
     }
 }
 
@@ -67,7 +87,7 @@ fun FeaturedTabPreview() {
  */
 @Composable
 fun GalleryPhotoCard(
-    photo: Screenshot,
+    path: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -76,7 +96,7 @@ fun GalleryPhotoCard(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data(photo.pathThumbnail)
+                .data(path)
                 .crossfade(true)
                 .build(),
             error = painterResource(R.drawable.ic_broken_image),
@@ -94,7 +114,7 @@ fun GalleryPhotoCard(
 @Composable
 fun PhotosGrid(
     game: String,
-    photos: List<Screenshot>,
+    photoPaths: List<String>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -102,7 +122,7 @@ fun PhotosGrid(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (photos.isEmpty()) {
+        if (photoPaths.isEmpty()) {
             Text(
                 text = "Game not found", // For invalid game ID values
                 textAlign = TextAlign.Center,
@@ -122,7 +142,7 @@ fun PhotosGrid(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                photos.chunked(3).forEach { photoRow ->
+                photoPaths.chunked(3).forEach { photoRow ->
                     Row(
                         modifier = modifier
                     ) {

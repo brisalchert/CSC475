@@ -120,7 +120,7 @@ fun SteamTrackerApp(
                 ) {
                     StoreScreen(
                         trackerUiState = trackerViewModel.trackerUiState,
-                        retryAction = trackerViewModel::getGamePhotos,
+                        getFeatured = trackerViewModel::getFeaturedGames,
                         contentPadding = PaddingValues()
                     )
                 }

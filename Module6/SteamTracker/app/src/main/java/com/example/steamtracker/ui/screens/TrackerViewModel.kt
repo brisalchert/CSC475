@@ -11,14 +11,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.TrackerRepository
-import com.example.steamtracker.model.GamePhotosRequest
+import com.example.steamtracker.model.FeaturedGame
 import com.example.steamtracker.model.Screenshot
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface TrackerUiState {
-    data class Success(val photos: List<Pair<String, List<Screenshot>>>) : TrackerUiState
+    data class SuccessPhotos(val photos: List<Pair<String, List<Screenshot>>>) : TrackerUiState
+    data class SuccessFeatured(val featuredGames: List<FeaturedGame>) : TrackerUiState
     data object Error : TrackerUiState
     data object Loading : TrackerUiState
 }
@@ -39,13 +40,30 @@ class TrackerViewModel(
 
     /**
      * Gets game photos from the API Retrofit service and updates the
-     * [GamePhotosRequest] [List] [MutableList].
+     * list of screenshots
      */
     fun getGamePhotos() {
         viewModelScope.launch {
             trackerUiState = TrackerUiState.Loading
             trackerUiState = try {
-                TrackerUiState.Success(trackerRepository.getGamePhotos())
+                TrackerUiState.SuccessPhotos(trackerRepository.getGamePhotos())
+            } catch (e: IOException) {
+                TrackerUiState.Error
+            } catch (e: HttpException) {
+                TrackerUiState.Error
+            }
+        }
+    }
+
+    /**
+     * Gets featured games from the API Retrofit services and updates the
+     * list of featured games
+     */
+    fun getFeaturedGames() {
+        viewModelScope.launch {
+            trackerUiState = TrackerUiState.Loading
+            trackerUiState = try {
+                TrackerUiState.SuccessFeatured(trackerRepository.getFeaturedGames())
             } catch (e: IOException) {
                 TrackerUiState.Error
             } catch (e: HttpException) {
