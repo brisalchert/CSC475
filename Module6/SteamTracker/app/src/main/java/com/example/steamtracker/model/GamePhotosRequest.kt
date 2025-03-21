@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GamePhotosRequestResult(
+data class GamePhotosRequest(
     val success: Boolean,
     val data: Data? = null
 )

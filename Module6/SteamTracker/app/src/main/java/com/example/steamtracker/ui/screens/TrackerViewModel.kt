@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.TrackerRepository
-import com.example.steamtracker.model.GamePhotosRequestResult
+import com.example.steamtracker.model.GamePhotosRequest
 import com.example.steamtracker.model.Screenshot
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -39,7 +39,7 @@ class TrackerViewModel(
 
     /**
      * Gets game photos from the API Retrofit service and updates the
-     * [GamePhotosRequestResult] [List] [MutableList].
+     * [GamePhotosRequest] [List] [MutableList].
      */
     fun getGamePhotos() {
         viewModelScope.launch {

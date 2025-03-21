@@ -1,6 +1,6 @@
 package com.example.steamtracker.data
 
-import com.example.steamtracker.model.GamePhotosRequestResult
+import com.example.steamtracker.model.GamePhotosRequest
 import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.network.TrackerApiService
 
@@ -16,7 +16,7 @@ class NetworkTrackerRepository(
      * Returns pairs of game names and their respective lists of screenshots
      */
     override suspend fun getGamePhotos(): List<Pair<String, List<Screenshot>>> {
-        val responses = ArrayList<Map<String, GamePhotosRequestResult>>()
+        val responses = ArrayList<Map<String, GamePhotosRequest>>()
 
         for (gameId: Int in gameIdsToNames.keys) {
             responses.add(trackerApiService.getGamePhotos(gameId))
