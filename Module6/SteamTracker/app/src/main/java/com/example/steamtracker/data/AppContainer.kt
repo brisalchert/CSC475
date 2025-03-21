@@ -16,11 +16,6 @@ interface AppContainer {
  */
 class DefaultAppContainer: AppContainer {
     private val baseURL = "https://store.steampowered.com/api/"
-    private val gameIdsToNames = linkedMapOf(
-        1245620 to "Elden Ring",
-        374320 to "Dark Souls 3",
-        814380 to "Sekiro: Shadows Die Twice"
-    )
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
@@ -35,6 +30,6 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val trackerRepository: TrackerRepository by lazy {
-        NetworkTrackerRepository(retrofitService, gameIdsToNames)
+        NetworkTrackerRepository(retrofitService)
     }
 }

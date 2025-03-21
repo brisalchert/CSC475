@@ -26,7 +26,7 @@ data class FeaturedGame(
     @SerialName(value = "discount_percent")
     val discountPercent: Int,
     @SerialName(value = "original_price")
-    val originalPrice: Int,
+    val originalPrice: Int?,
     @SerialName(value = "final_price")
     val finalPrice: Int,
     val currency: String,

@@ -12,47 +12,28 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.TrackerRepository
 import com.example.steamtracker.model.FeaturedGame
-import com.example.steamtracker.model.Screenshot
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface TrackerUiState {
-    data class SuccessPhotos(val photos: List<Pair<String, List<Screenshot>>>) : TrackerUiState
-    data class SuccessFeatured(val featuredGames: List<FeaturedGame>) : TrackerUiState
-    data object Error : TrackerUiState
-    data object Loading : TrackerUiState
+sealed interface StoreUiState {
+    data class SuccessFeatured(val featuredGames: List<FeaturedGame>) : StoreUiState
+    data object Error : StoreUiState
+    data object Loading : StoreUiState
 }
 
-class TrackerViewModel(
+class StoreViewModel(
     private val trackerRepository: TrackerRepository
 ): ViewModel() {
     /** The mutable State that stores the status of the most recent request */
-    var trackerUiState: TrackerUiState by mutableStateOf(TrackerUiState.Loading)
+    var storeUiState: StoreUiState by mutableStateOf(StoreUiState.Loading)
         private set
 
     /**
-     * Call getGamePhotos() on init so we can display status immediately.
+     * Call getFeaturedGames() on init so we can display status immediately.
      */
     init {
-        getGamePhotos()
-    }
-
-    /**
-     * Gets game photos from the API Retrofit service and updates the
-     * list of screenshots
-     */
-    fun getGamePhotos() {
-        viewModelScope.launch {
-            trackerUiState = TrackerUiState.Loading
-            trackerUiState = try {
-                TrackerUiState.SuccessPhotos(trackerRepository.getGamePhotos())
-            } catch (e: IOException) {
-                TrackerUiState.Error
-            } catch (e: HttpException) {
-                TrackerUiState.Error
-            }
-        }
+        getFeaturedGames()
     }
 
     /**
@@ -61,13 +42,13 @@ class TrackerViewModel(
      */
     fun getFeaturedGames() {
         viewModelScope.launch {
-            trackerUiState = TrackerUiState.Loading
-            trackerUiState = try {
-                TrackerUiState.SuccessFeatured(trackerRepository.getFeaturedGames())
+            storeUiState = StoreUiState.Loading
+            storeUiState = try {
+                StoreUiState.SuccessFeatured(trackerRepository.getFeaturedGames())
             } catch (e: IOException) {
-                TrackerUiState.Error
+                StoreUiState.Error
             } catch (e: HttpException) {
-                TrackerUiState.Error
+                StoreUiState.Error
             }
         }
     }
@@ -78,7 +59,7 @@ class TrackerViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val trackerRepository = application.container.trackerRepository
-                TrackerViewModel(trackerRepository = trackerRepository)
+                StoreViewModel(trackerRepository = trackerRepository)
             }
         }
     }

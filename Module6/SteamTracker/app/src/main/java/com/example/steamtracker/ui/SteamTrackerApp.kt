@@ -47,8 +47,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
+import com.example.steamtracker.ui.screens.AppDetailsScreen
+import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
-import com.example.steamtracker.ui.screens.TrackerViewModel
+import com.example.steamtracker.ui.screens.StoreViewModel
 
 enum class TrackerScreens {
     Store,
@@ -60,7 +62,8 @@ enum class TrackerScreens {
 
 @Composable
 fun SteamTrackerApp(
-    trackerViewModel: TrackerViewModel = viewModel(factory = TrackerViewModel.Factory),
+    storeViewModel: StoreViewModel = viewModel(factory = StoreViewModel.Factory),
+    appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val focusManager = LocalFocusManager.current
@@ -119,15 +122,26 @@ fun SteamTrackerApp(
                     route = TrackerScreens.Store.name
                 ) {
                     StoreScreen(
-                        trackerUiState = trackerViewModel.trackerUiState,
-                        getFeatured = trackerViewModel::getFeaturedGames,
+                        storeUiState = storeViewModel.storeUiState,
+                        getFeatured = storeViewModel::getFeaturedGames,
                         contentPadding = PaddingValues()
                     )
                 }
                 composable(
                     route = TrackerScreens.News.name
                 ) {
+                    val appId = 1245620
 
+                    LaunchedEffect(appId) {
+                        appDetailsViewModel.setAppDetailsId(appId)
+                        appDetailsViewModel.getAppDetails()
+                    }
+
+                    AppDetailsScreen(
+                        appDetailsUiState = appDetailsViewModel.appDetailsUiState,
+                        getAppDetails = appDetailsViewModel::getAppDetails,
+                        contentPadding = PaddingValues()
+                    )
                 }
                 composable(
                     route = TrackerScreens.Collections.name
