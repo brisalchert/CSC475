@@ -36,6 +36,7 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 fun StoreScreen(
     featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
+    searchStore: (query: String) -> Unit,
     salesUiState: SalesUiState,
     getSales: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,8 +84,9 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            FeaturedUiState.Success(listOf()),
+            FeaturedUiState.SuccessFeaturedGames(listOf()),
             {},
+            { string: String -> },
             SalesUiState.Success(listOf()),
             {}
         )

@@ -29,6 +29,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.model.ContentDescriptors
+import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
@@ -42,8 +44,13 @@ fun FeaturedTab(
 ) {
     when (featuredUiState) {
         is FeaturedUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is FeaturedUiState.Success -> FeaturedGamesList(
+        is FeaturedUiState.SuccessFeaturedGames -> FeaturedGamesList(
             featuredGames = featuredUiState.featuredGames,
+            modifier = modifier,
+            contentPadding = contentPadding
+        )
+        is FeaturedUiState.SuccessFeaturedCategories -> FeaturedCategoriesList(
+            featuredUiState.featuredCategories,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -60,7 +67,7 @@ fun FeaturedTab(
 @Composable
 fun FeaturedTabPreview() {
     SteamTrackerTheme {
-        FeaturedTab(FeaturedUiState.Success(listOf()), {})
+        FeaturedTab(FeaturedUiState.SuccessFeaturedGames(listOf()), {})
     }
 }
 
@@ -70,22 +77,59 @@ fun FeaturedGamesList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn(
+    Column(
         modifier = modifier,
-        contentPadding = contentPadding,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(items = featuredGames) { game ->
-            PhotosGrid(
-                game = game.name,
-                photoPaths = listOf(
-                    game.headerImage,
-                    game.largeCapsuleImage,
-                    game.smallCapsuleImage
-                ),
-                modifier = modifier
-            )
+        val seenIds = mutableSetOf<Int>()
+
+        featuredGames.forEach { game ->
+            // Prevent duplicate entries in the list
+            if (!seenIds.contains(game.id)) {
+                seenIds.add(game.id)
+
+                PhotosGrid(
+                    game = game.name,
+                    photoPaths = listOf(
+                        game.headerImage,
+                        game.largeCapsuleImage,
+                        game.smallCapsuleImage
+                    ),
+                    modifier = modifier
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun FeaturedCategoriesList(
+    featuredCategories: FeaturedCategoriesRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        featuredCategories.specials?.let {
+            item {
+                Text(text = "Specials", fontSize = 24.sp)
+            }
+            item {
+                FeaturedGamesList(featuredCategories.specials.items!!)
+            }
+        }
+
+        featuredCategories.topSellers?.let {
+            item {
+                Text(text = "Top Sellers", fontSize = 24.sp)
+            }
+            item {
+                FeaturedGamesList(featuredCategories.topSellers.items!!)
+            }
         }
     }
 }

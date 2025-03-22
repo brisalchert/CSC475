@@ -1,5 +1,8 @@
 package com.example.steamtracker.data
 
+import com.example.steamtracker.model.FeaturedCategoriesDeserializer
+import com.example.steamtracker.model.FeaturedCategoriesRequest
+import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.RequiredAgeDeserializer
 import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.model.SystemRequirementsDeserializer
@@ -7,6 +10,7 @@ import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -31,6 +35,7 @@ class DefaultAppContainer: AppContainer {
     private val gsonStore = GsonBuilder()
         .registerTypeAdapter(Int::class.java, RequiredAgeDeserializer())
         .registerTypeAdapter(SystemRequirements::class.java, SystemRequirementsDeserializer())
+        .registerTypeAdapter(FeaturedCategoriesRequest::class.java, FeaturedCategoriesDeserializer())
         .create()
 
     private val retrofitStore: Retrofit = Retrofit.Builder()

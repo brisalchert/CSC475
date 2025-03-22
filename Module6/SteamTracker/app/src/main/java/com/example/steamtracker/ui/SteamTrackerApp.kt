@@ -129,7 +129,8 @@ fun SteamTrackerApp(
                 ) {
                     StoreScreen(
                         featuredUiState = featuredViewModel.featuredUiState,
-                        getFeatured = featuredViewModel::getFeaturedGames,
+                        getFeatured = featuredViewModel::getFeaturedCategories,
+                        searchStore = featuredViewModel::getSearchResults,
                         salesUiState = salesViewModel.salesUiState,
                         getSales = salesViewModel::getSalesGames
                     )

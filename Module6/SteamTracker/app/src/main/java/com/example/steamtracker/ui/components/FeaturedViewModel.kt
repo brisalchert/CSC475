@@ -12,12 +12,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.model.FeaturedCategoriesRequest
+import com.example.steamtracker.model.StoreSearchRequest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface FeaturedUiState {
-    data class Success(val featuredGames: List<AppInfo>) : FeaturedUiState
+    data class SuccessFeaturedGames(val featuredGames: List<AppInfo>) : FeaturedUiState
+    data class SuccessFeaturedCategories(val featuredCategories: FeaturedCategoriesRequest) : FeaturedUiState
     data object Error : FeaturedUiState
     data object Loading : FeaturedUiState
 }
@@ -29,28 +32,57 @@ class FeaturedViewModel(
     var featuredUiState: FeaturedUiState by mutableStateOf(FeaturedUiState.Loading)
         private set
 
+    /** The mutable state that stores the current search results for user queries */
+    var searchResults: StoreSearchRequest by mutableStateOf(StoreSearchRequest(0, emptyList()))
+        private set
+
     /**
      * Call getFeaturedGames() on init so we can display status immediately.
      */
     init {
-        getFeaturedGames()
+        getFeaturedCategories()
     }
 
     /**
-     * Gets featured games from the API Retrofit services and updates the
+     * Gets featured games from the API Retrofit service and updates the
      * list of featured games
      */
     fun getFeaturedGames() {
         viewModelScope.launch {
             featuredUiState = FeaturedUiState.Loading
             featuredUiState = try {
-                FeaturedUiState.Success(storeRepository.getFeaturedGames())
+                FeaturedUiState.SuccessFeaturedGames(storeRepository.getFeaturedGames())
             } catch (e: IOException) {
                 FeaturedUiState.Error
             } catch (e: HttpException) {
                 FeaturedUiState.Error
             }
         }
+    }
+
+    /**
+     * Gets detailed featured categories information from the API Retrofit service
+     * and updates the list of featured games
+     */
+    fun getFeaturedCategories() {
+        viewModelScope.launch {
+            featuredUiState = FeaturedUiState.Loading
+            featuredUiState = try {
+                FeaturedUiState.SuccessFeaturedCategories(storeRepository.getFeaturedCategories())
+            } catch(e: IOException) {
+                FeaturedUiState.Error
+            } catch(e: HttpException) {
+                FeaturedUiState.Error
+            }
+        }
+    }
+
+    fun getSearchResults(query: String): StoreSearchRequest {
+        viewModelScope.launch {
+            searchResults = storeRepository.getSearchResults(query)
+        }
+
+        return searchResults
     }
 
     // Factory companion object to allow repository to be passed to view model on creation
