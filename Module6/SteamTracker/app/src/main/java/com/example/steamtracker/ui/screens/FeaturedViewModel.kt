@@ -16,17 +16,17 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface StoreUiState {
-    data class SuccessFeatured(val featuredGames: List<FeaturedGame>) : StoreUiState
-    data object Error : StoreUiState
-    data object Loading : StoreUiState
+sealed interface FeaturedUiState {
+    data class SuccessFeatured(val featuredGames: List<FeaturedGame>) : FeaturedUiState
+    data object Error : FeaturedUiState
+    data object Loading : FeaturedUiState
 }
 
-class StoreViewModel(
+class FeaturedViewModel(
     private val trackerRepository: TrackerRepository
 ): ViewModel() {
     /** The mutable State that stores the status of the most recent request */
-    var storeUiState: StoreUiState by mutableStateOf(StoreUiState.Loading)
+    var featuredUiState: FeaturedUiState by mutableStateOf(FeaturedUiState.Loading)
         private set
 
     /**
@@ -42,13 +42,13 @@ class StoreViewModel(
      */
     fun getFeaturedGames() {
         viewModelScope.launch {
-            storeUiState = StoreUiState.Loading
-            storeUiState = try {
-                StoreUiState.SuccessFeatured(trackerRepository.getFeaturedGames())
+            featuredUiState = FeaturedUiState.Loading
+            featuredUiState = try {
+                FeaturedUiState.SuccessFeatured(trackerRepository.getFeaturedGames())
             } catch (e: IOException) {
-                StoreUiState.Error
+                FeaturedUiState.Error
             } catch (e: HttpException) {
-                StoreUiState.Error
+                FeaturedUiState.Error
             }
         }
     }
@@ -59,7 +59,7 @@ class StoreViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val trackerRepository = application.container.trackerRepository
-                StoreViewModel(trackerRepository = trackerRepository)
+                FeaturedViewModel(trackerRepository = trackerRepository)
             }
         }
     }

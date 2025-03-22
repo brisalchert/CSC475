@@ -1,4 +1,4 @@
-package com.example.steamtracker.ui.components
+package com.example.steamtracker.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,7 +32,38 @@ import com.example.steamtracker.model.FeaturedGame
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun FeaturedTab(
+fun FeaturedScreen(
+    featuredUiState: FeaturedUiState,
+    getFeatured: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    when (featuredUiState) {
+        is FeaturedUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is FeaturedUiState.SuccessFeatured -> FeaturedGamesList(
+            featuredGames = featuredUiState.featuredGames,
+            modifier = modifier,
+            contentPadding = contentPadding
+        )
+        is FeaturedUiState.Error -> StoreErrorScreen(
+            retryAction = getFeatured,
+            modifier = modifier.fillMaxSize()
+        )
+    }
+
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FeaturedScreenPreview() {
+    SteamTrackerTheme {
+        FeaturedScreen(FeaturedUiState.SuccessFeatured(listOf()), {})
+    }
+}
+
+@Composable
+fun FeaturedGamesList(
     featuredGames: List<FeaturedGame>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -53,32 +85,6 @@ fun FeaturedTab(
                 modifier = modifier
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FeaturedTabPreview() {
-    SteamTrackerTheme {
-        FeaturedTab(listOf(
-            FeaturedGame(
-                id = 0,
-                type = 0,
-                name = "Game Name",
-                discounted = false,
-                discountPercent = 0,
-                originalPrice = 5999,
-                finalPrice = 5999,
-                currency = "USD",
-                largeCapsuleImage = "pathLarge",
-                smallCapsuleImage = "pathSmall",
-                windowsAvailable = true,
-                macAvailable = true,
-                linuxAvailable = true,
-                streamingVideoAvailable = true,
-                headerImage = "pathHeader"
-            )
-        ))
     }
 }
 

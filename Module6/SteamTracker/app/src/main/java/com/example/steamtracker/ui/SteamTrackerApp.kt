@@ -50,7 +50,7 @@ import com.example.steamtracker.R
 import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
-import com.example.steamtracker.ui.screens.StoreViewModel
+import com.example.steamtracker.ui.screens.FeaturedViewModel
 
 enum class TrackerScreens {
     Store,
@@ -62,7 +62,7 @@ enum class TrackerScreens {
 
 @Composable
 fun SteamTrackerApp(
-    storeViewModel: StoreViewModel = viewModel(factory = StoreViewModel.Factory),
+    featuredViewModel: FeaturedViewModel = viewModel(factory = FeaturedViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -122,8 +122,8 @@ fun SteamTrackerApp(
                     route = TrackerScreens.Store.name
                 ) {
                     StoreScreen(
-                        storeUiState = storeViewModel.storeUiState,
-                        getFeatured = storeViewModel::getFeaturedGames,
+                        featuredUiState = featuredViewModel.featuredUiState,
+                        getFeatured = featuredViewModel::getFeaturedGames,
                         contentPadding = PaddingValues()
                     )
                 }

@@ -25,13 +25,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
-import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.StoreSearchBar
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun StoreScreen(
-    storeUiState: StoreUiState,
+    featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -64,23 +63,10 @@ fun StoreScreen(
                 }
             }
 
-            // TODO: Create separate view models for each tab to prevent issues with repeated requests
-            when (storeUiState) {
-                is StoreUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-                is StoreUiState.SuccessFeatured -> FeaturedTab(
-                    storeUiState.featuredGames,
-                    modifier = modifier,
-                    contentPadding = contentPadding
-                )
-                is StoreUiState.Error -> StoreErrorScreen(
-                    when(tabIndex) {
-                        0 -> getFeatured
-                        1 -> getFeatured
-                        2 -> getFeatured
-                        else -> ({})
-                    },
-                    modifier = modifier.fillMaxSize()
-                )
+            when (tabIndex) {
+                0 -> FeaturedScreen(featuredUiState, getFeatured, modifier, contentPadding)
+                1 -> Column {}
+                2 -> Column {}
             }
         }
     }
@@ -91,7 +77,7 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            StoreUiState.SuccessFeatured(listOf()),
+            FeaturedUiState.SuccessFeatured(listOf()),
             {}
         )
     }
