@@ -4,6 +4,7 @@ package com.example.steamtracker.ui
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,6 +53,8 @@ import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
+import com.example.steamtracker.ui.screens.NewsScreen
+import com.example.steamtracker.ui.screens.NewsViewModel
 
 enum class TrackerScreens {
     Store,
@@ -65,6 +68,7 @@ enum class TrackerScreens {
 fun SteamTrackerApp(
     featuredViewModel: FeaturedViewModel = viewModel(factory = FeaturedViewModel.Factory),
     salesViewModel: SalesViewModel = viewModel(factory = SalesViewModel.Factory),
+    newsViewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -127,25 +131,15 @@ fun SteamTrackerApp(
                         featuredUiState = featuredViewModel.featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedGames,
                         salesUiState = salesViewModel.salesUiState,
-                        getSales = salesViewModel::getSalesGames,
-                        contentPadding = PaddingValues()
+                        getSales = salesViewModel::getSalesGames
                     )
                 }
                 composable(
                     route = TrackerScreens.News.name
                 ) {
-                    // TODO: Add remaining screens, layouts, and navigation
-                    val appId = 374320
-
-                    LaunchedEffect(appId) {
-                        appDetailsViewModel.setAppDetailsId(appId)
-                        appDetailsViewModel.getAppDetails()
-                    }
-
-                    AppDetailsScreen(
-                        appDetailsUiState = appDetailsViewModel.appDetailsUiState,
-                        getAppDetails = appDetailsViewModel::getAppDetails,
-                        contentPadding = PaddingValues()
+                    NewsScreen(
+                        newsUiState = newsViewModel.newsUiState,
+                        getNews = newsViewModel::getNews
                     )
                 }
                 composable(
@@ -198,7 +192,11 @@ fun TrackerTopAppBar(
                     )
                 }
             }
-        }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     )
 }
 

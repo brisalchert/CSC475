@@ -4,6 +4,7 @@ import com.example.steamtracker.model.RequiredAgeDeserializer
 import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.model.SystemRequirementsDeserializer
 import com.example.steamtracker.network.SpyApiService
+import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -12,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val storeRepository: StoreRepository
     val spyRepository: SpyRepository
+    val steamworksRepository: SteamworksRepository
 }
 
 /**
@@ -21,6 +23,7 @@ interface AppContainer {
 class DefaultAppContainer: AppContainer {
     private val steamStoreBaseUrl = "https://store.steampowered.com/api/"
     private val steamSpyBaseUrl = "https://steamspy.com/"
+    private val steamworksBaseUrl = "https://api.steampowered.com/"
 
     /**
      * Use the Retrofit builder to build a retrofit object for Steam store requests
@@ -59,6 +62,24 @@ class DefaultAppContainer: AppContainer {
 
     override val spyRepository: SpyRepository by lazy {
         NetworkSpyRepository(retrofitServiceSpy)
+    }
+
+    /**
+     * Use the Retrofit builder to build a retrofit object for Steamworks requests
+     */
+    private val gsonSteamworks = GsonBuilder().create()
+
+    private val retrofitSteamworks: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create(gsonSteamworks))
+        .baseUrl(steamworksBaseUrl)
+        .build()
+
+    private val retrofitServiceSteamworks: SteamworksApiService by lazy {
+        retrofitSteamworks.create(SteamworksApiService::class.java)
+    }
+
+    override val steamworksRepository: SteamworksRepository by lazy {
+        NetworkSteamworksRepository(retrofitServiceSteamworks)
     }
 
     // TODO: Add Room database for local storage
