@@ -1,4 +1,4 @@
-package com.example.steamtracker.ui.screens
+package com.example.steamtracker.ui.components
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

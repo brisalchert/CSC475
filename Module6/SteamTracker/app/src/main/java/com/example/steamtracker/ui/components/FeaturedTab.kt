@@ -1,4 +1,4 @@
-package com.example.steamtracker.ui.screens
+package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,10 +29,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.ui.screens.LoadingScreen
+import com.example.steamtracker.ui.screens.StoreErrorScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun FeaturedScreen(
+fun FeaturedTab(
     featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
     modifier: Modifier = Modifier,
@@ -56,9 +58,9 @@ fun FeaturedScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun FeaturedScreenPreview() {
+fun FeaturedTabPreview() {
     SteamTrackerTheme {
-        FeaturedScreen(FeaturedUiState.SuccessFeatured(listOf()), {})
+        FeaturedTab(FeaturedUiState.SuccessFeatured(listOf()), {})
     }
 }
 

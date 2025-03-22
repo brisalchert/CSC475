@@ -50,7 +50,7 @@ import com.example.steamtracker.R
 import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
-import com.example.steamtracker.ui.screens.FeaturedViewModel
+import com.example.steamtracker.ui.components.FeaturedViewModel
 
 enum class TrackerScreens {
     Store,

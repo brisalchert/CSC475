@@ -25,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.ui.components.FeaturedTab
+import com.example.steamtracker.ui.components.FeaturedUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
@@ -64,7 +66,7 @@ fun StoreScreen(
             }
 
             when (tabIndex) {
-                0 -> FeaturedScreen(featuredUiState, getFeatured, modifier, contentPadding)
+                0 -> FeaturedTab(featuredUiState, getFeatured, modifier, contentPadding)
                 1 -> Column {}
                 2 -> Column {}
             }
