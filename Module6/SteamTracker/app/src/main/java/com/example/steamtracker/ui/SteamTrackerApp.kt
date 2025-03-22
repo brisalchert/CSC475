@@ -130,7 +130,7 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerScreens.News.name
                 ) {
-                    val appId = 1245620
+                    val appId = 374320
 
                     LaunchedEffect(appId) {
                         appDetailsViewModel.setAppDetailsId(appId)

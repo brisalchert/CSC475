@@ -1,10 +1,12 @@
 package com.example.steamtracker.data
 
+import com.example.steamtracker.model.RequiredAgeDeserializer
+import com.example.steamtracker.model.SystemRequirements
+import com.example.steamtracker.model.SystemRequirementsDeserializer
 import com.example.steamtracker.network.TrackerApiService
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
     val trackerRepository: TrackerRepository
@@ -20,8 +22,13 @@ class DefaultAppContainer: AppContainer {
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
      */
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(Int::class.java, RequiredAgeDeserializer())
+        .registerTypeAdapter(SystemRequirements::class.java, SystemRequirementsDeserializer())
+        .create()
+
     private val retrofit: Retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .baseUrl(baseURL)
         .build()
 

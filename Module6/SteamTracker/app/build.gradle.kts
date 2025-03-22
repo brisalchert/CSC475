@@ -65,8 +65,8 @@ dependencies {
 
     // Image and network request libraries (Coil and Retrofit)
     implementation(libs.coil.compose)
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.okhttp)
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
 }
