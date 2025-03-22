@@ -44,7 +44,7 @@ class SalesViewModel(
         viewModelScope.launch {
             salesUiState = SalesUiState.Loading
             salesUiState = try {
-                SalesUiState.Success(spyRepository.getFirstPage())
+                SalesUiState.Success(spyRepository.getTopSales())
             } catch (e: IOException) {
                 SalesUiState.Error
             } catch (e: HttpException) {
