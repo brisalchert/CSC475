@@ -130,6 +130,7 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerScreens.News.name
                 ) {
+                    // TODO: Add remaining screens, layouts, and navigation
                     val appId = 374320
 
                     LaunchedEffect(appId) {

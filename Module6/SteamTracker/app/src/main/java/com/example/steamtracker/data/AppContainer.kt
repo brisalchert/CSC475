@@ -39,4 +39,8 @@ class DefaultAppContainer: AppContainer {
     override val trackerRepository: TrackerRepository by lazy {
         NetworkTrackerRepository(retrofitService)
     }
+
+    // TODO: Add another repository with a Retrofit service for SteamSpy requests
+
+    // TODO: Add Room database for local storage
 }

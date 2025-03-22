@@ -64,6 +64,7 @@ fun StoreScreen(
                 }
             }
 
+            // TODO: Create separate view models for each tab to prevent issues with repeated requests
             when (storeUiState) {
                 is StoreUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
                 is StoreUiState.SuccessFeatured -> FeaturedTab(
