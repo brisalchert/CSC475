@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName
 
 data class FeaturedGamesRequest(
     @SerializedName(value = "large_capsules")
-    val largeCapsules: List<FeaturedGame>,
+    val largeCapsules: List<AppInfo>,
     @SerializedName(value = "featured_win")
-    val featuredWin: List<FeaturedGame>,
+    val featuredWin: List<AppInfo>,
     @SerializedName(value = "featured_mac")
-    val featuredMac: List<FeaturedGame>,
+    val featuredMac: List<AppInfo>,
     @SerializedName(value = "featured_linux")
-    val featuredLinux: List<FeaturedGame>,
+    val featuredLinux: List<AppInfo>,
     val layout: String,
     val status: Int
 )
 
-data class FeaturedGame(
+data class AppInfo(
     val id: Int,
     val type: Int,
     val name: String,

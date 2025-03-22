@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
-import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
@@ -66,7 +66,7 @@ fun FeaturedTabPreview() {
 
 @Composable
 fun FeaturedGamesList(
-    featuredGames: List<FeaturedGame>,
+    featuredGames: List<AppInfo>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {

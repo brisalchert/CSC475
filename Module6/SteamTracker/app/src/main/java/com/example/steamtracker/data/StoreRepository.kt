@@ -1,11 +1,11 @@
 package com.example.steamtracker.data
 
-import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.network.StoreApiService
 
 interface StoreRepository {
-    suspend fun getFeaturedGames(): List<FeaturedGame>
+    suspend fun getFeaturedGames(): List<AppInfo>
     suspend fun getAppDetails(appId: Int): AppDetails?
 }
 
@@ -15,7 +15,7 @@ class NetworkStoreRepository(
     /**
      * Returns a list of the Steam store's current featured games
      */
-    override suspend fun getFeaturedGames(): List<FeaturedGame> {
+    override suspend fun getFeaturedGames(): List<AppInfo> {
         val response = storeApiService.getFeaturedGames()
 
         // Return only featured Windows games, since all games are Windows

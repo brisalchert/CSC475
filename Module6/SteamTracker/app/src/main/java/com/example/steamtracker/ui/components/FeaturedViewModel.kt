@@ -11,13 +11,13 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
-import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.model.AppInfo
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface FeaturedUiState {
-    data class Success(val featuredGames: List<FeaturedGame>) : FeaturedUiState
+    data class Success(val featuredGames: List<AppInfo>) : FeaturedUiState
     data object Error : FeaturedUiState
     data object Loading : FeaturedUiState
 }
