@@ -10,45 +10,45 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
-import com.example.steamtracker.data.StoreRepository
-import com.example.steamtracker.model.FeaturedGame
+import com.example.steamtracker.data.SpyRepository
+import com.example.steamtracker.model.SteamSpyAppRequest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-sealed interface FeaturedUiState {
-    data class Success(val featuredGames: List<FeaturedGame>) : FeaturedUiState
-    data object Error : FeaturedUiState
-    data object Loading : FeaturedUiState
+sealed interface SalesUiState {
+    data class Success(val salesGames: List<SteamSpyAppRequest>) : SalesUiState
+    data object Error : SalesUiState
+    data object Loading : SalesUiState
 }
 
-class FeaturedViewModel(
-    private val storeRepository: StoreRepository
+class SalesViewModel(
+    private val spyRepository: SpyRepository
 ): ViewModel() {
     /** The mutable State that stores the status of the most recent request */
-    var featuredUiState: FeaturedUiState by mutableStateOf(FeaturedUiState.Loading)
+    var salesUiState: SalesUiState by mutableStateOf(SalesUiState.Loading)
         private set
 
     /**
-     * Call getFeaturedGames() on init so we can display status immediately.
+     * Call getSalesGames() on init so we can display status immediately.
      */
     init {
-        getFeaturedGames()
+        getSalesGames()
     }
 
     /**
-     * Gets featured games from the API Retrofit services and updates the
-     * list of featured games
+     * Gets sales games from the API Retrofit services and updates the
+     * list of sales games
      */
-    fun getFeaturedGames() {
+    fun getSalesGames() {
         viewModelScope.launch {
-            featuredUiState = FeaturedUiState.Loading
-            featuredUiState = try {
-                FeaturedUiState.Success(storeRepository.getFeaturedGames())
+            salesUiState = SalesUiState.Loading
+            salesUiState = try {
+                SalesUiState.Success(spyRepository.getFirstPage())
             } catch (e: IOException) {
-                FeaturedUiState.Error
+                SalesUiState.Error
             } catch (e: HttpException) {
-                FeaturedUiState.Error
+                SalesUiState.Error
             }
         }
     }
@@ -58,8 +58,8 @@ class FeaturedViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
-                val storeRepository = application.container.storeRepository
-                FeaturedViewModel(storeRepository = storeRepository)
+                val spyRepository = application.container.spyRepository
+                SalesViewModel(spyRepository = spyRepository)
             }
         }
     }

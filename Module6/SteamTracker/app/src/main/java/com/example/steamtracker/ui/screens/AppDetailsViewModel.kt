@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
-import com.example.steamtracker.data.TrackerRepository
+import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -24,7 +24,7 @@ sealed interface AppDetailsUiState {
 }
 
 class AppDetailsViewModel(
-    private val trackerRepository: TrackerRepository
+    private val storeRepository: StoreRepository
 ): ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var appDetailsUiState: AppDetailsUiState by mutableStateOf(AppDetailsUiState.Loading)
@@ -40,7 +40,7 @@ class AppDetailsViewModel(
         viewModelScope.launch {
             appDetailsUiState = AppDetailsUiState.Loading
             appDetailsUiState = try {
-                AppDetailsUiState.SuccessAppDetails(trackerRepository.getAppDetails(appId))
+                AppDetailsUiState.SuccessAppDetails(storeRepository.getAppDetails(appId))
             } catch (e: IOException) {
                 AppDetailsUiState.Error
             } catch (e: HttpException) {
@@ -61,8 +61,8 @@ class AppDetailsViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
-                val trackerRepository = application.container.trackerRepository
-                AppDetailsViewModel(trackerRepository = trackerRepository)
+                val storeRepository = application.container.storeRepository
+                AppDetailsViewModel(storeRepository = storeRepository)
             }
         }
     }

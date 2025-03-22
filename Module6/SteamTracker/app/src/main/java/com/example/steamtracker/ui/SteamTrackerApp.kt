@@ -51,6 +51,7 @@ import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
+import com.example.steamtracker.ui.components.SalesViewModel
 
 enum class TrackerScreens {
     Store,
@@ -63,6 +64,7 @@ enum class TrackerScreens {
 @Composable
 fun SteamTrackerApp(
     featuredViewModel: FeaturedViewModel = viewModel(factory = FeaturedViewModel.Factory),
+    salesViewModel: SalesViewModel = viewModel(factory = SalesViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -124,6 +126,8 @@ fun SteamTrackerApp(
                     StoreScreen(
                         featuredUiState = featuredViewModel.featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedGames,
+                        salesUiState = salesViewModel.salesUiState,
+                        getSales = salesViewModel::getSalesGames,
                         contentPadding = PaddingValues()
                     )
                 }

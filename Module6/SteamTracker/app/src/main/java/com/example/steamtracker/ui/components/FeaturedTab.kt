@@ -42,7 +42,7 @@ fun FeaturedTab(
 ) {
     when (featuredUiState) {
         is FeaturedUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is FeaturedUiState.SuccessFeatured -> FeaturedGamesList(
+        is FeaturedUiState.Success -> FeaturedGamesList(
             featuredGames = featuredUiState.featuredGames,
             modifier = modifier,
             contentPadding = contentPadding
@@ -60,7 +60,7 @@ fun FeaturedTab(
 @Composable
 fun FeaturedTabPreview() {
     SteamTrackerTheme {
-        FeaturedTab(FeaturedUiState.SuccessFeatured(listOf()), {})
+        FeaturedTab(FeaturedUiState.Success(listOf()), {})
     }
 }
 

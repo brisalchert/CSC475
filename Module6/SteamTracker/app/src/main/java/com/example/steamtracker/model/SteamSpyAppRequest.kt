@@ -25,7 +25,7 @@ data class SteamSpyAppRequest(
     val initialprice: String,
     val discount: String,
     val ccu: Int,
-    val languages: String,
-    val genre: String,
-    val tags: Map<String, Integer>
+    val languages: String? = null,
+    val genre: String? = null,
+    val tags: Map<String, Integer>? = null
 )

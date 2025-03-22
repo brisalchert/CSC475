@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
+import com.example.steamtracker.ui.components.SalesTab
+import com.example.steamtracker.ui.components.SalesUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
@@ -34,6 +36,8 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 fun StoreScreen(
     featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
+    salesUiState: SalesUiState,
+    getSales: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -67,7 +71,7 @@ fun StoreScreen(
 
             when (tabIndex) {
                 0 -> FeaturedTab(featuredUiState, getFeatured, modifier, contentPadding)
-                1 -> Column {}
+                1 -> SalesTab(salesUiState, getSales, modifier, contentPadding)
                 2 -> Column {}
             }
         }
@@ -79,7 +83,9 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            FeaturedUiState.SuccessFeatured(listOf()),
+            FeaturedUiState.Success(listOf()),
+            {},
+            SalesUiState.Success(listOf()),
             {}
         )
     }

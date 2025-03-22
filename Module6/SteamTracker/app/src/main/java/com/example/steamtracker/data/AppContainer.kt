@@ -3,13 +3,15 @@ package com.example.steamtracker.data
 import com.example.steamtracker.model.RequiredAgeDeserializer
 import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.model.SystemRequirementsDeserializer
-import com.example.steamtracker.network.TrackerApiService
+import com.example.steamtracker.network.SpyApiService
+import com.example.steamtracker.network.StoreApiService
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface AppContainer {
-    val trackerRepository: TrackerRepository
+    val storeRepository: StoreRepository
+    val spyRepository: SpyRepository
 }
 
 /**
@@ -17,30 +19,47 @@ interface AppContainer {
  * In this case, the repository that provides the data is contained within.
  */
 class DefaultAppContainer: AppContainer {
-    private val baseURL = "https://store.steampowered.com/api/"
+    private val steamStoreBaseUrl = "https://store.steampowered.com/api/"
+    private val steamSpyBaseUrl = "https://steamspy.com/"
 
     /**
-     * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
+     * Use the Retrofit builder to build a retrofit object for Steam store requests
      */
-    private val gson = GsonBuilder()
+    private val gsonStore = GsonBuilder()
         .registerTypeAdapter(Int::class.java, RequiredAgeDeserializer())
         .registerTypeAdapter(SystemRequirements::class.java, SystemRequirementsDeserializer())
         .create()
 
-    private val retrofit: Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .baseUrl(baseURL)
+    private val retrofitStore: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create(gsonStore))
+        .baseUrl(steamStoreBaseUrl)
         .build()
 
-    private val retrofitService: TrackerApiService by lazy {
-        retrofit.create(TrackerApiService::class.java)
+    private val retrofitServiceStore: StoreApiService by lazy {
+        retrofitStore.create(StoreApiService::class.java)
     }
 
-    override val trackerRepository: TrackerRepository by lazy {
-        NetworkTrackerRepository(retrofitService)
+    override val storeRepository: StoreRepository by lazy {
+        NetworkStoreRepository(retrofitServiceStore)
     }
 
-    // TODO: Add another repository with a Retrofit service for SteamSpy requests
+    /**
+     * Use the Retrofit builder to build a retrofit object for SteamSpy requests
+     */
+    private val gsonSpy = GsonBuilder().create()
+
+    private val retrofitSpy: Retrofit = Retrofit.Builder()
+        .addConverterFactory(GsonConverterFactory.create(gsonSpy))
+        .baseUrl(steamSpyBaseUrl)
+        .build()
+
+    private val retrofitServiceSpy: SpyApiService by lazy {
+        retrofitSpy.create(SpyApiService::class.java)
+    }
+
+    override val spyRepository: SpyRepository by lazy {
+        NetworkSpyRepository(retrofitServiceSpy)
+    }
 
     // TODO: Add Room database for local storage
 }
