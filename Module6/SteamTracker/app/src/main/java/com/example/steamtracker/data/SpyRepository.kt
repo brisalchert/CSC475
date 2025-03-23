@@ -30,7 +30,7 @@ class NetworkSpyRepository(
 
         // Check if the data is outdated (not from today)
         if (isDataOutdated(lastUpdated)) {
-            // Get data from the API and sort by discount
+            // Get data from the API
             val response = spyApiService.getFirstPage().values
                 .toList()
                 .filter { it.discount != "0" }

@@ -12,9 +12,11 @@ import com.example.steamtracker.room.relations.SteamSpyAppWithTags
 
 @Dao
 interface SpyDao {
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(game: SteamSpyAppEntity)
 
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTags(tags: List<TagEntity>)
 

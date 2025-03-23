@@ -12,6 +12,7 @@ data class AppNews(
 )
 
 data class NewsItem(
+    val appid: Int,
     val gid: String,
     val title: String,
     val url: String,
@@ -23,6 +24,5 @@ data class NewsItem(
     val date: Long,
     val feedname: String,
     @SerializedName(value = "feed_type")
-    val feedType: Int,
-    val appid: Int
+    val feedType: Int
 )
