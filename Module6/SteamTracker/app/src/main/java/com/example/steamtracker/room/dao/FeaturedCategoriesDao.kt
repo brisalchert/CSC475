@@ -28,4 +28,7 @@ interface FeaturedCategoriesDao {
     @Transaction
     @Query("SELECT * FROM featured_categories")
     fun getAllFeaturedCategories(): LiveData<List<FeaturedCategoryWithDetails>>
+
+    @Query("SELECT MAX(lastUpdated) FROM featured_categories")
+    suspend fun getLastUpdatedTimestamp(): Long?
 }

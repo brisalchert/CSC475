@@ -25,10 +25,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 sealed interface FeaturedUiState {
     data class Success(val featuredCategories: FeaturedCategoriesRequest) : FeaturedUiState
@@ -60,33 +64,21 @@ class FeaturedViewModel(
      */
     fun getFeaturedCategories() {
         viewModelScope.launch {
-            _featuredUiState.value = FeaturedUiState.Loading
+            storeRepository.allFeaturedCategories.collectLatest { cachedData ->
+                if (cachedData.isNotEmpty()) {
+                    _featuredUiState.value = FeaturedUiState.Success(mapEntitiesToRequest(cachedData))
+                }
 
-            // Use cached Room data first
-            val cachedData = storeRepository.allFeaturedCategories.firstOrNull()?.let {
-                mapEntitiesToRequest(it)
-            }
-            if (cachedData != null) {
-                _featuredUiState.value = FeaturedUiState.Success(cachedData)
-            } else {
-                // Fetch from API
-                try {
-                    storeRepository.refreshFeaturedCategories()
-
-                    // Fetch the latest data from Room after refreshing
-                    val updatedData = storeRepository.allFeaturedCategories.firstOrNull()?.let {
-                        mapEntitiesToRequest(it)
+                // Check if the data is outdated
+                val isDataStale = cachedData.isEmpty() || isDataOutdated(cachedData)
+                if (isDataStale) {
+                    try {
+                        storeRepository.refreshFeaturedCategories()
+                    } catch (e: IOException) {
+                        _featuredUiState.value = FeaturedUiState.Error
+                    } catch (e: HttpException) {
+                        _featuredUiState.value = FeaturedUiState.Error
                     }
-                    _featuredUiState.value = if (updatedData != null) {
-                        FeaturedUiState.Success(updatedData)
-                    } else {
-                        Log.e("FeaturedViewModel", "Error: Unexpected null data from repository")
-                        FeaturedUiState.Error
-                    }
-                } catch (e: IOException) {
-                    _featuredUiState.value = FeaturedUiState.Error
-                } catch (e: HttpException) {
-                    _featuredUiState.value = FeaturedUiState.Error
                 }
             }
         }
@@ -141,6 +133,15 @@ class FeaturedViewModel(
             trailerslideshow = trailerslideshow,
             status = 1
         )
+    }
+
+    private fun isDataOutdated(data: List<FeaturedCategoryWithDetails>): Boolean {
+        val lastUpdatedTimestamp = data.maxOfOrNull { it.category.lastUpdated } ?: return true
+        val lastUpdatedDate = Instant.ofEpochMilli(lastUpdatedTimestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+        val currentDate = LocalDate.now()
+        return lastUpdatedDate.isBefore(currentDate)
     }
 
     /**

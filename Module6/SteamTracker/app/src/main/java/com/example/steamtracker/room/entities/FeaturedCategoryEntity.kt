@@ -8,7 +8,8 @@ data class FeaturedCategoryEntity(
     @PrimaryKey val id: String,
     val name: String,
     val type: String,
-    val status: Int
+    val status: Int,
+    val lastUpdated: Long
 )
 
 @Entity(tableName = "spotlight_items")

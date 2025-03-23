@@ -34,7 +34,7 @@ class DefaultAppContainer(private val application: Application): AppContainer {
             application,
             AppDatabase::class.java,
             "steam_tracker_database"
-        ).fallbackToDestructiveMigration() // Remove this if you want manual migrations
+        ).fallbackToDestructiveMigration()
             .build()
     }
 

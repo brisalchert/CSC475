@@ -38,18 +38,42 @@ class NetworkStoreRepository(
      * Refresh featured categories with API and update Room Database
      */
     override suspend fun refreshFeaturedCategories() {
-        // Get data from the API
-        val response = storeApiService.getFeaturedCategories()
+        // Get the latest stored categories
+        val lastUpdated = featuredCategoriesDao.getLastUpdatedTimestamp()
 
-        // Convert API response to Room database entities
-        val categoryEntities = mapRequestToEntities(response)
-        val appEntities = mapAppInfoToEntities(response)
-        val spotlightEntities = mapSpotlightItemsToEntities(response)
+        // Check if the data is outdated (not from today)
+        if (isDataOutdated(lastUpdated)) {
+            // Get data from the API
+            val response = storeApiService.getFeaturedCategories()
 
-        // Insert into Room Database using transactions
-        featuredCategoriesDao.insertFeaturedCategories(categoryEntities)
-        featuredCategoriesDao.insertAppItems(appEntities)
-        featuredCategoriesDao.insertSpotlightItems(spotlightEntities)
+            // Convert API response to Room database entities
+            val categoryEntities = mapRequestToEntities(response).map {
+                it.copy(lastUpdated = System.currentTimeMillis()) // Update timestamp
+            }
+            val appEntities = mapAppInfoToEntities(response)
+            val spotlightEntities = mapSpotlightItemsToEntities(response)
+
+            // Insert into Room Database using transactions
+            featuredCategoriesDao.insertFeaturedCategories(categoryEntities)
+            featuredCategoriesDao.insertAppItems(appEntities)
+            featuredCategoriesDao.insertSpotlightItems(spotlightEntities)
+        }
+    }
+
+    /**
+     * Checks if the data in the database is out of date
+     */
+    private fun isDataOutdated(lastUpdated: Long?): Boolean {
+        // No data exists in database
+        if (lastUpdated == null) return true
+
+        val lastUpdateDate = java.time.Instant.ofEpochMilli(lastUpdated)
+            .atZone(java.time.ZoneId.systemDefault())
+            .toLocalDate()
+
+        val today = java.time.LocalDate.now()
+
+        return lastUpdateDate.isBefore(today)
     }
 
     /**
@@ -59,29 +83,29 @@ class NetworkStoreRepository(
         val entities = mutableListOf<FeaturedCategoryEntity>()
 
         request.specials?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status, System.currentTimeMillis()))
         }
         request.comingSoon?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status, System.currentTimeMillis()))
         }
         request.topSellers?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status, System.currentTimeMillis()))
         }
         request.newReleases?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "regular", request.status, System.currentTimeMillis()))
         }
         request.genres?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "static", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "static", request.status, System.currentTimeMillis()))
         }
         request.trailerslideshow?.let {
-            entities.add(FeaturedCategoryEntity(it.id, it.name, "static", request.status))
+            entities.add(FeaturedCategoryEntity(it.id, it.name, "static", request.status, System.currentTimeMillis()))
         }
 
         request.spotlightCategories?.forEach { (key, value) ->
             if (value is SpotlightCategory) {
-                entities.add(FeaturedCategoryEntity(value.id, value.name, "spotlight", request.status))
+                entities.add(FeaturedCategoryEntity(value.id, value.name, "spotlight", request.status, System.currentTimeMillis()))
             } else if (value is RegularCategory) {
-                entities.add(FeaturedCategoryEntity(value.id, value.name, "regular", request.status))
+                entities.add(FeaturedCategoryEntity(value.id, value.name, "regular", request.status, System.currentTimeMillis()))
             }
         }
 
