@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import coil.network.HttpException
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.StoreSearchRequest
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 @OptIn(FlowPreview::class)
 class SearchViewModel(
@@ -27,13 +29,23 @@ class SearchViewModel(
     private val _nameFromId = MutableStateFlow("")
     val nameFromId: StateFlow<String> = _nameFromId
 
+    // State flow for search errors
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     /**
      * Gets the search results for the given query, updating the live data
      */
     fun getSearchResults(query: String) {
         viewModelScope.launch {
-            val response = storeRepository.getSearchResults(query)
-            _searchResults.update { response }
+            try {
+                val response = storeRepository.getSearchResults(query)
+                _searchResults.update { response }
+            } catch(e: IOException) {
+                _errorMessage.value = "Error: No Internet connection"
+            } catch(e: HttpException) {
+                _errorMessage.value = "Server error: ${e.message}"
+            }
         }
     }
 
@@ -45,12 +57,25 @@ class SearchViewModel(
     }
 
     /**
+     * Clears the current search error message
+     */
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
+    /**
      * Gets the name of an app based on its App ID
      */
     fun getNameFromId(appId: Int) {
         viewModelScope.launch {
-            val response = storeRepository.getAppName(appId)
-            _nameFromId.update { response }
+            try {
+                val response = storeRepository.getAppName(appId)
+                _nameFromId.update { response }
+            } catch(e: okio.IOException) {
+                _errorMessage.value = "Error: No Internet connection"
+            } catch(e: HttpException) {
+                _errorMessage.value = "Server error: ${e.message}"
+            }
         }
     }
 

@@ -23,6 +23,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -83,10 +86,25 @@ fun SteamTrackerApp(
     val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
     val searchResults by searchViewModel.searchResults.collectAsState()
     val nameFromId by searchViewModel.nameFromId.collectAsState()
+    val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Dynamically update navigation status based on current navigation destination
     LaunchedEffect(backStackEntry) {
         canNavigateBack = navController.previousBackStackEntry != null
+    }
+
+    // Dynamically check for search error messages
+    LaunchedEffect(searchErrorMessage) {
+        searchErrorMessage?.let {
+            snackbarHostState.showSnackbar(
+                message = it,
+                duration = SnackbarDuration.Short
+            )
+
+            // Clear the error message so it can repeat if necessary
+            searchViewModel.clearError()
+        }
     }
 
     Scaffold(
@@ -113,7 +131,8 @@ fun SteamTrackerApp(
                 },
                 selectedScreen = selectedScreen
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Surface(
             modifier = Modifier
