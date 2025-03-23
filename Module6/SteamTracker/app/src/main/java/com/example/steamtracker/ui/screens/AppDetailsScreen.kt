@@ -15,7 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
+import com.example.steamtracker.data.NewsAppsViewModel
 import com.example.steamtracker.ui.components.AppPage
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
@@ -23,6 +25,7 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 fun AppDetailsScreen(
     appDetailsUiState: AppDetailsUiState,
     getAppDetails: () -> Unit,
+    newsAppsViewModel: ViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {

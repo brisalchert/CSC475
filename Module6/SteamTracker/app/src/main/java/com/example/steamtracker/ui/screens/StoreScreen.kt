@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
@@ -43,6 +44,7 @@ fun StoreScreen(
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,
     searchResults: List<AppInfo>,
+    newsAppsViewModel: ViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -93,22 +95,25 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            featuredUiState = FeaturedUiState.Success(FeaturedCategoriesRequest(
-                spotlightCategories = null,
-                specials = null,
-                comingSoon = null,
-                topSellers = null,
-                newReleases = null,
-                genres = null,
-                trailerslideshow = null,
-                status = 0
-            )),
+            featuredUiState = FeaturedUiState.Success(
+                FeaturedCategoriesRequest(
+                    spotlightCategories = null,
+                    specials = null,
+                    comingSoon = null,
+                    topSellers = null,
+                    newReleases = null,
+                    genres = null,
+                    trailerslideshow = null,
+                    status = 0
+                )
+            ),
             getFeatured = {},
             salesUiState = SalesUiState.Success(listOf()),
             getSales = {},
             searchStore = { string: String -> },
             clearSearch = {},
-            searchResults = listOf()
+            searchResults = listOf(),
+            newsAppsViewModel = object: ViewModel() {}
         )
     }
 }

@@ -29,6 +29,7 @@ sealed interface NewsUiState {
     data class Success(val newsItems: List<List<NewsItem>>) : NewsUiState
     data object Error : NewsUiState
     data object Loading : NewsUiState
+    data object NoNewsApps : NewsUiState
 }
 
 class NewsViewModel(
@@ -51,6 +52,16 @@ class NewsViewModel(
      */
     fun getNews() {
         viewModelScope.launch {
+            // Set UI state to loading when retrieving news
+            _newsUiState.value = NewsUiState.Loading
+
+            // If there are no news apps being tracked, set the UI state appropriately
+            val newsApps = steamworksRepository.getNewsAppIds()
+            if (newsApps.isEmpty()) {
+                _newsUiState.value = NewsUiState.NoNewsApps
+                return@launch
+            }
+
             steamworksRepository.newsList.collectLatest { cachedData ->
                 if (cachedData.isNotEmpty()) {
                     _newsUiState.value = NewsUiState.Success(

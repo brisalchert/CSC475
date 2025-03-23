@@ -53,6 +53,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
+import com.example.steamtracker.data.NewsAppsViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
@@ -77,6 +78,7 @@ fun SteamTrackerApp(
     newsViewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
     searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
+    newsAppsViewModel: NewsAppsViewModel = viewModel(factory = NewsAppsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val focusManager = LocalFocusManager.current
@@ -169,7 +171,8 @@ fun SteamTrackerApp(
                         getSales = salesViewModel::getSalesGames,
                         searchStore = searchViewModel::getSearchResults,
                         clearSearch = searchViewModel::clearSearchResults,
-                        searchResults = searchResults.items
+                        searchResults = searchResults.items,
+                        newsAppsViewModel = newsAppsViewModel
                     )
                 }
                 composable(
@@ -179,7 +182,8 @@ fun SteamTrackerApp(
                         newsUiState = newsUiState,
                         getNews = newsViewModel::getNews,
                         getNameFromId = searchViewModel::getNameFromId,
-                        nameFromId = nameFromId
+                        nameFromId = nameFromId,
+                        newsAppsViewModel = newsAppsViewModel
                     )
                 }
                 composable(

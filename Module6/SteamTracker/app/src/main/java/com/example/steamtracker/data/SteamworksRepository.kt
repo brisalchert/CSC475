@@ -1,51 +1,82 @@
 package com.example.steamtracker.data
 
-import android.util.Log
 import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.network.SteamworksApiService
+import com.example.steamtracker.room.dao.NewsAppsDao
 import com.example.steamtracker.room.dao.SteamworksDao
 import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
+import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.utils.isDataOutdated
 import com.example.steamtracker.utils.toNewsItemEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 interface SteamworksRepository {
     val newsList: Flow<List<AppNewsWithDetails>>
+    val newsApps: Flow<List<Int>>
 
     suspend fun refreshAppNews()
+    suspend fun addNewsApp(appid: Int)
+    suspend fun removeNewsApp(appid: Int)
+    suspend fun getNewsAppIds(): List<Int>
 }
 
 class NetworkSteamworksRepository(
     private val steamworksApiService: SteamworksApiService,
     private val steamworksDao: SteamworksDao,
-    private val appList: List<Int> = listOf(1245620)
+    private val newsAppsDao: NewsAppsDao
 ): SteamworksRepository {
     override val newsList: Flow<List<AppNewsWithDetails>> =
         steamworksDao.getAllAppNews().asFlow()
 
+    // List of apps specified by the user for tracking
+    override val newsApps: Flow<List<Int>> =
+        newsAppsDao.getAllNewsApps().map { list -> list.map { it.appid } }
+
     override suspend fun refreshAppNews() {
-        // Get the timestamp of the current sales data
-        val lastUpdated = steamworksDao.getLastUpdatedTimestamp()
+        newsApps.collect { appids ->
+            if (appids.isNotEmpty()) {
+                // Get the timestamp of the current sales data
+                val lastUpdated = steamworksDao.getLastUpdatedTimestamp()
 
-        // Check if the data is outdated (not from today)
-        if (isDataOutdated(lastUpdated)) {
-            // Get data from the API
-            val responseList = mutableListOf<AppNewsRequest>()
-            appList.forEach { responseList.add(steamworksApiService.getAppNews(it)) }
+                // Check if the data is outdated (not from today)
+                if (isDataOutdated(lastUpdated)) {
+                    // Get data from the API
+                    val responseList = mutableListOf<AppNewsRequest>()
+                    appids.forEach { responseList.add(steamworksApiService.getAppNews(it)) }
 
-            // Convert API response to Room database entities
-            val appNewsRequestEntities = mapRequestsToEntities(responseList)
-            val appNewsEntities = mapAppNewsToEntities(responseList)
-            val newsItemEntities = mapNewsItemsToEntities(responseList).flatten()
+                    // Convert API response to Room database entities
+                    val appNewsRequestEntities = mapRequestsToEntities(responseList)
+                    val appNewsEntities = mapAppNewsToEntities(responseList)
+                    val newsItemEntities = mapNewsItemsToEntities(responseList).flatten()
 
-            // Insert into Room Database using transactions
-            steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
-            steamworksDao.insertAppNews(appNewsEntities)
-            steamworksDao.insertNews(newsItemEntities)
+                    // Insert into Room Database using transactions
+                    steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
+                    steamworksDao.insertAppNews(appNewsEntities)
+                    steamworksDao.insertNews(newsItemEntities)
+                }
+            }
+        }
+
+    }
+
+    override suspend fun addNewsApp(appid: Int) {
+        newsAppsDao.insertNewsApp(NewsAppEntity(appid))
+    }
+
+    override suspend fun removeNewsApp(appid: Int) {
+        newsAppsDao.deleteNewsApp(NewsAppEntity(appid))
+    }
+
+    override suspend fun getNewsAppIds(): List<Int> {
+        return withContext(Dispatchers.IO) {
+            newsAppsDao.getNewsAppIds()
         }
     }
 

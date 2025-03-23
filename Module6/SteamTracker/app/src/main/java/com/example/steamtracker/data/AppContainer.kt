@@ -103,7 +103,8 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val steamworksRepository: SteamworksRepository by lazy {
         NetworkSteamworksRepository(
             retrofitServiceSteamworks,
-            appDatabase.steamworksDao()
+            appDatabase.steamworksDao(),
+            appDatabase.newsAppsDao()
         )
     }
 }
