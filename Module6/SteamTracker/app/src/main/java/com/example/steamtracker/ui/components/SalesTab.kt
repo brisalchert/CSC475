@@ -62,15 +62,19 @@ fun SalesGamesList(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
+        var gamesCSV = ""
+
+        // Create a CSV list of app IDs for games on sale
+        salesGames.forEach { game ->
+            gamesCSV += game.appid
+            gamesCSV += ","
+        }
+
         items(items = salesGames) { game ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-            ) {
-                Text(game.name)
-                Text(game.discount)
-            }
+            SalesApp(
+                appInfo = game,
+                modifier = modifier
+            )
         }
     }
 }

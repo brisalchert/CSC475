@@ -28,7 +28,7 @@ import com.example.steamtracker.R
 import com.example.steamtracker.utils.formatCurrency
 
 @Composable
-fun BasicAppCard(
+fun FeaturedApp(
     appInfo: AppInfo,
     modifier: Modifier = Modifier
 ) {

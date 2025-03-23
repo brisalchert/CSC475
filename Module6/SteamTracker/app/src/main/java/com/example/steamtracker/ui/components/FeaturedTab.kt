@@ -59,8 +59,6 @@ fun FeaturedTab(
             modifier = modifier.fillMaxSize()
         )
     }
-
-
 }
 
 @Preview(showBackground = true)
@@ -91,7 +89,7 @@ fun FeaturedGamesList(
             if (!seenIds.contains(game.id)) {
                 seenIds.add(game.id)
 
-                BasicAppCard(
+                FeaturedApp(
                     appInfo = game,
                     modifier = modifier
                 )
