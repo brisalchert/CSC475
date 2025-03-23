@@ -31,13 +31,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
-import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
@@ -93,7 +91,7 @@ fun FeaturedGamesList(
             if (!seenIds.contains(game.id)) {
                 seenIds.add(game.id)
 
-                FeaturedApp(
+                BasicAppCard(
                     appInfo = game,
                     modifier = modifier
                 )

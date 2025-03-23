@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
