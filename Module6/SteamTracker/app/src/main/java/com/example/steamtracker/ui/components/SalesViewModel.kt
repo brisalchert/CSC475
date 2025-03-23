@@ -53,7 +53,9 @@ class SalesViewModel(
         }
     }
 
-    // Factory companion object to allow repository to be passed to view model on creation
+    /**
+     * Factory companion object to allow repository to be passed to view model on creation
+     */
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

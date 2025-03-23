@@ -30,6 +30,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +54,7 @@ import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
+import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 
@@ -69,6 +71,7 @@ fun SteamTrackerApp(
     featuredViewModel: FeaturedViewModel = viewModel(factory = FeaturedViewModel.Factory),
     salesViewModel: SalesViewModel = viewModel(factory = SalesViewModel.Factory),
     newsViewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
+    searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -78,6 +81,7 @@ fun SteamTrackerApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     var canNavigateBack by remember { mutableStateOf(false) }
     val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
+    val searchResults by searchViewModel.searchResults.collectAsState()
 
     // Dynamically update navigation status based on current navigation destination
     LaunchedEffect(backStackEntry) {
@@ -130,9 +134,11 @@ fun SteamTrackerApp(
                     StoreScreen(
                         featuredUiState = featuredViewModel.featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
-                        searchStore = featuredViewModel::getSearchResults,
                         salesUiState = salesViewModel.salesUiState,
-                        getSales = salesViewModel::getSalesGames
+                        getSales = salesViewModel::getSalesGames,
+                        searchStore = searchViewModel::getSearchResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        searchResults = searchResults.items
                     )
                 }
                 composable(

@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.example.steamtracker.model.AppDetails
 
 @Composable
-fun AppInfo(
+fun AppPage(
     appDetails: AppDetails?,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)

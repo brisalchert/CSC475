@@ -25,20 +25,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
 import com.example.steamtracker.ui.components.SalesTab
 import com.example.steamtracker.ui.components.SalesUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun StoreScreen(
     featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
-    searchStore: (query: String) -> Unit,
     salesUiState: SalesUiState,
     getSales: () -> Unit,
+    searchStore: (query: String) -> Unit,
+    clearSearch: () -> Unit,
+    searchResults: List<AppInfo>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -49,7 +54,11 @@ fun StoreScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        StoreSearchBar()
+        StoreSearchBar(
+            searchStore = searchStore,
+            clearSearch = clearSearch,
+            searchResults = searchResults
+        )
 
         Column(
             modifier = modifier,
@@ -70,6 +79,7 @@ fun StoreScreen(
                 }
             }
 
+            // Display the correct screen for the current selected tab
             when (tabIndex) {
                 0 -> FeaturedTab(featuredUiState, getFeatured, modifier, contentPadding)
                 1 -> SalesTab(salesUiState, getSales, modifier, contentPadding)
@@ -84,11 +94,13 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            FeaturedUiState.SuccessFeaturedGames(listOf()),
-            {},
-            { string: String -> },
-            SalesUiState.Success(listOf()),
-            {}
+            featuredUiState = FeaturedUiState.SuccessFeaturedGames(listOf()),
+            getFeatured = {},
+            salesUiState = SalesUiState.Success(listOf()),
+            getSales = {},
+            searchStore = { string: String -> },
+            clearSearch = {},
+            searchResults = listOf()
         )
     }
 }

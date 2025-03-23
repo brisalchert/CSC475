@@ -1,10 +1,14 @@
 package com.example.steamtracker.data
 
+import android.util.Log
 import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 
 interface StoreRepository {
     suspend fun getFeaturedGames(): List<AppInfo>
@@ -48,7 +52,7 @@ class NetworkStoreRepository(
     /**
      * Returns a StoreSearchRequest object based on the query provided
      */
-    override suspend fun getSearchResults(query: String): StoreSearchRequest {
-        return storeApiService.getSearchResults(query)
+    override suspend fun getSearchResults(query: String): StoreSearchRequest = withContext(Dispatchers.IO) {
+        return@withContext storeApiService.getSearchResults(query)
     }
 }
