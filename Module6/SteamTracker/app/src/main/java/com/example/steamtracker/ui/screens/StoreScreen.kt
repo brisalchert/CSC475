@@ -83,7 +83,7 @@ fun StoreScreen(
             when (tabIndex) {
                 0 -> FeaturedTab(featuredUiState, getFeatured, modifier, contentPadding)
                 1 -> SalesTab(salesUiState, getSales, modifier, contentPadding)
-                2 -> Column {}
+                2 -> Column {} // TODO: Implement recommendations
             }
         }
     }

@@ -83,7 +83,7 @@ fun StoreSearchBar(
                 }
         }
 
-        TextField(
+        TextField( // TODO: Implement Search Screen
             value = query,
             onValueChange = { newQuery ->
                 query = newQuery

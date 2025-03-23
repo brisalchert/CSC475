@@ -21,7 +21,7 @@ fun NewsCard(
     appName: String,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Card( // TODO: Implement clicking on news card to go to details
         modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),

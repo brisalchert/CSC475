@@ -32,7 +32,7 @@ fun FeaturedApp(
     appInfo: AppInfo,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Card( // TODO: Implement clicking on app to visit details page
         modifier = modifier.padding(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {

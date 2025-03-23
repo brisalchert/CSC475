@@ -155,17 +155,17 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerScreens.Collections.name
                 ) {
-
+                    // TODO: Implement Collections
                 }
                 composable(
                     route = TrackerScreens.Notifications.name
                 ) {
-
+                    // TODO: Implement Notifications
                 }
                 composable(
                     route = TrackerScreens.Menu.name
                 ) {
-
+                    // TODO: Implement Menu/Settings/Preferences
                 }
             }
         }
