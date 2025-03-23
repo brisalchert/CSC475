@@ -82,6 +82,7 @@ fun SteamTrackerApp(
     var canNavigateBack by remember { mutableStateOf(false) }
     val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
     val searchResults by searchViewModel.searchResults.collectAsState()
+    val nameFromId by searchViewModel.nameFromId.collectAsState()
 
     // Dynamically update navigation status based on current navigation destination
     LaunchedEffect(backStackEntry) {
@@ -146,7 +147,9 @@ fun SteamTrackerApp(
                 ) {
                     NewsScreen(
                         newsUiState = newsViewModel.newsUiState,
-                        getNews = newsViewModel::getNews
+                        getNews = newsViewModel::getNews,
+                        getNameFromId = searchViewModel::getNameFromId,
+                        nameFromId = nameFromId
                     )
                 }
                 composable(

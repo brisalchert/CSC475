@@ -15,6 +15,7 @@ interface StoreRepository {
     suspend fun getFeaturedCategories(): FeaturedCategoriesRequest
     suspend fun getAppDetails(appId: Int): AppDetails?
     suspend fun getSearchResults(query: String): StoreSearchRequest
+    suspend fun getAppName(appId: Int): String
 }
 
 class NetworkStoreRepository(
@@ -47,6 +48,13 @@ class NetworkStoreRepository(
 
         // App ID is contained within gameInfo; outer App ID not needed
         return response["$appId"]?.appDetails
+    }
+
+    override suspend fun getAppName(appId: Int): String {
+        val response = storeApiService.getAppDetails(appId)
+
+        // Return only the app's name
+        return response["$appId"]?.appDetails?.name.toString()
     }
 
     /**

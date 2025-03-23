@@ -68,7 +68,7 @@ fun StoreSearchBar(
         // Debounce autocomplete results, ensuring only necessary updates are processed
         LaunchedEffect(query) {
             snapshotFlow { query }
-                .debounce(500)
+                .debounce(1000)
                 .distinctUntilChanged()
                 .collectLatest { newQuery ->
                     // Only update search results when the query changes

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.model.NewsItem
+import com.example.steamtracker.ui.components.NewsCard
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -22,6 +23,8 @@ import java.time.format.DateTimeFormatter
 fun NewsScreen(
     newsUiState: NewsUiState,
     getNews: () -> Unit,
+    getNameFromId: (appId: Int) -> Unit,
+    nameFromId: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -29,6 +32,8 @@ fun NewsScreen(
         is NewsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is NewsUiState.Success -> NewsItemList(
             newsUiState.newsItems,
+            getNameFromId = getNameFromId,
+            nameFromId = nameFromId,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -42,6 +47,8 @@ fun NewsScreen(
 @Composable
 fun NewsItemList(
     newsLists: List<List<NewsItem>>,
+    getNameFromId: (Int) -> Unit,
+    nameFromId: String,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -53,17 +60,13 @@ fun NewsItemList(
     ) {
         items(items = newsLists) { newsLists ->
             newsLists.forEach { news ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    Text(news.title)
-                    val instant = Instant.ofEpochSecond(news.date)
-                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                        .withZone(ZoneId.systemDefault())
-                    Text(formatter.format(instant))
-                }
+                getNameFromId(news.appid)
+
+                NewsCard(
+                    newsItem = news,
+                    appName = nameFromId,
+                    modifier = modifier
+                )
             }
         }
     }

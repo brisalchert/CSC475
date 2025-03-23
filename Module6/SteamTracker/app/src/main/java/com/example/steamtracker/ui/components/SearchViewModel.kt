@@ -19,8 +19,13 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val storeRepository: StoreRepository
 ): ViewModel() {
+    // State flow for observing search results
     private val _searchResults = MutableStateFlow(StoreSearchRequest(0, emptyList()))
     val searchResults: StateFlow<StoreSearchRequest> = _searchResults
+
+    // State flow for observing game name request results
+    private val _nameFromId = MutableStateFlow("")
+    val nameFromId: StateFlow<String> = _nameFromId
 
     /**
      * Gets the search results for the given query, updating the live data
@@ -37,6 +42,16 @@ class SearchViewModel(
      */
     fun clearSearchResults() {
         _searchResults.update { StoreSearchRequest(0, emptyList()) }
+    }
+
+    /**
+     * Gets the name of an app based on its App ID
+     */
+    fun getNameFromId(appId: Int) {
+        viewModelScope.launch {
+            val response = storeRepository.getAppName(appId)
+            _nameFromId.update { response }
+        }
     }
 
     /**
