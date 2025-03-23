@@ -2,7 +2,6 @@ package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,11 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
+import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
@@ -50,13 +51,8 @@ fun FeaturedTab(
 ) {
     when (featuredUiState) {
         is FeaturedUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is FeaturedUiState.SuccessFeaturedGames -> FeaturedGamesList(
-            featuredGames = featuredUiState.featuredGames,
-            modifier = modifier,
-            contentPadding = contentPadding
-        )
-        is FeaturedUiState.SuccessFeaturedCategories -> FeaturedCategoriesList(
-            featuredUiState.featuredCategories,
+        is FeaturedUiState.Success -> FeaturedCategoriesList(
+            featuredCategories = featuredUiState.featuredCategories,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -73,7 +69,9 @@ fun FeaturedTab(
 @Composable
 fun FeaturedTabPreview() {
     SteamTrackerTheme {
-        FeaturedTab(FeaturedUiState.SuccessFeaturedGames(listOf()), {})
+//        FeaturedTab(
+//            featuredUiState = FeaturedUiState.Success()),
+//            getFeatured = {},
     }
 }
 

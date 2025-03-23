@@ -1,5 +1,7 @@
 package com.example.steamtracker.data
 
+import android.app.Application
+import androidx.room.Room
 import com.example.steamtracker.model.FeaturedCategoriesDeserializer
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.RegularCategory
@@ -9,6 +11,7 @@ import com.example.steamtracker.model.SystemRequirementsDeserializer
 import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
+import com.example.steamtracker.room.AppDatabase
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import retrofit2.Retrofit
@@ -24,7 +27,17 @@ interface AppContainer {
  * The App Container holds important data so that it can be accessed across the application.
  * In this case, the repository that provides the data is contained within.
  */
-class DefaultAppContainer: AppContainer {
+class DefaultAppContainer(private val application: Application): AppContainer {
+    // Initialize the database instance
+    val appDatabase: AppDatabase by lazy {
+        Room.databaseBuilder(
+            application,
+            AppDatabase::class.java,
+            "steam_tracker_database"
+        ).fallbackToDestructiveMigration() // Remove this if you want manual migrations
+            .build()
+    }
+
     private val steamStoreBaseUrl = "https://store.steampowered.com/api/"
     private val steamSpyBaseUrl = "https://steamspy.com/"
     private val steamworksBaseUrl = "https://api.steampowered.com/"
@@ -48,7 +61,10 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val storeRepository: StoreRepository by lazy {
-        NetworkStoreRepository(retrofitServiceStore)
+        NetworkStoreRepository(
+            retrofitServiceStore,
+            appDatabase.FeaturedCategoriesDao()
+        )
     }
 
     /**
@@ -66,7 +82,9 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val spyRepository: SpyRepository by lazy {
-        NetworkSpyRepository(retrofitServiceSpy)
+        NetworkSpyRepository(
+            retrofitServiceSpy
+        )
     }
 
     /**
@@ -84,8 +102,8 @@ class DefaultAppContainer: AppContainer {
     }
 
     override val steamworksRepository: SteamworksRepository by lazy {
-        NetworkSteamworksRepository(retrofitServiceSteamworks)
+        NetworkSteamworksRepository(
+            retrofitServiceSteamworks
+        )
     }
-
-    // TODO: Add Room database for local storage
 }

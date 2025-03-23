@@ -2,6 +2,7 @@
 
 package com.example.steamtracker.ui
 
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.background
@@ -81,18 +82,22 @@ fun SteamTrackerApp(
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    var canNavigateBack by remember { mutableStateOf(false) }
     val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
-    val searchResults by searchViewModel.searchResults.collectAsState()
+
+    // Dynamically update navigation status based on current navigation destination
+    var canNavigateBack by remember { mutableStateOf(navController.previousBackStackEntry != null) }
+    LaunchedEffect(navController.currentBackStackEntryAsState().value) {
+        canNavigateBack = navController.previousBackStackEntry != null
+    }
+
+    // UI States for search data updates
     val nameFromId by searchViewModel.nameFromId.collectAsState()
+    val searchResults by searchViewModel.searchResults.collectAsState()
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Dynamically update navigation status based on current navigation destination
-    LaunchedEffect(backStackEntry) {
-        canNavigateBack = navController.previousBackStackEntry != null
-    }
+    // UI States for observing live data updates
+    val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -127,7 +132,11 @@ fun SteamTrackerApp(
                 // Prevent bottom app bar navigation from adding back stack entries. Instead,
                 // replace the start destination with the current tab.
                 destinations = TrackerScreens.entries.associate { screen ->
-                    screen.name to { navController.navigate(screen.name) { popUpTo(0) { inclusive = true } } }
+                    screen.name to {
+                        navController.navigate(screen.name) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 },
                 selectedScreen = selectedScreen
             )
@@ -152,7 +161,7 @@ fun SteamTrackerApp(
                     route = TrackerScreens.Store.name
                 ) {
                     StoreScreen(
-                        featuredUiState = featuredViewModel.featuredUiState,
+                        featuredUiState = featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
                         salesUiState = salesViewModel.salesUiState,
                         getSales = salesViewModel::getSalesGames,

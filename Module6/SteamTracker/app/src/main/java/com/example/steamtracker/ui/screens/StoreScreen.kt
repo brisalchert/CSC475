@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
 import com.example.steamtracker.ui.components.SalesTab
@@ -92,7 +93,16 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
-            featuredUiState = FeaturedUiState.SuccessFeaturedGames(listOf()),
+            featuredUiState = FeaturedUiState.Success(FeaturedCategoriesRequest(
+                spotlightCategories = null,
+                specials = null,
+                comingSoon = null,
+                topSellers = null,
+                newReleases = null,
+                genres = null,
+                trailerslideshow = null,
+                status = 0
+            )),
             getFeatured = {},
             salesUiState = SalesUiState.Success(listOf()),
             getSales = {},

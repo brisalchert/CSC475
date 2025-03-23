@@ -2,15 +2,11 @@ package com.example.steamtracker.network
 
 import com.example.steamtracker.model.AppDetailsRequest
 import com.example.steamtracker.model.FeaturedCategoriesRequest
-import com.example.steamtracker.model.FeaturedGamesRequest
 import com.example.steamtracker.model.StoreSearchRequest
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface StoreApiService {
-    @GET("featured")
-    suspend fun getFeaturedGames(): FeaturedGamesRequest
-
     @GET("featuredcategories")
     suspend fun getFeaturedCategories(): FeaturedCategoriesRequest
 
