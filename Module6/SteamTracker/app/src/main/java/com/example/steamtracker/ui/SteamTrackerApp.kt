@@ -98,6 +98,7 @@ fun SteamTrackerApp(
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
+    val salesUiState by salesViewModel.salesUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -163,7 +164,7 @@ fun SteamTrackerApp(
                     StoreScreen(
                         featuredUiState = featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
-                        salesUiState = salesViewModel.salesUiState,
+                        salesUiState = salesUiState,
                         getSales = salesViewModel::getSalesGames,
                         searchStore = searchViewModel::getSearchResults,
                         clearSearch = searchViewModel::clearSearchResults,

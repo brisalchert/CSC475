@@ -12,7 +12,7 @@ import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 
 @Dao
-interface FeaturedCategoriesDao {
+interface StoreDao {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFeaturedCategories(categories: List<FeaturedCategoryEntity>)

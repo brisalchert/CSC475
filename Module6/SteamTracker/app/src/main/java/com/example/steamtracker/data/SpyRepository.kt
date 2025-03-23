@@ -1,56 +1,83 @@
 package com.example.steamtracker.data
 
+import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.network.SpyApiService
+import com.example.steamtracker.room.dao.SpyDao
+import com.example.steamtracker.room.entities.SteamSpyAppEntity
+import com.example.steamtracker.room.entities.TagEntity
+import com.example.steamtracker.room.relations.SteamSpyAppWithTags
+import com.example.steamtracker.utils.isDataOutdated
+import com.example.steamtracker.utils.toSteamSpyAppEntity
+import kotlinx.coroutines.flow.Flow
 
 interface SpyRepository {
-    suspend fun getFirstPage(): List<SteamSpyAppRequest>
-    suspend fun getTopSales(): List<SteamSpyAppRequest>
+    val topSales: Flow<List<SteamSpyAppWithTags>>
+
+    suspend fun refreshTopSales()
 }
 
 class NetworkSpyRepository(
     private val spyApiService: SpyApiService,
-    private var firstPageResponse: List<SteamSpyAppRequest> = emptyList(),
-    private var sortedSales: List<SteamSpyAppRequest> = emptyList()
+    private val spyDao: SpyDao
 ): SpyRepository {
-    /**
-     * Get the first page of results from SteamSpy if necessary
-     */
-    suspend fun checkFirstPage() {
-        if (firstPageResponse.isEmpty()) {
-            firstPageResponse = spyApiService.getFirstPage().values.toList()
-        }
-    }
+    override val topSales: Flow<List<SteamSpyAppWithTags>> =
+        spyDao.getAllGames().asFlow()
 
-    /**
-     * Get discounted games from the first page of SteamSpy results if necessary
-     */
-    suspend fun checkSortedSales() {
-        checkFirstPage()
+    override suspend fun refreshTopSales() {
+        // Get the timestamp of the current sales data
+        val lastUpdated = spyDao.getLastUpdatedTimestamp()
 
-        if (sortedSales.isEmpty()) {
-            sortedSales = firstPageResponse.map { it.copy() } // Create a new list as a copy
-            sortedSales = sortedSales
+        // Check if the data is outdated (not from today)
+        if (isDataOutdated(lastUpdated)) {
+            // Get data from the API and sort by discount
+            val response = spyApiService.getFirstPage().values
+                .toList()
                 .filter { it.discount != "0" }
-                .sortedByDescending { it.discount }
+
+            // Convert API response to Room database entities
+            val spyEntities = mapRequestsToEntities(response).map {
+                it.copy(lastUpdated = System.currentTimeMillis()) // Update timestamp
+            }
+            val tagEntities = mapTagsToEntities(response)
+
+            // Insert into Room Database using transactions
+            spyDao.insertAll(spyEntities)
+            tagEntities.forEach { tagList ->
+                spyDao.insertTags(tagList)
+            }
         }
     }
 
     /**
-     * Returns the first page of SteamSpy games
+     * Maps a list of SteamSpyAppRequests to a list of database entities
      */
-    override suspend fun getFirstPage(): List<SteamSpyAppRequest> {
-        checkFirstPage()
-
-        return firstPageResponse
+    private fun mapRequestsToEntities(requests: List<SteamSpyAppRequest>): List<SteamSpyAppEntity> {
+        return requests.map { it.toSteamSpyAppEntity() }
     }
 
     /**
-     * Returns the top games on sale from SteamSpy
+     * Maps the tags of a list of SteamSpyAppRequests to a list of lists of tags
      */
-    override suspend fun getTopSales(): List<SteamSpyAppRequest> {
-        checkSortedSales()
+    private fun mapTagsToEntities(requests: List<SteamSpyAppRequest>): List<List<TagEntity>> {
+        val tagEntityList = mutableListOf<List<TagEntity>>()
 
-        return sortedSales
+        requests.forEach { request ->
+            val tagList = mutableListOf<TagEntity>()
+
+            request.tags?.map { (key, value) ->
+                tagList.add(
+                    TagEntity(
+                        appid = request.appid,
+                        tagName = key,
+                        tagCount = value.toInt()
+                    )
+                )
+            }
+
+            tagEntityList.add(tagList)
+        }
+
+        return tagEntityList
     }
 }

@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.room.Room
 import com.example.steamtracker.model.FeaturedCategoriesDeserializer
 import com.example.steamtracker.model.FeaturedCategoriesRequest
-import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.RequiredAgeDeserializer
 import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.model.SystemRequirementsDeserializer
@@ -13,7 +12,6 @@ import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
 import com.example.steamtracker.room.AppDatabase
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -63,7 +61,7 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val storeRepository: StoreRepository by lazy {
         NetworkStoreRepository(
             retrofitServiceStore,
-            appDatabase.FeaturedCategoriesDao()
+            appDatabase.storeDao()
         )
     }
 
@@ -83,7 +81,8 @@ class DefaultAppContainer(private val application: Application): AppContainer {
 
     override val spyRepository: SpyRepository by lazy {
         NetworkSpyRepository(
-            retrofitServiceSpy
+            retrofitServiceSpy,
+            appDatabase.salesDao()
         )
     }
 

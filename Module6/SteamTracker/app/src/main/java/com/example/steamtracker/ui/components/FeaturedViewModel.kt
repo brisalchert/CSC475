@@ -43,10 +43,6 @@ sealed interface FeaturedUiState {
 class FeaturedViewModel(
     private val storeRepository: StoreRepository
 ): ViewModel() {
-    /** Live data from the database */
-    val featuredCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        storeRepository.allFeaturedCategories
-
     /** The mutable StateFlow that stores the status of the most recent request */
     private val _featuredUiState = MutableStateFlow<FeaturedUiState>(FeaturedUiState.Loading)
     val featuredUiState: StateFlow<FeaturedUiState> = _featuredUiState.asStateFlow()
@@ -91,7 +87,6 @@ class FeaturedViewModel(
         val spotlightCategories = mutableMapOf<String, Any>()
 
         val specials = entities.find { it.category.type == "regular" && it.category.name == "Specials" }?.let {
-            Log.d("FeaturedViewModel", "Found Specials: ${it.category.name}")
             RegularCategory(it.category.id, it.category.name, it.appItems?.map { it.toAppInfo() })
         }
 
@@ -135,6 +130,9 @@ class FeaturedViewModel(
         )
     }
 
+    /**
+     * Checks if the data is outdated and needs to be fetched again
+     */
     private fun isDataOutdated(data: List<FeaturedCategoryWithDetails>): Boolean {
         val lastUpdatedTimestamp = data.maxOfOrNull { it.category.lastUpdated } ?: return true
         val lastUpdatedDate = Instant.ofEpochMilli(lastUpdatedTimestamp)

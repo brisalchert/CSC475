@@ -29,7 +29,8 @@ fun SalesTab(
     when (salesUiState) {
         is SalesUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is SalesUiState.Success -> SalesGamesList(
-            salesGames = salesUiState.salesGames,
+            salesGames = salesUiState.salesGames
+                .sortedByDescending { it.discount },
             modifier = modifier,
             contentPadding = contentPadding
         )

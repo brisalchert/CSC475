@@ -4,22 +4,28 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.steamtracker.room.dao.FeaturedCategoriesDao
+import com.example.steamtracker.room.dao.StoreDao
+import com.example.steamtracker.room.dao.SpyDao
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
+import com.example.steamtracker.room.entities.SteamSpyAppEntity
+import com.example.steamtracker.room.entities.TagEntity
 
 @Database(
     entities = [
         FeaturedCategoryEntity::class,
         AppInfoEntity::class,
-        SpotlightItemEntity::class
+        SpotlightItemEntity::class,
+        SteamSpyAppEntity::class,
+        TagEntity::class
     ],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun FeaturedCategoriesDao(): FeaturedCategoriesDao
+    abstract fun storeDao(): StoreDao
+    abstract fun salesDao(): SpyDao
 
     companion object {
         @Volatile

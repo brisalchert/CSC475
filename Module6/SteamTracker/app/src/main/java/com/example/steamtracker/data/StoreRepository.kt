@@ -7,12 +7,13 @@ import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.SpotlightCategory
 import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
-import com.example.steamtracker.room.dao.FeaturedCategoriesDao
+import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.toAppInfoEntityList
+import com.example.steamtracker.utils.isDataOutdated
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -28,17 +29,17 @@ interface StoreRepository {
 
 class NetworkStoreRepository(
     private val storeApiService: StoreApiService,
-    private val featuredCategoriesDao: FeaturedCategoriesDao
+    private val storeDao: StoreDao
 ): StoreRepository {
     override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        featuredCategoriesDao.getAllFeaturedCategories().asFlow()
+        storeDao.getAllFeaturedCategories().asFlow()
 
     /**
      * Refresh featured categories with API and update Room Database
      */
     override suspend fun refreshFeaturedCategories() {
-        // Get the latest stored categories
-        val lastUpdated = featuredCategoriesDao.getLastUpdatedTimestamp()
+        // Get the timestamp of the current categories data
+        val lastUpdated = storeDao.getLastUpdatedTimestamp()
 
         // Check if the data is outdated (not from today)
         if (isDataOutdated(lastUpdated)) {
@@ -53,32 +54,16 @@ class NetworkStoreRepository(
             val spotlightEntities = mapSpotlightItemsToEntities(response)
 
             // Insert into Room Database using transactions
-            featuredCategoriesDao.insertFeaturedCategories(categoryEntities)
-            featuredCategoriesDao.insertAppItems(appEntities)
-            featuredCategoriesDao.insertSpotlightItems(spotlightEntities)
+            storeDao.insertFeaturedCategories(categoryEntities)
+            storeDao.insertAppItems(appEntities)
+            storeDao.insertSpotlightItems(spotlightEntities)
         }
-    }
-
-    /**
-     * Checks if the data in the database is out of date
-     */
-    private fun isDataOutdated(lastUpdated: Long?): Boolean {
-        // No data exists in database
-        if (lastUpdated == null) return true
-
-        val lastUpdateDate = java.time.Instant.ofEpochMilli(lastUpdated)
-            .atZone(java.time.ZoneId.systemDefault())
-            .toLocalDate()
-
-        val today = java.time.LocalDate.now()
-
-        return lastUpdateDate.isBefore(today)
     }
 
     /**
      * Maps the categories of a FeaturedCategoriesRequest to a list of database entities
      */
-    fun mapRequestToEntities(request: FeaturedCategoriesRequest): List<FeaturedCategoryEntity> {
+    private fun mapRequestToEntities(request: FeaturedCategoriesRequest): List<FeaturedCategoryEntity> {
         val entities = mutableListOf<FeaturedCategoryEntity>()
 
         request.specials?.let {
