@@ -89,13 +89,8 @@ fun FeaturedGamesList(
             if (!seenIds.contains(game.id)) {
                 seenIds.add(game.id)
 
-                PhotosGrid(
-                    game = game.name,
-                    photoPaths = listOf(
-                        game.headerImage,
-                        game.largeCapsuleImage,
-                        game.smallCapsuleImage
-                    ),
+                FeaturedApp(
+                    appInfo = game,
                     modifier = modifier
                 )
             }

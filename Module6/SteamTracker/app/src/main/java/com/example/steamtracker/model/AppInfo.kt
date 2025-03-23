@@ -10,7 +10,7 @@ data class AppInfo(
     @SerializedName(value = "discount_percent")
     val discountPercent: Int,
     @SerializedName(value = "original_price")
-    val originalPrice: Int?,
+    val originalPrice: Int,
     @SerializedName(value = "final_price")
     val finalPrice: Int,
     val currency: String,
