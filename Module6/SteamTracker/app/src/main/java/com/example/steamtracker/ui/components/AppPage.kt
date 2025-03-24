@@ -71,21 +71,7 @@ fun AppPage(
         modifier = modifier.fillMaxWidth()
     ) {
         item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .shadow(8.dp, RoundedCornerShape(0.dp))
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = appDetails.name.uppercase(),
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    textAlign = TextAlign.Center
-                )
-            }
+            TitleCard(appDetails, appSpyInfo, modifier, contentPadding)
         }
 
         item {
@@ -103,110 +89,154 @@ fun AppPage(
         }
 
         item {
-            Column(
-                modifier = modifier.padding(12.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = appDetails.name,
-                    fontSize = 24.sp
-                )
-
-                if (appSpyInfo.price == "0") {
-                    Box(
-                        modifier = modifier
-                            .background(
-                                colorResource(R.color.discount_background),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                    ) {
-                        Text(
-                            text = "FREE",
-                            color = colorResource(R.color.discount_text),
-                            fontSize = 16.sp,
-                            modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                        )
-                    }
-                } else if (appSpyInfo.discount.toInt() > 0) {
-                    Row(
-                        modifier = modifier,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = formatCurrency(appSpyInfo.initialprice.toInt().div(100.0)),
-                            fontSize = 16.sp,
-                            textDecoration = TextDecoration.LineThrough,
-                            color = MaterialTheme.colorScheme.outline
-                        )
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        Text(
-                            text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
-                            fontSize = 18.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        Card(
-                            modifier = modifier.wrapContentSize(),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = colorResource(R.color.discount_background)
-                            )
-                        ) {
-                            Text(
-                                text = "-${appSpyInfo.discount.toInt()}%",
-                                fontSize = 18.sp,
-                                color = colorResource(R.color.discount_text),
-                                modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                            )
-                        }
-                    }
-                } else {
-                    Text(
-                        text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
-                        fontSize = 16.sp
-                    )
-                }
-
-                Text(
-                    text = "Developers: ${appDetails.developers?.joinToString(", ").toString()}"
-                )
-
-                Text(
-                    text = "Publishers: ${appDetails.publishers?.joinToString(", ")}"
-                )
-
-                Text(
-                    text = "Release Date: ${appDetails.releaseDate.date}"
-                )
-            }
+            GeneralInfo(appDetails, appSpyInfo, modifier, contentPadding)
         }
 
         item {
-            Column(
-                modifier = modifier.padding(12.dp),
-                horizontalAlignment = Alignment.Start
+            ShortInfo(appDetails, appSpyInfo, modifier, contentPadding)
+        }
+    }
+}
+
+@Composable
+fun TitleCard(
+    appDetails: AppDetails,
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .shadow(8.dp, RoundedCornerShape(0.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = appDetails.name.uppercase(),
+            fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun GeneralInfo(
+    appDetails: AppDetails,
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    Column(
+        modifier = modifier.padding(12.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = appDetails.name,
+            fontSize = 24.sp
+        )
+
+        if (appSpyInfo.price == "0") {
+            Box(
+                modifier = modifier
+                    .background(
+                        colorResource(R.color.discount_background),
+                        shape = RoundedCornerShape(8.dp)
+                    )
             ) {
                 Text(
-                    text = appDetails.shortDescription,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 20.sp,
-                    modifier = modifier.padding(vertical = 20.dp)
-                )
-
-                Text(
-                    text = "Genres: ${
-                        appDetails.genres?.joinToString(", ") { genre ->
-                            genre.description
-                        }
-                    }"
+                    text = "FREE",
+                    color = colorResource(R.color.discount_text),
+                    fontSize = 16.sp,
+                    modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                 )
             }
+        } else if (appSpyInfo.discount.toInt() > 0) {
+            Row(
+                modifier = modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = formatCurrency(appSpyInfo.initialprice.toInt().div(100.0)),
+                    fontSize = 16.sp,
+                    textDecoration = TextDecoration.LineThrough,
+                    color = MaterialTheme.colorScheme.outline
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Text(
+                    text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Card(
+                    modifier = modifier.wrapContentSize(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorResource(R.color.discount_background)
+                    )
+                ) {
+                    Text(
+                        text = "-${appSpyInfo.discount.toInt()}%",
+                        fontSize = 18.sp,
+                        color = colorResource(R.color.discount_text),
+                        modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            }
+        } else {
+            Text(
+                text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
+                fontSize = 16.sp
+            )
         }
+
+        Text(
+            text = "Developers: ${appDetails.developers?.joinToString(", ").toString()}"
+        )
+
+        Text(
+            text = "Publishers: ${appDetails.publishers?.joinToString(", ")}"
+        )
+
+        Text(
+            text = "Release Date: ${appDetails.releaseDate.date}"
+        )
+    }
+}
+
+@Composable
+fun ShortInfo(
+    appDetails: AppDetails,
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    Column(
+        modifier = modifier.padding(12.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Genres: ${
+                appDetails.genres?.joinToString(", ") { genre ->
+                    genre.description
+                }
+            }"
+        )
+
+        Text(
+            text = appDetails.shortDescription,
+            fontStyle = FontStyle.Italic,
+            fontSize = 20.sp,
+            modifier = modifier.padding(vertical = 20.dp)
+        )
     }
 }
 
