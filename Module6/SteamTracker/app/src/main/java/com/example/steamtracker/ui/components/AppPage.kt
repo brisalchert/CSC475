@@ -1,8 +1,11 @@
 package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
+import com.example.steamtracker.mock.MockSteamworksRepository
 import com.example.steamtracker.model.Achievement
 import com.example.steamtracker.model.AchievementsContainer
 import com.example.steamtracker.model.AppDetails
@@ -51,8 +55,10 @@ import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.model.SupportInfo
 import com.example.steamtracker.model.SystemRequirements
+import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
+import kotlinx.coroutines.flow.asFlow
 import java.util.Locale
 
 @Composable
@@ -86,6 +92,10 @@ fun AppPage(
 
         item {
             GeneralInfo(appDetails, appSpyInfo, modifier, contentPadding)
+        }
+
+        item {
+            Genres(appDetails, appSpyInfo, modifier, contentPadding)
         }
 
         item {
@@ -251,6 +261,46 @@ fun GeneralInfo(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun Genres(
+    appDetails: AppDetails,
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        FlowRow(
+            modifier = modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Box(
+                modifier = modifier.height(50.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Genres: ",
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            appDetails.genres?.forEach {
+                Box(
+                    modifier = modifier.height(50.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Genre(it.description)
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun ShortInfo(
     appDetails: AppDetails,
@@ -262,14 +312,6 @@ fun ShortInfo(
         modifier = modifier.padding(12.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        Text(
-            text = "Genres: ${
-                appDetails.genres?.joinToString(", ") { genre ->
-                    genre.description
-                }
-            }"
-        )
-
         Text(
             text = appDetails.shortDescription,
             fontStyle = FontStyle.Italic,
@@ -410,7 +452,12 @@ fun AppPagePreview() {
                 genre = "genre",
                 tags = mapOf("tag" to 123 as Integer)
             ),
-            newsAppsViewModel = TODO(),
+            newsAppsViewModel = NewsAppsViewModel(
+                MockSteamworksRepository(
+                    listOf(listOf<AppNewsWithDetails>()).asFlow(),
+                    listOf(listOf<Int>()).asFlow()
+                )
+            ),
             modifier = Modifier,
             contentPadding = PaddingValues(0.dp)
         )

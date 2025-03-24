@@ -12,4 +12,6 @@
     <color name="reviews_positive">#8bff95</color>
     <color name="reviews_neutral">#fffd8b</color>
     <color name="reviews_negative">#ff8b8b</color>
+    <color name="genre_container">#399bc3</color>
+    <color name="genre_text">#48cbff</color>
 </resources>
