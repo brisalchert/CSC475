@@ -138,7 +138,29 @@ fun GeneralInfo(
             fontSize = 24.sp
         )
 
-        if (appSpyInfo.price == null || appSpyInfo.price == "0") {
+        val priceInitial: Int
+        val priceFinal: Int
+        val discount: Int
+
+        val hasAppDetailsPrice = appDetails.priceOverview != null
+        val hasAppSpyInfoPrice = appSpyInfo.price != null && appSpyInfo.initialprice != null && appSpyInfo.discount != null
+
+        // Check for price details or assign default values
+        if (hasAppDetailsPrice) {
+            priceInitial = appDetails.priceOverview.initial
+            priceFinal = appDetails.priceOverview.final
+            discount = appDetails.priceOverview.discountPercent
+        } else if (hasAppSpyInfoPrice) {
+            priceInitial = appSpyInfo.initialprice.toInt()
+            priceFinal = appSpyInfo.price.toInt()
+            discount = appSpyInfo.discount.toInt()
+        } else {
+            priceInitial = 0
+            priceFinal = 0
+            discount = 0
+        }
+
+        if (priceFinal == priceInitial && priceFinal == 0) {
             Box(
                 modifier = modifier
                     .background(
@@ -153,14 +175,13 @@ fun GeneralInfo(
                     modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                 )
             }
-        // If price != null, other price fields will have values
-        } else if (appSpyInfo.discount!!.toInt() > 0) {
+        } else if (discount > 0) {
             Row(
                 modifier = modifier,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = formatCurrency(appSpyInfo.initialprice!!.toInt().div(100.0)),
+                    text = formatCurrency(priceInitial.div(100.0)),
                     fontSize = 16.sp,
                     textDecoration = TextDecoration.LineThrough,
                     color = MaterialTheme.colorScheme.outline
@@ -169,7 +190,7 @@ fun GeneralInfo(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
+                    text = formatCurrency(priceFinal.div(100.0)),
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -185,7 +206,7 @@ fun GeneralInfo(
                     )
                 ) {
                     Text(
-                        text = "-${appSpyInfo.discount.toInt()}%",
+                        text = "-${discount}%",
                         fontSize = 18.sp,
                         color = colorResource(R.color.discount_text),
                         modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -193,10 +214,27 @@ fun GeneralInfo(
                 }
             }
         } else {
-            Text(
-                text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
-                fontSize = 16.sp
-            )
+            if (priceFinal == 0) {
+                Box(
+                    modifier = modifier
+                        .background(
+                            colorResource(R.color.discount_background),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ) {
+                    Text(
+                        text = "FREE",
+                        color = colorResource(R.color.discount_text),
+                        fontSize = 16.sp,
+                        modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                    )
+                }
+            } else {
+                Text(
+                    text = formatCurrency(priceFinal.div(100.0)),
+                    fontSize = 16.sp
+                )
+            }
         }
 
         Text(
