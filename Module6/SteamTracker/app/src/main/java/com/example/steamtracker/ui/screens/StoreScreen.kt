@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
-import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
+import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
 import com.example.steamtracker.ui.components.SalesTab
@@ -43,8 +43,10 @@ fun StoreScreen(
     getSales: () -> Unit,
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,
-    searchResults: List<AppInfo>,
+    autocompleteResults: List<SearchAppInfo>,
     newsAppsViewModel: ViewModel,
+    navigateSearch: () -> Unit,
+    onSearch: (query: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -58,7 +60,9 @@ fun StoreScreen(
         StoreSearchBar(
             searchStore = searchStore,
             clearSearch = clearSearch,
-            searchResults = searchResults
+            autocompleteResults = autocompleteResults,
+            navigateSearch = navigateSearch,
+            onSearch = onSearch
         )
 
         Column(
@@ -112,8 +116,10 @@ fun StoreScreenPreview() {
             getSales = {},
             searchStore = { string: String -> },
             clearSearch = {},
-            searchResults = listOf(),
-            newsAppsViewModel = object: ViewModel() {}
+            autocompleteResults = listOf(),
+            newsAppsViewModel = object: ViewModel() {},
+            navigateSearch = {},
+            onSearch = {}
         )
     }
 }

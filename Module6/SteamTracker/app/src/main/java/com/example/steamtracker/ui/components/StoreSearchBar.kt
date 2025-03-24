@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
@@ -31,10 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -46,7 +51,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 fun StoreSearchBar(
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,
-    searchResults: List<AppInfo>,
+    autocompleteResults: List<SearchAppInfo>,
+    navigateSearch: () -> Unit,
+    onSearch: (query: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -64,6 +71,7 @@ fun StoreSearchBar(
     ) {
         var query by remember { mutableStateOf("") }
         var isEditing by remember { mutableStateOf(false) }
+        val keyboardController = LocalSoftwareKeyboardController.current
 
         // Debounce autocomplete results, ensuring only necessary updates are processed
         LaunchedEffect(query) {
@@ -83,18 +91,29 @@ fun StoreSearchBar(
                 }
         }
 
-        TextField( // TODO: Implement Search Screen
+        TextField(
             value = query,
             onValueChange = { newQuery ->
                 query = newQuery
             },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Text
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    onSearch(query)
+                    navigateSearch()
+                }
+            ),
             placeholder = { Text("Search the Steam Store") },
             singleLine = true,
             leadingIcon = {
                 Icon(
                     Icons.Filled.Menu,
                     contentDescription = "Menu Icon",
-                    modifier = modifier.padding(PaddingValues(10.dp, 0.dp, 0.dp, 0.dp))
+                    modifier = Modifier.padding(PaddingValues(10.dp, 0.dp, 0.dp, 0.dp))
                 )
             },
             trailingIcon = {
@@ -123,8 +142,8 @@ fun StoreSearchBar(
         )
 
         // Only display autocomplete when the user benefits from it
-        if (isEditing && searchResults.isNotEmpty()) {
-            SearchAutoComplete(searchResults)
+        if (isEditing && autocompleteResults.isNotEmpty()) {
+            SearchAutoComplete(autocompleteResults)
         }
     }
 }
@@ -134,16 +153,18 @@ fun StoreSearchBar(
 fun StoreSearchBarPreview() {
     SteamTrackerTheme {
         StoreSearchBar(
-            searchStore = { string: String -> },
+            searchStore = {},
             clearSearch = {},
-            searchResults = listOf()
+            autocompleteResults = listOf(),
+            navigateSearch = {},
+            onSearch = {}
         )
     }
 }
 
 @Composable
 fun SearchAutoComplete(
-    searchResults: List<AppInfo>,
+    searchResults: List<SearchAppInfo>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {

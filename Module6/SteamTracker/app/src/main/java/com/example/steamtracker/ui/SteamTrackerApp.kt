@@ -2,12 +2,9 @@
 
 package com.example.steamtracker.ui
 
-import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -54,7 +51,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
 import com.example.steamtracker.data.NewsAppsViewModel
-import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
@@ -62,13 +58,18 @@ import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
+import com.example.steamtracker.ui.screens.SearchScreen
 
-enum class TrackerScreens {
+enum class TrackerMainScreens {
     Store,
     News,
     Collections,
     Notifications,
     Menu
+}
+
+enum class TrackerOtherScreens {
+    Search
 }
 
 @Composable
@@ -84,7 +85,7 @@ fun SteamTrackerApp(
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
-    val selectedScreen = remember { mutableStateOf(TrackerScreens.Store.name) }
+    val selectedScreen = remember { mutableStateOf(TrackerMainScreens.Store.name) }
 
     // Dynamically update navigation status based on current navigation destination
     var canNavigateBack by remember { mutableStateOf(navController.previousBackStackEntry != null) }
@@ -94,6 +95,7 @@ fun SteamTrackerApp(
 
     // UI States for search data updates
     val nameFromId by searchViewModel.nameFromId.collectAsState()
+    val autocompleteResults by searchViewModel.autocompleteResults.collectAsState()
     val searchResults by searchViewModel.searchResults.collectAsState()
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -102,6 +104,7 @@ fun SteamTrackerApp(
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
     val salesUiState by salesViewModel.salesUiState.collectAsState()
     val newsUiState by newsViewModel.newsUiState.collectAsState()
+    val searchUiState by searchViewModel.searchUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -135,7 +138,7 @@ fun SteamTrackerApp(
             TrackerBottomAppBar(
                 // Prevent bottom app bar navigation from adding back stack entries. Instead,
                 // replace the start destination with the current tab.
-                destinations = TrackerScreens.entries.associate { screen ->
+                destinations = TrackerMainScreens.entries.associate { screen ->
                     screen.name to {
                         navController.navigate(screen.name) {
                             popUpTo(0) { inclusive = true }
@@ -154,7 +157,7 @@ fun SteamTrackerApp(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = TrackerScreens.Store.name,
+                startDestination = TrackerMainScreens.Store.name,
                 enterTransition = { EnterTransition.None },
                 exitTransition = { ExitTransition.None },
                 popEnterTransition = { EnterTransition.None },
@@ -162,21 +165,27 @@ fun SteamTrackerApp(
                 modifier = Modifier
             ) {
                 composable(
-                    route = TrackerScreens.Store.name
+                    route = TrackerMainScreens.Store.name
                 ) {
                     StoreScreen(
                         featuredUiState = featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
                         salesUiState = salesUiState,
                         getSales = salesViewModel::getSalesGames,
-                        searchStore = searchViewModel::getSearchResults,
+                        searchStore = searchViewModel::getAutocompleteResults,
                         clearSearch = searchViewModel::clearSearchResults,
-                        searchResults = searchResults.items,
-                        newsAppsViewModel = newsAppsViewModel
+                        autocompleteResults = autocompleteResults.items,
+                        newsAppsViewModel = newsAppsViewModel,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.Search.name) {
+                                popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
+                            }
+                        },
+                        onSearch = searchViewModel::getSearchResults
                     )
                 }
                 composable(
-                    route = TrackerScreens.News.name
+                    route = TrackerMainScreens.News.name
                 ) {
                     NewsScreen(
                         newsUiState = newsUiState,
@@ -187,19 +196,37 @@ fun SteamTrackerApp(
                     )
                 }
                 composable(
-                    route = TrackerScreens.Collections.name
+                    route = TrackerMainScreens.Collections.name
                 ) {
                     // TODO: Implement Collections
                 }
                 composable(
-                    route = TrackerScreens.Notifications.name
+                    route = TrackerMainScreens.Notifications.name
                 ) {
                     // TODO: Implement Notifications
                 }
                 composable(
-                    route = TrackerScreens.Menu.name
+                    route = TrackerMainScreens.Menu.name
                 ) {
                     // TODO: Implement Menu/Settings/Preferences
+                }
+                composable(
+                    route = TrackerOtherScreens.Search.name
+                ) {
+                    SearchScreen(
+                        searchUiState = searchUiState,
+                        searchStore = searchViewModel::getAutocompleteResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        autocompleteResults = autocompleteResults.items,
+                        searchResults = searchResults.items,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.Search.name) {
+                                popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
+                            }
+                        },
+                        onSearch = searchViewModel::getSearchResults,
+                        newsAppsViewModel = newsAppsViewModel
+                    )
                 }
             }
         }
@@ -220,6 +247,7 @@ fun TrackerTopAppBar(
         title = {
             Text(
                 text = stringResource(R.string.app_name),
+                color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.headlineSmall
             )
         },
@@ -238,8 +266,8 @@ fun TrackerTopAppBar(
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.primary,
+            scrolledContainerColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -251,11 +279,11 @@ fun TrackerBottomAppBar(
     modifier: Modifier = Modifier
 ) {
     val icons = mapOf(
-        TrackerScreens.Store.name to Icons.Filled.Store,
-        TrackerScreens.News.name to Icons.Filled.Newspaper,
-        TrackerScreens.Collections.name to Icons.Filled.CollectionsBookmark,
-        TrackerScreens.Notifications.name to Icons.Filled.Notifications,
-        TrackerScreens.Menu.name to Icons.Filled.Menu
+        TrackerMainScreens.Store.name to Icons.Filled.Store,
+        TrackerMainScreens.News.name to Icons.Filled.Newspaper,
+        TrackerMainScreens.Collections.name to Icons.Filled.CollectionsBookmark,
+        TrackerMainScreens.Notifications.name to Icons.Filled.Notifications,
+        TrackerMainScreens.Menu.name to Icons.Filled.Menu
     )
 
     BottomAppBar(

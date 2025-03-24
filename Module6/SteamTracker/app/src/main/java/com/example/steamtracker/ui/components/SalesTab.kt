@@ -57,7 +57,7 @@ fun SalesGamesList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn( // TODO: Implement app cards for sales page
+    LazyColumn( // TODO: Implement clicking on app cards
         modifier = modifier,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.Top,

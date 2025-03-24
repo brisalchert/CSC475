@@ -9,19 +9,35 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
+import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.model.StoreSearchRequest
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
+
+sealed interface SearchUiState {
+    data class Success(val searchResults: List<SearchAppInfo>) : SearchUiState
+    data object Loading : SearchUiState
+    data object Error : SearchUiState
+}
 
 @OptIn(FlowPreview::class)
 class SearchViewModel(
     private val storeRepository: StoreRepository
 ): ViewModel() {
-    // State flow for observing search results
+    // State flow for UI state
+    private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Loading)
+    val searchUiState: StateFlow<SearchUiState> = _searchUiState.asStateFlow()
+
+    // State flow for observing autocomplete search results
+    private val _autocompleteResults = MutableStateFlow(StoreSearchRequest(0, emptyList()))
+    val autocompleteResults: StateFlow<StoreSearchRequest> = _autocompleteResults
+
+    // State flow for observing actual search results
     private val _searchResults = MutableStateFlow(StoreSearchRequest(0, emptyList()))
     val searchResults: StateFlow<StoreSearchRequest> = _searchResults
 
@@ -34,13 +50,13 @@ class SearchViewModel(
     val errorMessage: StateFlow<String?> = _errorMessage
 
     /**
-     * Gets the search results for the given query, updating the live data
+     * Gets the autocomplete results for the given query, updating the live data
      */
-    fun getSearchResults(query: String) {
+    fun getAutocompleteResults(query: String) {
         viewModelScope.launch {
             try {
                 val response = storeRepository.getSearchResults(query)
-                _searchResults.update { response }
+                _autocompleteResults.update { response }
             } catch(e: IOException) {
                 _errorMessage.value = "Error: No Internet connection"
             } catch(e: HttpException) {
@@ -50,10 +66,30 @@ class SearchViewModel(
     }
 
     /**
+     * Gets the actual search results for the given query, updating the live data
+     */
+    fun getSearchResults(query: String) {
+        viewModelScope.launch {
+            // Set to loading on new query entered
+            _searchUiState.value = SearchUiState.Loading
+
+            try {
+                val response = storeRepository.getSearchResults(query)
+                _searchResults.update { response }
+                _searchUiState.value = SearchUiState.Success(response.items)
+            } catch(e: IOException) {
+                _searchUiState.value = SearchUiState.Error
+            } catch(e: HttpException) {
+                _searchUiState.value = SearchUiState.Error
+            }
+        }
+    }
+
+    /**
      * Clears the current search results, updating the live data
      */
     fun clearSearchResults() {
-        _searchResults.update { StoreSearchRequest(0, emptyList()) }
+        _autocompleteResults.update { StoreSearchRequest(0, emptyList()) }
     }
 
     /**
