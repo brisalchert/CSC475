@@ -95,15 +95,33 @@ fun AppPage(
         }
 
         item {
-            Genres(appDetails, appSpyInfo, modifier, contentPadding)
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Genres(appDetails, appSpyInfo, modifier, contentPadding)
+            }
         }
 
         item {
-            ReviewScore(appDetails, appSpyInfo, modifier, contentPadding)
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+            ) {
+                ReviewScore(appDetails, appSpyInfo, modifier, contentPadding)
+            }
         }
 
         item {
-            ShortInfo(appDetails, appSpyInfo, modifier, contentPadding)
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.inversePrimary)
+            ) {
+                ShortInfo(appDetails, appSpyInfo, modifier, contentPadding)
+            }
         }
     }
 }
@@ -269,33 +287,27 @@ fun Genres(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.outlineVariant)
+    FlowRow(
+        modifier = modifier.padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        FlowRow(
-            modifier = modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+        Box(
+            modifier = modifier.height(50.dp),
+            contentAlignment = Alignment.Center
         ) {
+            Text(
+                text = "Genres: ",
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        appDetails.genres?.forEach {
             Box(
                 modifier = modifier.height(50.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Genres: ",
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            appDetails.genres?.forEach {
-                Box(
-                    modifier = modifier.height(50.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Genre(it.description)
-                }
+                Genre(it.description)
             }
         }
     }
