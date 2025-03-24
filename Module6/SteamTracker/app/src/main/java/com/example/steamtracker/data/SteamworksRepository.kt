@@ -27,6 +27,7 @@ interface SteamworksRepository {
     suspend fun addNewsApp(appid: Int)
     suspend fun removeNewsApp(appid: Int)
     suspend fun getNewsAppIds(): List<Int>
+    suspend fun checkNewsApp(appId: Int): Boolean
 }
 
 class NetworkSteamworksRepository(
@@ -84,6 +85,10 @@ class NetworkSteamworksRepository(
 
     override suspend fun removeNewsApp(appid: Int) {
         newsAppsDao.deleteNewsApp(NewsAppEntity(appid))
+    }
+
+    override suspend fun checkNewsApp(appId: Int): Boolean {
+        return newsAppsDao.getNewsAppById(appId) != null
     }
 
     override suspend fun getNewsAppIds(): List<Int> {

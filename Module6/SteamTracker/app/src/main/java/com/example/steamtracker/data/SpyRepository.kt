@@ -15,6 +15,7 @@ interface SpyRepository {
     val topSales: Flow<List<SteamSpyAppWithTags>>
 
     suspend fun refreshTopSales()
+    suspend fun getSpyAppInfo(appId: Int): SteamSpyAppRequest
 }
 
 class NetworkSpyRepository(
@@ -47,6 +48,10 @@ class NetworkSpyRepository(
                 spyDao.insertTags(tagList)
             }
         }
+    }
+
+    override suspend fun getSpyAppInfo(appId: Int): SteamSpyAppRequest {
+        return spyApiService.getAppDetails(appId)
     }
 
     /**

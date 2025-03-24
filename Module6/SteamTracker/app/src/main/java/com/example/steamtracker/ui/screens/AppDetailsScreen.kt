@@ -37,9 +37,11 @@ fun AppDetailsScreen(
                 )
             } else {
                 AppPage(
-                    appDetailsUiState.appDetails,
-                    modifier,
-                    contentPadding
+                    appDetails = appDetailsUiState.appDetails,
+                    appSpyInfo = appDetailsUiState.appSpyInfo,
+                    newsAppsViewModel = newsAppsViewModel,
+                    modifier = modifier,
+                    contentPadding = contentPadding
                 )
             }
         }

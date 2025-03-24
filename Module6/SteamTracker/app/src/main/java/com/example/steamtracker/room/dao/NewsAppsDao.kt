@@ -20,5 +20,8 @@ interface NewsAppsDao {
     fun getAllNewsApps(): Flow<List<NewsAppEntity>>
 
     @Query("SELECT appid FROM news_apps")
-    fun getNewsAppIds(): List<Int>
+    suspend fun getNewsAppIds(): List<Int>
+
+    @Query("SELECT * FROM news_apps WHERE appid = :appId")
+    suspend fun getNewsAppById(appId: Int): Int?
 }
