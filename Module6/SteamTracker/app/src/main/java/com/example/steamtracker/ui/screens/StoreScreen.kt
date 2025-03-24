@@ -47,6 +47,8 @@ fun StoreScreen(
     newsAppsViewModel: ViewModel,
     navigateSearch: () -> Unit,
     onSearch: (query: String) -> Unit,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -86,8 +88,22 @@ fun StoreScreen(
 
             // Display the correct screen for the current selected tab
             when (tabIndex) {
-                0 -> FeaturedTab(featuredUiState, getFeatured, modifier, contentPadding)
-                1 -> SalesTab(salesUiState, getSales, modifier, contentPadding)
+                0 -> FeaturedTab(
+                    featuredUiState,
+                    getFeatured,
+                    navigateApp,
+                    onAppSelect,
+                    modifier,
+                    contentPadding
+                )
+                1 -> SalesTab(
+                    salesUiState,
+                    getSales,
+                    navigateApp,
+                    onAppSelect,
+                    modifier,
+                    contentPadding
+                )
                 2 -> Column {} // TODO: Implement recommendations
             }
         }
@@ -119,7 +135,9 @@ fun StoreScreenPreview() {
             autocompleteResults = listOf(),
             newsAppsViewModel = object: ViewModel() {},
             navigateSearch = {},
-            onSearch = {}
+            onSearch = {},
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }

@@ -178,6 +178,8 @@ fun SearchAutoComplete(
             SearchResult(
                 app = item,
                 newsAppsViewModel = object: ViewModel() {},
+                navigateApp = {},
+                onAppSelect = {},
                 modifier = modifier,
                 contentPadding = contentPadding
             )

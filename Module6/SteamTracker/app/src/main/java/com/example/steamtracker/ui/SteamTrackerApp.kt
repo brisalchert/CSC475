@@ -56,6 +56,7 @@ import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
+import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 import com.example.steamtracker.ui.screens.SearchScreen
@@ -69,7 +70,8 @@ enum class TrackerMainScreens {
 }
 
 enum class TrackerOtherScreens {
-    Search
+    Search,
+    App
 }
 
 @Composable
@@ -105,6 +107,7 @@ fun SteamTrackerApp(
     val salesUiState by salesViewModel.salesUiState.collectAsState()
     val newsUiState by newsViewModel.newsUiState.collectAsState()
     val searchUiState by searchViewModel.searchUiState.collectAsState()
+    val appDetailsUiState by appDetailsViewModel.appDetailsUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -181,7 +184,13 @@ fun SteamTrackerApp(
                                 popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
                             }
                         },
-                        onSearch = searchViewModel::getSearchResults
+                        onSearch = searchViewModel::getSearchResults,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
                     )
                 }
                 composable(
@@ -192,7 +201,12 @@ fun SteamTrackerApp(
                         getNews = newsViewModel::getNews,
                         getNameFromId = searchViewModel::getNameFromId,
                         nameFromId = nameFromId,
-                        newsAppsViewModel = newsAppsViewModel
+                        newsAppsViewModel = newsAppsViewModel,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        }
                     )
                 }
                 composable(
@@ -225,7 +239,22 @@ fun SteamTrackerApp(
                             }
                         },
                         onSearch = searchViewModel::getSearchResults,
-                        newsAppsViewModel = newsAppsViewModel
+                        newsAppsViewModel = newsAppsViewModel,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.App.name
+                ) {
+                    AppDetailsScreen(
+                        appDetailsUiState = appDetailsUiState,
+                        getAppDetails = appDetailsViewModel::getAppDetails,
+                        newsAppsViewModel = newsAppsViewModel,
                     )
                 }
             }

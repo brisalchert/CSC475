@@ -41,6 +41,8 @@ fun SearchScreen(
     navigateSearch: () -> Unit,
     onSearch: (query: String) -> Unit,
     newsAppsViewModel: ViewModel,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -53,11 +55,13 @@ fun SearchScreen(
         ) {
             Spacer(modifier = modifier.height(140.dp))
 
-            when(searchUiState) {
+            when (searchUiState) {
                 is SearchUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
                 is SearchUiState.Success -> SearchResults(
                     searchResults,
                     newsAppsViewModel,
+                    navigateApp,
+                    onAppSelect,
                     modifier,
                     contentPadding
                 )
@@ -109,7 +113,9 @@ fun SearchScreenPreview() {
             searchResults = listOf(),
             navigateSearch = {},
             onSearch = {},
-            newsAppsViewModel = object: ViewModel() {}
+            newsAppsViewModel = object: ViewModel() {},
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }
@@ -118,6 +124,8 @@ fun SearchScreenPreview() {
 fun SearchResults(
     searchResults: List<SearchAppInfo>,
     newsAppsViewModel: ViewModel,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -131,6 +139,8 @@ fun SearchResults(
                 SearchResult(
                     result,
                     newsAppsViewModel,
+                    navigateApp,
+                    onAppSelect,
                     modifier,
                     contentPadding
                 )

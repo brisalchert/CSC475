@@ -1,9 +1,5 @@
 package com.example.steamtracker.ui.screens
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -13,47 +9,44 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface AppDetailsUiState {
-    data class SuccessAppDetails(val appDetails: AppDetails?) : AppDetailsUiState
-    data object Error : AppDetailsUiState
+    data class Success(val appDetails: AppDetails?, val appId: Int) : AppDetailsUiState
+    data class Error(val appId: Int) : AppDetailsUiState
     data object Loading : AppDetailsUiState
 }
 
 class AppDetailsViewModel(
     private val storeRepository: StoreRepository
 ): ViewModel() {
-    /** The mutable State that stores the status of the most recent request */
-    var appDetailsUiState: AppDetailsUiState by mutableStateOf(AppDetailsUiState.Loading)
-        private set
-    var appId: Int by mutableIntStateOf(0)
-        private set
+    // State flow for observing UI updates
+    private val _appDetailsUiState = MutableStateFlow<AppDetailsUiState>(AppDetailsUiState.Loading)
+    val appDetailsUiState: StateFlow<AppDetailsUiState> = _appDetailsUiState.asStateFlow()
 
     /**
-     * Gets featured games from the API Retrofit services and updates the
-     * list of featured games
+     * Gets detailed information for an application
      */
-    fun getAppDetails() {
+    fun getAppDetails(appId: Int) {
         viewModelScope.launch {
-            appDetailsUiState = AppDetailsUiState.Loading
-            appDetailsUiState = try {
-                AppDetailsUiState.SuccessAppDetails(storeRepository.getAppDetails(appId))
+            // Set UI state to loading before fetching
+            _appDetailsUiState.update { AppDetailsUiState.Loading }
+
+            try {
+                val response = storeRepository.getAppDetails(appId)
+                _appDetailsUiState.update { AppDetailsUiState.Success(response, appId) }
             } catch (e: IOException) {
-                AppDetailsUiState.Error
+                _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
             } catch (e: HttpException) {
-                AppDetailsUiState.Error
+                _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
             }
         }
-    }
-
-    /**
-     * Sets the App ID to a new ID
-     */
-    fun setAppDetailsId(appId: Int) {
-        this.appId = appId
     }
 
     /**

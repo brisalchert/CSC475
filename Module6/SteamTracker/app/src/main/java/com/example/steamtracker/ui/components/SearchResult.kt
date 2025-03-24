@@ -38,13 +38,19 @@ import com.example.steamtracker.utils.formatCurrency
 fun SearchResult(
     app: SearchAppInfo,
     newsAppsViewModel: ViewModel,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(12.dp),
+        onClick = {
+            onAppSelect(app.id)
+            navigateApp()
+        }
     ) {
         Row(
             modifier = modifier.fillMaxWidth(),
@@ -139,7 +145,9 @@ fun SearchResultPreview() {
                 ),
                 streamingvideo = false,
             ),
-            newsAppsViewModel = object: ViewModel() {}
+            newsAppsViewModel = object: ViewModel() {},
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }

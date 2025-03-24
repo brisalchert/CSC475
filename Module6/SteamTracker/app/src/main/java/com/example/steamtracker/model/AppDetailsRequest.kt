@@ -52,7 +52,7 @@ data class AppDetails(
     val legalNotice: String? = null,
     val developers: List<String>? = null,
     val publishers: List<String>,
-    val demos: Demos? = null,
+    val demos: List<Demos>? = null,
     @SerializedName(value = "price_overview")
     val priceOverview: PriceOverview? = null,
     val packages: List<Int>,

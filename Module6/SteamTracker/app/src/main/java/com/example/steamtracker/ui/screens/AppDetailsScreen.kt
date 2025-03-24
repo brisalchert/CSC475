@@ -17,31 +17,43 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
-import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.AppPage
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun AppDetailsScreen(
     appDetailsUiState: AppDetailsUiState,
-    getAppDetails: () -> Unit,
+    getAppDetails: (appId: Int) -> Unit,
     newsAppsViewModel: ViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     when(appDetailsUiState) {
         is AppDetailsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is AppDetailsUiState.SuccessAppDetails -> AppPage(
-            appDetailsUiState.appDetails,
-            modifier,
-            contentPadding
+        is AppDetailsUiState.Success -> {
+            if (appDetailsUiState.appDetails == null) {
+                AppDetailsErrorScreen(
+                    retryAction = { getAppDetails(appDetailsUiState.appId) }
+                )
+            } else {
+                AppPage(
+                    appDetailsUiState.appDetails,
+                    modifier,
+                    contentPadding
+                )
+            }
+        }
+        is AppDetailsUiState.Error -> AppDetailsErrorScreen(
+            retryAction = { getAppDetails(appDetailsUiState.appId) }
         )
-        is AppDetailsUiState.Error -> AppDetailsErrorScreen(getAppDetails)
     }
 }
 
 @Composable
-fun AppDetailsErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+fun AppDetailsErrorScreen(
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,

@@ -7,18 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.ui.screens.AppDetailsUiState
 
 @Composable
 fun AppPage(
-    appDetails: AppDetails?,
+    appDetails: AppDetails,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    if (appDetails == null) {
-        Text("App Not Found")
-    } else {
-        AppText(appDetails, modifier, contentPadding)
-    }
+    AppText(
+        appDetails = appDetails
+    )
 }
 
 @Composable

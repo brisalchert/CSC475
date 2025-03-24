@@ -32,11 +32,17 @@ import com.example.steamtracker.utils.formatCurrency
 @Composable
 fun FeaturedApp(
     appInfo: AppInfo,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card( // TODO: Implement clicking on app to visit details page
         modifier = modifier.padding(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        onClick = {
+            onAppSelect(appInfo.id)
+            navigateApp()
+        }
     ) {
         Column(
             modifier = modifier,

@@ -1,14 +1,10 @@
 package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +19,8 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 fun SalesTab(
     salesUiState: SalesUiState,
     getSales: () -> Unit,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -31,6 +29,8 @@ fun SalesTab(
         is SalesUiState.Success -> SalesGamesList(
             salesGames = salesUiState.salesGames
                 .sortedByDescending { it.discount },
+            navigateApp = navigateApp,
+            onAppSelect = onAppSelect,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -47,13 +47,20 @@ fun SalesTab(
 @Composable
 fun SalesTabPreview() {
     SteamTrackerTheme {
-        SalesTab(SalesUiState.Success(listOf()), {})
+        SalesTab(
+            SalesUiState.Success(listOf()),
+            {},
+            {},
+            {}
+        )
     }
 }
 
 @Composable
 fun SalesGamesList(
     salesGames: List<SteamSpyAppRequest>,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -74,6 +81,8 @@ fun SalesGamesList(
         items(items = salesGames) { game ->
             SalesApp(
                 appInfo = game,
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect,
                 modifier = modifier
             )
         }
