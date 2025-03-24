@@ -1,20 +1,28 @@
 package com.example.steamtracker.ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -73,7 +81,7 @@ fun AppPage(
         modifier = modifier.fillMaxWidth()
     ) {
         item {
-            TitleCard(appDetails, appSpyInfo, modifier, contentPadding)
+            TitleCard(appDetails)
         }
 
         item {
@@ -91,17 +99,7 @@ fun AppPage(
         }
 
         item {
-            GeneralInfo(appDetails, appSpyInfo, modifier, contentPadding)
-        }
-
-        item {
-            Box(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.outlineVariant)
-            ) {
-                Genres(appDetails, appSpyInfo, modifier, contentPadding)
-            }
+            GeneralInfo(appDetails, appSpyInfo, modifier)
         }
 
         item {
@@ -110,7 +108,29 @@ fun AppPage(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
             ) {
-                ReviewScore(appDetails, appSpyInfo, modifier, contentPadding)
+                ReviewScore(appSpyInfo, modifier)
+            }
+        }
+
+        item {
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Genres(appDetails, modifier)
+            }
+        }
+
+        if (appSpyInfo.tags != null) {
+            item {
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceDim)
+                ) {
+                    Tags(appSpyInfo, modifier)
+                }
             }
         }
 
@@ -120,7 +140,7 @@ fun AppPage(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.inversePrimary)
             ) {
-                ShortInfo(appDetails, appSpyInfo, modifier, contentPadding)
+                ShortInfo(appDetails, modifier)
             }
         }
     }
@@ -128,10 +148,7 @@ fun AppPage(
 
 @Composable
 fun TitleCard(
-    appDetails: AppDetails,
-    appSpyInfo: SteamSpyAppRequest,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    appDetails: AppDetails
 ) {
     Box(
         modifier = Modifier
@@ -154,8 +171,7 @@ fun TitleCard(
 fun GeneralInfo(
     appDetails: AppDetails,
     appSpyInfo: SteamSpyAppRequest,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.padding(12.dp),
@@ -283,9 +299,7 @@ fun GeneralInfo(
 @Composable
 fun Genres(
     appDetails: AppDetails,
-    appSpyInfo: SteamSpyAppRequest,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     FlowRow(
         modifier = modifier.padding(12.dp),
@@ -297,7 +311,7 @@ fun Genres(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Genres: ",
+                text = "GENRES: ",
                 fontWeight = FontWeight.Bold
             )
         }
@@ -307,8 +321,44 @@ fun Genres(
                 modifier = modifier.height(50.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Genre(it.description)
+                Genre(it.description, true) // TODO: Add genre favorites
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@Composable
+fun Tags(
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        modifier = modifier.height(56.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        stickyHeader {
+            Row(
+                modifier = modifier
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "TAGS:",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = modifier.padding(12.dp)
+                )
+            }
+        }
+
+        items(items = appSpyInfo.tags!!.keys.toList()) { key ->
+            Tag(
+                tag = key,
+                favorite = true
+            ) // TODO: Add tag favorites
         }
     }
 }
@@ -316,9 +366,7 @@ fun Genres(
 @Composable
 fun ShortInfo(
     appDetails: AppDetails,
-    appSpyInfo: SteamSpyAppRequest,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.padding(12.dp),
@@ -335,10 +383,8 @@ fun ShortInfo(
 
 @Composable
 fun ReviewScore(
-    appDetails: AppDetails,
     appSpyInfo: SteamSpyAppRequest,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier
 ) {
     if (appSpyInfo.positive > 0 && appSpyInfo.negative > 0) {
         val percentPositive = (appSpyInfo.positive.toDouble()

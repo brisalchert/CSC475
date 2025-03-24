@@ -14,4 +14,6 @@
     <color name="reviews_negative">#ff8b8b</color>
     <color name="genre_container">#399bc3</color>
     <color name="genre_text">#48cbff</color>
+    <color name="tag_text">#ffddfd</color>
+    <color name="tag_container">#ffa1f9</color>
 </resources>

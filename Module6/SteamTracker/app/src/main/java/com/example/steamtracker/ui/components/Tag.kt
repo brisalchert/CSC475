@@ -31,8 +31,8 @@ import com.example.steamtracker.R
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun Genre(
-    genre: String,
+fun Tag(
+    tag: String,
     favorite: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +41,6 @@ fun Genre(
 
     Card(
         modifier = modifier
-            .padding(2.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = { pressOffset ->
@@ -51,11 +50,11 @@ fun Genre(
             },
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.genre_container)
+            containerColor = colorResource(R.color.tag_container)
         )
     ) {
         Row(
-            modifier = modifier.padding(8.dp),
+            modifier = Modifier.padding(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -63,13 +62,13 @@ fun Genre(
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Check Icon",
-                    tint = colorResource(R.color.genre_text)
+                    tint = colorResource(R.color.tag_text)
                 )
             }
 
             Text(
-                text = genre,
-                color = colorResource(R.color.genre_text)
+                text = tag,
+                color = colorResource(R.color.tag_text),
             )
 
             DropdownMenu(
@@ -78,18 +77,18 @@ fun Genre(
                 offset = DpOffset.Zero
             ) {
                 val text: String = if (favorite) {
-                    "Remove genre from favorites"
+                    "Remove tag from favorites"
                 } else {
-                    "Add genre to favorites"
+                    "Add tag to favorites"
                 }
 
                 DropdownMenuItem(
                     text = { Text(text) },
                     onClick = {
                         val text: String = if (favorite) {
-                            "Genre \"$genre\" removed from favorites"
+                            "Tag \"$tag\" removed from favorites"
                         } else {
-                            "Genre \"$genre\" added to favorites"
+                            "Tag \"$tag\" added to favorites"
                         }
 
                         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
@@ -103,8 +102,8 @@ fun Genre(
 
 @Preview(showBackground = true)
 @Composable
-fun GenrePreview() {
+fun TagPreview() {
     SteamTrackerTheme {
-        Genre("Genre", true)
+        Tag("Tag", true)
     }
 }
