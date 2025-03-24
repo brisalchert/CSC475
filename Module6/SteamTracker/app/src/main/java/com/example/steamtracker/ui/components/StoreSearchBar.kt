@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.ViewModel
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import kotlinx.coroutines.FlowPreview
@@ -174,7 +175,12 @@ fun SearchAutoComplete(
         horizontalAlignment = Alignment.Start
     ) {
         items(items = searchResults) { item ->
-            Text(item.name)
+            SearchResult(
+                app = item,
+                newsAppsViewModel = object: ViewModel() {},
+                modifier = modifier,
+                contentPadding = contentPadding
+            )
         }
     }
 }
