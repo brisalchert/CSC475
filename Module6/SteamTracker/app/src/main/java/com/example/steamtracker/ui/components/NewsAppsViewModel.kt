@@ -1,13 +1,12 @@
-package com.example.steamtracker.data
+package com.example.steamtracker.ui.components
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
-import com.example.steamtracker.ui.screens.NewsViewModel
+import com.example.steamtracker.data.SteamworksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -34,7 +33,8 @@ class NewsAppsViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
+                val application =
+                    (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as SteamTrackerApplication)
                 val steamworksRepository = application.container.steamworksRepository
                 NewsAppsViewModel(steamworksRepository = steamworksRepository)
             }

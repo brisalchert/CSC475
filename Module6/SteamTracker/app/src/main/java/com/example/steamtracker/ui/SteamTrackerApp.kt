@@ -50,7 +50,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
-import com.example.steamtracker.data.NewsAppsViewModel
+import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel

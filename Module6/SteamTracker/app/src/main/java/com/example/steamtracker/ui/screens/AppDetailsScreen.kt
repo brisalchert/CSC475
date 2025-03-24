@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
-import com.example.steamtracker.data.NewsAppsViewModel
+import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.AppPage
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
