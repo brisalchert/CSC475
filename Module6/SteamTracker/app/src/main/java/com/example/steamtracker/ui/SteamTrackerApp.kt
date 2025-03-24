@@ -178,7 +178,6 @@ fun SteamTrackerApp(
                         searchStore = searchViewModel::getAutocompleteResults,
                         clearSearch = searchViewModel::clearSearchResults,
                         autocompleteResults = autocompleteResults.items,
-                        newsAppsViewModel = newsAppsViewModel,
                         navigateSearch = {
                             navController.navigate(TrackerOtherScreens.Search.name) {
                                 popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
@@ -201,7 +200,6 @@ fun SteamTrackerApp(
                         getNews = newsViewModel::getNews,
                         getNameFromId = searchViewModel::getNameFromId,
                         nameFromId = nameFromId,
-                        newsAppsViewModel = newsAppsViewModel,
                         navigateApp = {
                             navController.navigate(TrackerOtherScreens.App.name) {
                                 popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
@@ -239,7 +237,6 @@ fun SteamTrackerApp(
                             }
                         },
                         onSearch = searchViewModel::getSearchResults,
-                        newsAppsViewModel = newsAppsViewModel,
                         navigateApp = {
                             navController.navigate(TrackerOtherScreens.App.name) {
                                 popUpTo(TrackerOtherScreens.App.name) { inclusive = true }

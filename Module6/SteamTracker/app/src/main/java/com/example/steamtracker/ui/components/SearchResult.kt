@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
@@ -37,7 +36,6 @@ import com.example.steamtracker.utils.formatCurrency
 @Composable
 fun SearchResult(
     app: SearchAppInfo,
-    newsAppsViewModel: ViewModel,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -145,7 +143,6 @@ fun SearchResultPreview() {
                 ),
                 streamingvideo = false,
             ),
-            newsAppsViewModel = object: ViewModel() {},
             navigateApp = {},
             onAppSelect = {}
         )

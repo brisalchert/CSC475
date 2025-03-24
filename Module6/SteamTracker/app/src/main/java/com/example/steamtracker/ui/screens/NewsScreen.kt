@@ -33,7 +33,6 @@ fun NewsScreen(
     getNews: () -> Unit,
     getNameFromId: (appId: Int) -> Unit,
     nameFromId: String,
-    newsAppsViewModel: ViewModel,
     navigateApp: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)

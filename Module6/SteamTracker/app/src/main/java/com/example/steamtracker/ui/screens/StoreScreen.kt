@@ -24,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.steamtracker.R
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SearchAppInfo
@@ -44,7 +43,6 @@ fun StoreScreen(
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,
     autocompleteResults: List<SearchAppInfo>,
-    newsAppsViewModel: ViewModel,
     navigateSearch: () -> Unit,
     onSearch: (query: String) -> Unit,
     navigateApp: () -> Unit,
@@ -133,7 +131,6 @@ fun StoreScreenPreview() {
             searchStore = { string: String -> },
             clearSearch = {},
             autocompleteResults = listOf(),
-            newsAppsViewModel = object: ViewModel() {},
             navigateSearch = {},
             onSearch = {},
             navigateApp = {},

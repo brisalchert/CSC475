@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.SearchResult
 import com.example.steamtracker.ui.components.SearchUiState
@@ -40,7 +39,6 @@ fun SearchScreen(
     searchResults: List<SearchAppInfo>,
     navigateSearch: () -> Unit,
     onSearch: (query: String) -> Unit,
-    newsAppsViewModel: ViewModel,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -59,7 +57,6 @@ fun SearchScreen(
                 is SearchUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
                 is SearchUiState.Success -> SearchResults(
                     searchResults,
-                    newsAppsViewModel,
                     navigateApp,
                     onAppSelect,
                     modifier,
@@ -113,7 +110,6 @@ fun SearchScreenPreview() {
             searchResults = listOf(),
             navigateSearch = {},
             onSearch = {},
-            newsAppsViewModel = object: ViewModel() {},
             navigateApp = {},
             onAppSelect = {}
         )
@@ -123,7 +119,6 @@ fun SearchScreenPreview() {
 @Composable
 fun SearchResults(
     searchResults: List<SearchAppInfo>,
-    newsAppsViewModel: ViewModel,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -138,7 +133,6 @@ fun SearchResults(
             itemsIndexed(searchResults) { index, result ->
                 SearchResult(
                     result,
-                    newsAppsViewModel,
                     navigateApp,
                     onAppSelect,
                     modifier,
