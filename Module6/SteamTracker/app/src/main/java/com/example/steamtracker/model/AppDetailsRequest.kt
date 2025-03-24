@@ -8,46 +8,46 @@ import java.lang.reflect.Type
 import kotlin.math.min
 
 data class AppDetailsRequest(
-    val success: Boolean,
+    val success: Boolean = false,
     @SerializedName(value = "data")
     val appDetails: AppDetails?
 )
 
 data class AppDetails(
-    val type: String,
-    val name: String,
+    val type: String = "None",
+    val name: String = "Name",
     @SerializedName(value = "steam_appid")
-    val steamAppId: Int,
+    val steamAppId: Int = 0,
     @SerializedName(value = "required_age")
-    val requiredAge: Int,
+    val requiredAge: Int = 0,
     @SerializedName(value = "is_free")
-    val isFree: Boolean,
+    val isFree: Boolean = false,
     @SerializedName(value = "controller_support")
     val controllerSupport: String? = null,
     val dlc: List<Int>? = null,
     @SerializedName(value = "detailed_description")
-    val detailedDescription: String,
+    val detailedDescription: String = "",
     @SerializedName(value = "about_the_game")
-    val aboutTheGame: String,
+    val aboutTheGame: String = "",
     @SerializedName(value = "short_description")
-    val shortDescription: String,
+    val shortDescription: String = "",
     val fullgame: FullGame? = null,
     @SerializedName(value = "supported_languages")
-    val supportedLanguages: String,
-    val reviews: String,
+    val supportedLanguages: String = "",
+    val reviews: String = "",
     @SerializedName(value = "header_image")
-    val headerImage: String,
+    val headerImage: String = "",
     @SerializedName(value = "capsule_image")
-    val capsuleImage: String,
+    val capsuleImage: String = "",
     @SerializedName(value = "capsule_imagev5")
-    val capsuleImageV5: String,
-    val website: String?,
+    val capsuleImageV5: String = "",
+    val website: String? = "",
     @SerializedName(value = "pc_requirements")
-    val pcRequirements: SystemRequirements,
+    val pcRequirements: SystemRequirements = SystemRequirements(),
     @SerializedName(value = "mac_requirements")
-    val macRequirements: SystemRequirements?,
+    val macRequirements: SystemRequirements? = SystemRequirements(),
     @SerializedName(value = "linux_requirements")
-    val linuxRequirements: SystemRequirements?,
+    val linuxRequirements: SystemRequirements? = SystemRequirements(),
     @SerializedName(value = "legal_notice")
     val legalNotice: String? = null,
     val developers: List<String>? = null,
@@ -55,10 +55,10 @@ data class AppDetails(
     val demos: List<Demos>? = null,
     @SerializedName(value = "price_overview")
     val priceOverview: PriceOverview? = null,
-    val packages: List<Int>,
+    val packages: List<Int> = listOf(),
     @SerializedName(value = "package_groups")
-    val packageGroups: List<PackageGroup>,
-    val platforms: Platforms,
+    val packageGroups: List<PackageGroup> = listOf(),
+    val platforms: Platforms = Platforms(),
     val metacritic: MetaCritic? = null,
     val categories: List<Category>? = null,
     val genres: List<Genre>? = null,
@@ -67,164 +67,164 @@ data class AppDetails(
     val recommendations: Recommendations? = null,
     val achievements: AchievementsContainer? = null,
     @SerializedName(value = "release_date")
-    val releaseDate: ReleaseDate,
+    val releaseDate: ReleaseDate = ReleaseDate(),
     @SerializedName(value = "support_info")
-    val supportInfo: SupportInfo,
-    val background: String,
+    val supportInfo: SupportInfo = SupportInfo(),
+    val background: String = "",
     @SerializedName(value = "background_raw")
-    val backgroundRaw: String,
+    val backgroundRaw: String = "",
     @SerializedName(value = "content_descriptors")
-    val contentDescriptors: ContentDescriptors,
-    val ratings: Map<String, Rating>
+    val contentDescriptors: ContentDescriptors = ContentDescriptors(),
+    val ratings: Map<String, Rating> = mapOf()
 )
 
 data class FullGame(
-    val appid: Int?,
+    val appid: Int? = 0,
     val name: String = "Uninitialized"
 )
 
 data class SystemRequirements(
-    val minimum: String,
-    val recommended: String
+    val minimum: String = "",
+    val recommended: String = ""
 )
 
 data class Demos(
-    val appid: Int,
-    val description: String
+    val appid: Int = 0,
+    val description: String = ""
 )
 
 data class PriceOverview(
-    val currency: String,
-    val initial: Int,
-    val final: Int,
+    val currency: String = "USD",
+    val initial: Int = 0,
+    val final: Int = 0,
     @SerializedName(value = "discount_percent")
-    val discountPercent: Int,
+    val discountPercent: Int = 0,
     @SerializedName(value = "initial_formatted")
-    val initialFormatted: String,
+    val initialFormatted: String = "",
     @SerializedName(value = "final_formatted")
-    val finalFormatted: String
+    val finalFormatted: String = ""
 )
 
 data class PackageGroup(
-    val name: String,
-    val title: String,
-    val description: String,
+    val name: String = "",
+    val title: String = "",
+    val description: String = "",
     @SerializedName(value = "selection_text")
-    val selectionText: String,
+    val selectionText: String = "",
     @SerializedName(value = "save_text")
-    val saveText: String,
+    val saveText: String = "",
     @SerializedName(value = "display_type")
-    val displayType: Int,
+    val displayType: Int = 0,
     @SerializedName(value = "is_recurring_subscription")
-    val isRecurringSubscription: String,
-    val subs: List<Package>
+    val isRecurringSubscription: String = "",
+    val subs: List<Package> = listOf()
 )
 
 data class Package(
-    val packageid: Int,
+    val packageid: Int = 0,
     @SerializedName(value = "percent_savings_text")
-    val percentSavingsText: String,
+    val percentSavingsText: String = "",
     @SerializedName(value = "percent_savings")
-    val percentSavings: Int,
+    val percentSavings: Int = 0,
     @SerializedName(value = "option_text")
-    val optionText: String,
+    val optionText: String = "",
     @SerializedName(value = "option_description")
-    val optionDescription: String,
+    val optionDescription: String = "",
     @SerializedName(value = "can_get_free_license")
-    val canGetFreeLicense: String,
+    val canGetFreeLicense: String = "",
     @SerializedName(value = "is_free_license")
-    val isFreeLicense: Boolean,
+    val isFreeLicense: Boolean = false,
     @SerializedName(value = "price_in_cents_with_discount")
-    val priceInCentsWithDiscount: Int
+    val priceInCentsWithDiscount: Int = 0
 )
 
 data class Platforms(
-    val windows: Boolean,
-    val mac: Boolean,
-    val linux: Boolean
+    val windows: Boolean = false,
+    val mac: Boolean = false,
+    val linux: Boolean = false
 )
 
 data class MetaCritic(
-    val score: Int,
-    val url: String
+    val score: Int = 0,
+    val url: String = ""
 )
 
 data class Category(
-    val id: Int,
-    val description: String
+    val id: Int = 0,
+    val description: String = ""
 )
 
 data class Genre(
-    val id: Int,
-    val description: String
+    val id: Int = 0,
+    val description: String = ""
 )
 
 data class Screenshot(
-    val id: Int,
+    val id: Int = 0,
     @SerializedName(value = "path_thumbnail")
-    val pathThumbnail: String,
+    val pathThumbnail: String = "",
     @SerializedName(value = "path_full")
-    val pathFull: String
+    val pathFull: String = ""
 )
 
 data class Movie(
-    val id: Int,
-    val name: String,
-    val thumbnail: String,
-    val webm: WebM,
-    val mp4: MP4,
-    val highlight: Boolean
+    val id: Int = 0,
+    val name: String = "",
+    val thumbnail: String = "",
+    val webm: WebM = WebM(),
+    val mp4: MP4 = MP4(),
+    val highlight: Boolean = false
 )
 
 data class WebM(
     @SerializedName(value = "480")
-    val res480: String,
-    val max: String
+    val res480: String = "",
+    val max: String = ""
 )
 
 data class MP4(
     @SerializedName(value = "480")
-    val res480: String,
-    val max: String
+    val res480: String = "",
+    val max: String = ""
 )
 
 data class Recommendations(
-    val total: Int
+    val total: Int = 0
 )
 
 data class AchievementsContainer(
-    val total: Int,
-    val highlighted: List<Achievement>
+    val total: Int = 0,
+    val highlighted: List<Achievement> = listOf()
 )
 
 data class Achievement(
-    val name: String,
-    val path: String
+    val name: String = "",
+    val path: String = ""
 )
 
 data class ReleaseDate(
     @SerializedName(value = "coming_soon")
-    val comingSoon: Boolean,
-    val date: String
+    val comingSoon: Boolean = false,
+    val date: String = ""
 )
 
 data class SupportInfo(
-    val url: String,
-    val email: String
+    val url: String = "",
+    val email: String = ""
 )
 
 data class ContentDescriptors(
-    val ids: List<Int>,
-    val notes: String?
+    val ids: List<Int> = listOf(),
+    val notes: String? = ""
 )
 
 data class Rating(
-    val rating: String,
+    val rating: String = "",
     val descriptors: String? = null,
     @SerializedName(value = "required_age")
-    val requiredAge: String,
+    val requiredAge: String = "",
     @SerializedName(value = "use_age_gate")
-    val useAgeGate: String,
+    val useAgeGate: String = "",
     @SerializedName(value = "interactive_elements")
     val interactiveElements: String? = null
 )
