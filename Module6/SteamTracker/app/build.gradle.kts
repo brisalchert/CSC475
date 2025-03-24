@@ -63,7 +63,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.accompanist.flowlayout)
 
     // Image and network request libraries (Coil and Retrofit)
     implementation(libs.coil.compose)

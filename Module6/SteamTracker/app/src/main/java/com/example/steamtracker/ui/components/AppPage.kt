@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
@@ -62,7 +63,7 @@ import com.example.steamtracker.utils.formatCurrency
 fun AppPage(
     appDetails: AppDetails,
     appSpyInfo: SteamSpyAppRequest,
-    newsAppsViewModel: ViewModel,
+    newsAppsViewModel: NewsAppsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -292,7 +293,7 @@ fun AppPagePreview() {
                 genre = "genre",
                 tags = mapOf("tag" to 123 as Integer)
             ),
-            newsAppsViewModel = object: ViewModel() {},
+            newsAppsViewModel = TODO(),
             modifier = Modifier,
             contentPadding = PaddingValues(0.dp)
         )
