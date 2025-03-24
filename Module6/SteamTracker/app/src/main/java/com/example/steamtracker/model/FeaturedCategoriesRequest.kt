@@ -7,42 +7,42 @@ import com.google.gson.annotations.SerializedName
 import java.lang.reflect.Type
 
 data class FeaturedCategoriesRequest(
-    val spotlightCategories: Map<String, Any>? = mapOf(),
-    val specials: RegularCategory? = RegularCategory(),
+    val spotlightCategories: Map<String, Any>?,
+    val specials: RegularCategory?,
     @SerializedName(value = "coming_soon")
-    val comingSoon: RegularCategory? = RegularCategory(),
+    val comingSoon: RegularCategory?,
     @SerializedName(value = "top_sellers")
-    val topSellers: RegularCategory? = RegularCategory(),
+    val topSellers: RegularCategory?,
     @SerializedName(value = "new_releases")
-    val newReleases: RegularCategory? = RegularCategory(),
-    val genres: StaticCategory? = StaticCategory(),
-    val trailerslideshow: StaticCategory? = StaticCategory(),
-    val status: Int = -1,
+    val newReleases: RegularCategory?,
+    val genres: StaticCategory?,
+    val trailerslideshow: StaticCategory?,
+    val status: Int,
 )
 
 data class SpotlightCategory(
-    val id: String = "ID",
-    val name: String = "Name",
-    val items: List<SpotlightItem>? = listOf()
+    val id: String,
+    val name: String,
+    val items: List<SpotlightItem>?
 )
 
 data class RegularCategory(
-    val id: String = "ID",
-    val name: String = "Name",
-    val items: List<AppInfo>? = listOf()
+    val id: String,
+    val name: String,
+    val items: List<AppInfo>?
 )
 
 data class SpotlightItem(
-    val name: String = "Name",
+    val name: String,
     @SerializedName(value = "header_image")
-    val headerImage: String = "",
-    val body: String = "",
-    val url: String = ""
+    val headerImage: String,
+    val body: String,
+    val url: String
 )
 
 data class StaticCategory(
-    val id: String = "ID",
-    val name: String = "Name"
+    val id: String,
+    val name: String
 )
 
 /**

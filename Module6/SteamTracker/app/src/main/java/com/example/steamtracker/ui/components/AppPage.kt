@@ -99,13 +99,6 @@ fun AppPage(
         }
 
         item {
-            CollectionsRow(
-                appDetails = appDetails,
-                newsAppsViewModel = newsAppsViewModel
-            )
-        }
-
-        item {
             GeneralInfo(appDetails, appSpyInfo, modifier)
         }
 
@@ -170,29 +163,6 @@ fun TitleCard(
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun CollectionsRow(
-    appDetails: AppDetails,
-    newsAppsViewModel: NewsAppsViewModel,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        WishlistBox(
-            appDetails = appDetails,
-            onList = false,
-            onClick = { }
-        )
-
-        NewsListBox(
-            appDetails = appDetails,
-            onList = false,
-            newsAppsViewModel = newsAppsViewModel
         )
     }
 }
@@ -462,8 +432,84 @@ fun ReviewScore(
 fun AppPagePreview() {
     SteamTrackerTheme {
         AppPage(
-            appDetails = AppDetails(),
-            appSpyInfo = SteamSpyAppRequest(),
+            appDetails = AppDetails(
+                type = "0",
+                name = "Video Game",
+                steamAppId = 123123,
+                requiredAge = 0,
+                isFree = false,
+                controllerSupport = "full",
+                dlc = listOf(123, 123),
+                detailedDescription = "Detailed game description",
+                aboutTheGame = "About the game",
+                shortDescription = "Short description",
+                fullgame = null,
+                supportedLanguages = "English",
+                reviews = "Reviews",
+                headerImage = "headerPath",
+                capsuleImage = "capsulePath",
+                capsuleImageV5 = "capsuleV5Path",
+                website = "url",
+                pcRequirements = SystemRequirements("minPC", "maxPC"),
+                macRequirements = SystemRequirements("minMac", "maxMac"),
+                linuxRequirements = SystemRequirements("minLinux", "maxLinux"),
+                legalNotice = "legal",
+                developers = listOf("Developer"),
+                publishers = listOf("Publisher"),
+                demos = null,
+                priceOverview = PriceOverview(
+                    currency = "USD",
+                    initial = 4999,
+                    final = 3999,
+                    discountPercent = 20,
+                    initialFormatted = "$49.99",
+                    finalFormatted = "39.99"
+                ),
+                packages = listOf(123, 345),
+                packageGroups = listOf(),
+                platforms = Platforms(true, true, false),
+                metacritic = MetaCritic(94, "Good"),
+                categories = listOf(Category(123, "Category")),
+                genres = listOf(Genre(123, "Genre"), Genre(123, "Genre")),
+                screenshots = listOf(Screenshot(1, "path", "path")),
+                movies = null,
+                recommendations = Recommendations(123),
+                achievements = AchievementsContainer(123, listOf(Achievement("Achievement", "path"))),
+                releaseDate = ReleaseDate(false, "12-12-1212"),
+                supportInfo = SupportInfo("path", "email"),
+                background = "url",
+                backgroundRaw = "url",
+                contentDescriptors = ContentDescriptors(listOf(1,2,3), "notes"),
+                ratings = mapOf("Positive" to Rating(
+                    "rating",
+                    descriptors = "descriptors",
+                    requiredAge = "requiredAge",
+                    useAgeGate = "useAgeGate",
+                    interactiveElements = "interactiveElements"
+                ))
+            ),
+            appSpyInfo = SteamSpyAppRequest(
+                appid = 0,
+                name = "VIDEO GAME",
+                developer = "developer",
+                publisher = "publisher",
+                scoreRank = "0",
+                positive = 123,
+                negative = 345,
+                userscore = 92,
+                owners = "Many",
+                averageForever = 123456,
+                average2Weeks = 123,
+                medianForever = 123456,
+                median2Weeks = 123,
+                price = "12.22",
+                initialprice = "13.13",
+                discount = "10",
+                ccu = 1231,
+                languages = "Languages",
+                genre = "genre",
+                tags = mapOf("tag" to 123 as Integer)
+            ),
             newsAppsViewModel = NewsAppsViewModel(
                 MockSteamworksRepository(
                     listOf(listOf<AppNewsWithDetails>()).asFlow(),
