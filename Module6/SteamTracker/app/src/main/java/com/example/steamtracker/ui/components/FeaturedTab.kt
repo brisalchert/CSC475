@@ -61,16 +61,6 @@ fun FeaturedTab(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun FeaturedTabPreview() {
-    SteamTrackerTheme {
-//        FeaturedTab(
-//            featuredUiState = FeaturedUiState.Success()),
-//            getFeatured = {},
-    }
-}
-
 @Composable
 fun FeaturedGamesList(
     featuredGames: List<AppInfo>,
