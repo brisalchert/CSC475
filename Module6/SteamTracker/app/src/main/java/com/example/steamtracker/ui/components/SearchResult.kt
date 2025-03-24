@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -32,7 +30,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.Platforms
-import com.example.steamtracker.model.Price
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
@@ -80,15 +77,14 @@ fun SearchResult(
 
             Spacer(modifier = Modifier.width(32.dp))
 
-            // Ensure price is not null
-//            val price = app.price ?: Price("USD", 0, 0)
-
             Box(
                 modifier = modifier.padding(end = 8.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
                 if (app.price != null) {
+                    // Show app price only if it is provided
                     if (app.price.initial != app.price.final) {
+                        // Show both the original and discounted prices
                         Column {
                             Text(
                                 text = formatCurrency(app.price.initial.div(100.0)),
@@ -111,6 +107,7 @@ fun SearchResult(
                         )
                     }
                 } else {
+                    // If not provided, the app is free to play
                     Text(
                         text = "FREE",
                         fontSize = 16.sp,
