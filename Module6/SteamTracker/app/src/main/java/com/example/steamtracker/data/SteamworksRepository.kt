@@ -16,6 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 interface SteamworksRepository {
     val newsList: Flow<List<AppNewsWithDetails>>
@@ -49,7 +51,17 @@ class NetworkSteamworksRepository(
                 if (isDataOutdated(lastUpdated)) {
                     // Get data from the API
                     val responseList = mutableListOf<AppNewsRequest>()
-                    appids.forEach { responseList.add(steamworksApiService.getAppNews(it)) }
+                    appids.forEach { app -> responseList.add(steamworksApiService.getAppNews(app)) }
+
+                    // Filter out news from over two months ago
+                    responseList.forEach { request ->
+                        request.appnews.newsitems.filter { item ->
+                            val now = Instant.now()
+                            val twoMonthsAgo = now.minus(2, ChronoUnit.MONTHS)
+
+                            Instant.ofEpochMilli(item.date).isAfter(twoMonthsAgo)
+                        }
+                    }
 
                     // Convert API response to Room database entities
                     val appNewsRequestEntities = mapRequestsToEntities(responseList)
