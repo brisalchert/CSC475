@@ -25,17 +25,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextGeometricTransform
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
@@ -55,9 +51,9 @@ import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.model.SupportInfo
 import com.example.steamtracker.model.SystemRequirements
-import com.example.steamtracker.ui.screens.AppDetailsUiState
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
+import java.util.Locale
 
 @Composable
 fun AppPage(
@@ -90,6 +86,10 @@ fun AppPage(
 
         item {
             GeneralInfo(appDetails, appSpyInfo, modifier, contentPadding)
+        }
+
+        item {
+            ReviewScore(appDetails, appSpyInfo, modifier, contentPadding)
         }
 
         item {
@@ -138,7 +138,7 @@ fun GeneralInfo(
             fontSize = 24.sp
         )
 
-        if (appSpyInfo.price == "0") {
+        if (appSpyInfo.price == null || appSpyInfo.price == "0") {
             Box(
                 modifier = modifier
                     .background(
@@ -153,13 +153,14 @@ fun GeneralInfo(
                     modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                 )
             }
-        } else if (appSpyInfo.discount.toInt() > 0) {
+        // If price != null, other price fields will have values
+        } else if (appSpyInfo.discount!!.toInt() > 0) {
             Row(
                 modifier = modifier,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = formatCurrency(appSpyInfo.initialprice.toInt().div(100.0)),
+                    text = formatCurrency(appSpyInfo.initialprice!!.toInt().div(100.0)),
                     fontSize = 16.sp,
                     textDecoration = TextDecoration.LineThrough,
                     color = MaterialTheme.colorScheme.outline
@@ -238,6 +239,54 @@ fun ShortInfo(
             modifier = modifier.padding(vertical = 20.dp)
         )
     }
+}
+
+@Composable
+fun ReviewScore(
+    appDetails: AppDetails,
+    appSpyInfo: SteamSpyAppRequest,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    if (appSpyInfo.positive > 0 && appSpyInfo.negative > 0) {
+        val percentPositive = (appSpyInfo.positive.toDouble()
+            .div(appSpyInfo.positive.plus(appSpyInfo.negative))).times(100)
+
+        var cardColor = colorResource(R.color.reviews_positive)
+
+        if (percentPositive < 60) {
+            cardColor = colorResource(R.color.reviews_negative)
+        } else if (percentPositive < 80) {
+            cardColor = colorResource(R.color.reviews_neutral)
+        }
+
+        Card(
+            modifier = modifier.padding(12.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = cardColor
+            )
+        ) {
+            Text(
+                text = "Reviews: ${String.format(Locale.US, "%.1f", percentPositive)}% positive",
+                modifier = modifier.padding(8.dp)
+            )
+        }
+    } else {
+        Card(
+            modifier = modifier.padding(12.dp),
+            elevation = CardDefaults.cardElevation(4.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.outlineVariant
+            )
+        ) {
+            Text(
+                text = "Reviews Unavailable",
+                modifier = modifier.padding(8.dp)
+            )
+        }
+    }
+
 }
 
 @Preview(showBackground = true)

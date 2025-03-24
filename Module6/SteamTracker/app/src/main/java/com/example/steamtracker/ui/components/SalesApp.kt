@@ -31,7 +31,7 @@ fun SalesApp(
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card( // TODO: Implement clicking on app to visit details page
+    Card(
         modifier = modifier.padding(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         onClick = {
@@ -57,7 +57,8 @@ fun SalesApp(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = formatCurrency(appInfo.initialprice.toInt().div(100.0)),
+                    // Prices will not be null, since these are specifically discounted games
+                    text = formatCurrency(appInfo.initialprice!!.toInt().div(100.0)),
                     fontSize = 16.sp,
                     textDecoration = TextDecoration.LineThrough,
                     color = MaterialTheme.colorScheme.outline
@@ -66,7 +67,7 @@ fun SalesApp(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 Text(
-                    text = formatCurrency(appInfo.price.toInt().div(100.0)),
+                    text = formatCurrency(appInfo.price!!.toInt().div(100.0)),
                     fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold

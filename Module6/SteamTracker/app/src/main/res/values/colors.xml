@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="discount_text">#FF60FF6F</color>
     <color name="discount_background">#FF12B922</color>
+    <color name="reviews_positive">#8bff95</color>
+    <color name="reviews_neutral">#fffd8b</color>
+    <color name="reviews_negative">#ff8b8b</color>
 </resources>

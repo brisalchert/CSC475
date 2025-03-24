@@ -21,9 +21,9 @@ data class SteamSpyAppRequest(
     val medianForever: Int,
     @SerializedName(value = "median_2weeks")
     val median2Weeks: Int,
-    val price: String,
-    val initialprice: String,
-    val discount: String,
+    val price: String? = null,
+    val initialprice: String? = null,
+    val discount: String? = null,
     val ccu: Int,
     val languages: String? = null,
     val genre: String? = null,
