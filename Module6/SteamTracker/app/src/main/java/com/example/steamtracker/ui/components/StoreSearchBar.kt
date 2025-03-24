@@ -177,7 +177,6 @@ fun SearchAutoComplete(
         items(items = searchResults) { item ->
             SearchResult(
                 app = item,
-                newsAppsViewModel = object: ViewModel() {},
                 navigateApp = {},
                 onAppSelect = {},
                 modifier = modifier,

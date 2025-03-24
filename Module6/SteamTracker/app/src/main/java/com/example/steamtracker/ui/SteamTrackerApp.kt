@@ -33,8 +33,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -84,6 +86,9 @@ fun SteamTrackerApp(
     newsAppsViewModel: NewsAppsViewModel = viewModel(factory = NewsAppsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
+    // Tab index for store screen
+    var tabIndex by rememberSaveable { mutableIntStateOf(0) }
+
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
@@ -171,6 +176,8 @@ fun SteamTrackerApp(
                     route = TrackerMainScreens.Store.name
                 ) {
                     StoreScreen(
+                        tabIndex = tabIndex,
+                        onTabChange = { tabIndex = it },
                         featuredUiState = featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
                         salesUiState = salesUiState,

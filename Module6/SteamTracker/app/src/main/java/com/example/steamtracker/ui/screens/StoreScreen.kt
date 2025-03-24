@@ -36,6 +36,8 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun StoreScreen(
+    tabIndex: Int,
+    onTabChange: (Int) -> Unit,
     featuredUiState: FeaturedUiState,
     getFeatured: () -> Unit,
     salesUiState: SalesUiState,
@@ -50,7 +52,7 @@ fun StoreScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    var tabIndex by remember { mutableIntStateOf(0) }
+    var storeTabIndex by remember { mutableIntStateOf(tabIndex) }
     val tabs = listOf("Featured", "On Sale", "Recommended")
 
     Box(
@@ -72,20 +74,23 @@ fun StoreScreen(
             Spacer(modifier = modifier.height(76.dp))
 
             TabRow(
-                selectedTabIndex = tabIndex,
+                selectedTabIndex = storeTabIndex,
                 modifier = modifier
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
                         text = { Text(title) },
-                        selected = tabIndex == index,
-                        onClick = { tabIndex = index }
+                        selected = storeTabIndex == index,
+                        onClick = {
+                            storeTabIndex = index
+                            onTabChange(index)
+                        }
                     )
                 }
             }
 
             // Display the correct screen for the current selected tab
-            when (tabIndex) {
+            when (storeTabIndex) {
                 0 -> FeaturedTab(
                     featuredUiState,
                     getFeatured,
@@ -113,6 +118,8 @@ fun StoreScreen(
 fun StoreScreenPreview() {
     SteamTrackerTheme {
         StoreScreen(
+            tabIndex = 0,
+            onTabChange = {},
             featuredUiState = FeaturedUiState.Success(
                 FeaturedCategoriesRequest(
                     spotlightCategories = null,
