@@ -64,7 +64,9 @@ fun StoreScreen(
             clearSearch = clearSearch,
             autocompleteResults = autocompleteResults,
             navigateSearch = navigateSearch,
-            onSearch = onSearch
+            onSearch = onSearch,
+            navigateApp = navigateApp,
+            onAppSelect = onAppSelect
         )
 
         Column(

@@ -111,7 +111,7 @@ fun AppPage(
                     fontSize = 24.sp
                 )
 
-                if (appDetails.isFree || appDetails.priceOverview == null) {
+                if (appSpyInfo.price == "0") {
                     Box(
                         modifier = modifier
                             .background(
@@ -126,13 +126,13 @@ fun AppPage(
                             modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                         )
                     }
-                } else {
+                } else if (appSpyInfo.discount.toInt() > 0) {
                     Row(
                         modifier = modifier,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = appDetails.priceOverview.initialFormatted,
+                            text = formatCurrency(appSpyInfo.initialprice.toInt().div(100.0)),
                             fontSize = 16.sp,
                             textDecoration = TextDecoration.LineThrough,
                             color = MaterialTheme.colorScheme.outline
@@ -141,7 +141,7 @@ fun AppPage(
                         Spacer(modifier = Modifier.width(12.dp))
 
                         Text(
-                            text = appDetails.priceOverview.finalFormatted,
+                            text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
                             fontSize = 18.sp,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
@@ -157,13 +157,18 @@ fun AppPage(
                             )
                         ) {
                             Text(
-                                text = "-${appDetails.priceOverview.discountPercent}%",
+                                text = "-${appSpyInfo.discount.toInt()}%",
                                 fontSize = 18.sp,
                                 color = colorResource(R.color.discount_text),
                                 modifier = modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
                     }
+                } else {
+                    Text(
+                        text = formatCurrency(appSpyInfo.price.toInt().div(100.0)),
+                        fontSize = 16.sp
+                    )
                 }
 
                 Text(
@@ -171,7 +176,7 @@ fun AppPage(
                 )
 
                 Text(
-                    text = "Publishers: ${appDetails.publishers.joinToString(", ")}"
+                    text = "Publishers: ${appDetails.publishers?.joinToString(", ")}"
                 )
 
                 Text(
@@ -200,8 +205,6 @@ fun AppPage(
                     }"
                 )
             }
-
-
         }
     }
 }

@@ -51,7 +51,7 @@ data class AppDetails(
     @SerializedName(value = "legal_notice")
     val legalNotice: String? = null,
     val developers: List<String>? = null,
-    val publishers: List<String>,
+    val publishers: List<String>? = null,
     val demos: List<Demos>? = null,
     @SerializedName(value = "price_overview")
     val priceOverview: PriceOverview? = null,

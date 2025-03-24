@@ -39,7 +39,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.ViewModel
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import kotlinx.coroutines.FlowPreview
@@ -55,6 +54,8 @@ fun StoreSearchBar(
     autocompleteResults: List<SearchAppInfo>,
     navigateSearch: () -> Unit,
     onSearch: (query: String) -> Unit,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -144,7 +145,11 @@ fun StoreSearchBar(
 
         // Only display autocomplete when the user benefits from it
         if (isEditing && autocompleteResults.isNotEmpty()) {
-            SearchAutoComplete(autocompleteResults)
+            SearchAutoComplete(
+                autocompleteResults,
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect
+            )
         }
     }
 }
@@ -158,7 +163,9 @@ fun StoreSearchBarPreview() {
             clearSearch = {},
             autocompleteResults = listOf(),
             navigateSearch = {},
-            onSearch = {}
+            onSearch = {},
+            navigateApp = {},
+            onAppSelect = {},
         )
     }
 }
@@ -166,6 +173,8 @@ fun StoreSearchBarPreview() {
 @Composable
 fun SearchAutoComplete(
     searchResults: List<SearchAppInfo>,
+    navigateApp: () -> Unit,
+    onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -177,8 +186,8 @@ fun SearchAutoComplete(
         items(items = searchResults) { item ->
             SearchResult(
                 app = item,
-                navigateApp = {},
-                onAppSelect = {},
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect,
                 modifier = modifier,
                 contentPadding = contentPadding
             )

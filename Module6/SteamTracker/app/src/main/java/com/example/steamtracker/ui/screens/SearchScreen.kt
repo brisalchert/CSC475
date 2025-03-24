@@ -92,6 +92,8 @@ fun SearchScreen(
                 autocompleteResults = autocompleteResults,
                 navigateSearch = navigateSearch,
                 onSearch = onSearch,
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect,
                 modifier = modifier.background(MaterialTheme.colorScheme.surfaceDim)
             )
         }
