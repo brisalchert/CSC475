@@ -10,7 +10,6 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.SpyRepository
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.room.relations.SteamSpyAppWithTags
-import com.example.steamtracker.utils.isDataOutdated
 import com.example.steamtracker.utils.toSteamSpyAppRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -31,7 +31,7 @@ import com.example.steamtracker.ui.components.StoreSearchBar
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun SearchScreen(
+fun SearchScreen( // TODO: Add search sorting/filtering
     searchUiState: SearchUiState,
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,

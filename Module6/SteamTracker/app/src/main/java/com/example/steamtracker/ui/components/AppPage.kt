@@ -181,7 +181,9 @@ fun CollectionsRow(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         WishlistBox(
             appDetails = appDetails,
@@ -193,6 +195,11 @@ fun CollectionsRow(
             appDetails = appDetails,
             onList = false,
             newsAppsViewModel = newsAppsViewModel
+        )
+
+        CollectionsButton(
+            appDetails = appDetails,
+            collections = listOf(), // TODO: Add collections
         )
     }
 }

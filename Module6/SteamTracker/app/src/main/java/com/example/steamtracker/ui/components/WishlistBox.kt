@@ -17,24 +17,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
-import com.example.steamtracker.model.Achievement
-import com.example.steamtracker.model.AchievementsContainer
 import com.example.steamtracker.model.AppDetails
-import com.example.steamtracker.model.Category
-import com.example.steamtracker.model.ContentDescriptors
-import com.example.steamtracker.model.Genre
-import com.example.steamtracker.model.MetaCritic
-import com.example.steamtracker.model.Platforms
-import com.example.steamtracker.model.PriceOverview
-import com.example.steamtracker.model.Rating
-import com.example.steamtracker.model.Recommendations
-import com.example.steamtracker.model.ReleaseDate
-import com.example.steamtracker.model.Screenshot
-import com.example.steamtracker.model.SupportInfo
-import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
-import com.example.steamtracker.utils.previewAppDetails
 
 @Composable
 fun WishlistBox(
@@ -47,7 +33,7 @@ fun WishlistBox(
         modifier = modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.genre_container)
+            containerColor = colorResource(R.color.collections_container)
         ),
         onClick = { onClick() }
     ) {
@@ -65,12 +51,13 @@ fun WishlistBox(
             Icon(
                 imageVector = image,
                 contentDescription = "Wishlist Status",
-                tint = colorResource(R.color.genre_text)
+                tint = colorResource(R.color.collections_text)
             )
 
             Text(
                 text = "Add to Wishlist",
-                color = colorResource(R.color.genre_text)
+                fontSize = 14.sp,
+                color = colorResource(R.color.collections_text)
             )
         }
     }
@@ -81,7 +68,7 @@ fun WishlistBox(
 fun WishlistBoxPreview() {
     SteamTrackerTheme {
         WishlistBox(
-            appDetails = previewAppDetails(),
+            appDetails = AppDetails(),
             onList = false,
             onClick = {}
         )

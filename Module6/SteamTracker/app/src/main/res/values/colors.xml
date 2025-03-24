@@ -16,4 +16,6 @@
     <color name="genre_text">#48cbff</color>
     <color name="tag_text">#ffddfd</color>
     <color name="tag_container">#ffa1f9</color>
+    <color name="collections_container">#00be93</color>
+    <color name="collections_text">#b2ffee</color>
 </resources>

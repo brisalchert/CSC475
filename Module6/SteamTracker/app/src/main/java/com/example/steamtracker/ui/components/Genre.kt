@@ -3,7 +3,6 @@ package com.example.steamtracker.ui.components
 import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -44,7 +43,7 @@ fun Genre(
             .padding(2.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onLongPress = { pressOffset ->
+                    onLongPress = {
                         showMenu = true
                     }
                 )

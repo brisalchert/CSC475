@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
 import com.example.steamtracker.mock.MockSteamworksRepository
 import com.example.steamtracker.model.AppDetails
@@ -35,7 +36,7 @@ fun NewsListBox(
         modifier = modifier.padding(4.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.genre_container)
+            containerColor = colorResource(R.color.collections_container)
         ),
         onClick = {  }
     ) {
@@ -53,12 +54,13 @@ fun NewsListBox(
             Icon(
                 imageVector = image,
                 contentDescription = "News List Status",
-                tint = colorResource(R.color.genre_text)
+                tint = colorResource(R.color.collections_text)
             )
 
             Text(
                 text = "Track News",
-                color = colorResource(R.color.genre_text)
+                fontSize = 14.sp,
+                color = colorResource(R.color.collections_text)
             )
         }
     }
