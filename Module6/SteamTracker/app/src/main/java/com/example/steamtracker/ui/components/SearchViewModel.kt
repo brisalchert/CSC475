@@ -42,10 +42,6 @@ class SearchViewModel(
     private val _searchResults = MutableStateFlow(StoreSearchRequest(0, emptyList()))
     val searchResults: StateFlow<StoreSearchRequest> = _searchResults
 
-    // State flow for observing game name request results
-    private val _nameFromId = MutableStateFlow("")
-    val nameFromId: StateFlow<String> = _nameFromId
-
     // State flow for search errors
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
@@ -100,22 +96,6 @@ class SearchViewModel(
      */
     fun clearError() {
         _errorMessage.value = null
-    }
-
-    /**
-     * Gets the name of an app based on its App ID
-     */
-    fun getNameFromId(appId: Int) {
-        viewModelScope.launch {
-            try {
-                val response = storeRepository.getAppName(appId)
-                _nameFromId.update { response }
-            } catch(e: okio.IOException) {
-                _errorMessage.value = "Error: No Internet connection"
-            } catch(e: HttpException) {
-                _errorMessage.value = "Server error: ${e.message}"
-            }
-        }
     }
 
     /**

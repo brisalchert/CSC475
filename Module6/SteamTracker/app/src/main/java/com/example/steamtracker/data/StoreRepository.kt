@@ -26,7 +26,6 @@ interface StoreRepository {
     suspend fun refreshFeaturedCategories()
     suspend fun getAppDetails(appId: Int): AppDetails?
     suspend fun getSearchResults(query: String): StoreSearchRequest
-    suspend fun getAppName(appId: Int): String
     suspend fun clearFeaturedCategories()
 }
 
@@ -164,13 +163,6 @@ class NetworkStoreRepository(
         }
 
         return apiResponse["$appId"]?.appDetails
-    }
-
-    override suspend fun getAppName(appId: Int): String {
-        val response = storeApiService.getAppDetails(appId)
-
-        // Return only the app's name
-        return response["$appId"]?.appDetails?.name.toString()
     }
 
     /**

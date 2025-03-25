@@ -63,6 +63,8 @@ import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
+import com.example.steamtracker.ui.screens.CollectionsScreen
+import com.example.steamtracker.ui.screens.CollectionsViewModel
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 import com.example.steamtracker.ui.screens.SearchScreen
@@ -88,6 +90,7 @@ fun SteamTrackerApp(
     searchViewModel: SearchViewModel = viewModel(factory = SearchViewModel.Factory),
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     newsAppsViewModel: NewsAppsViewModel = viewModel(factory = NewsAppsViewModel.Factory),
+    collectionsViewModel: CollectionsViewModel = viewModel(factory = CollectionsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     // Tab index for store screen
@@ -105,17 +108,19 @@ fun SteamTrackerApp(
     }
 
     // UI States for search data updates
-    val nameFromId by searchViewModel.nameFromId.collectAsState()
     val autocompleteResults by searchViewModel.autocompleteResults.collectAsState()
     val searchResults by searchViewModel.searchResults.collectAsState()
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // UI state for news page
+    // AppDetails state for news page
     val trackedAppsDetails by newsAppsViewModel.trackedAppDetails.collectAsState()
 
-    // UI state for sales page
+    // AppDetails state for sales page
     val salesAppDetails by salesViewModel.salesAppDetails.collectAsState()
+
+    // AppDetails state for collections page
+    val collectionsAppDetails by collectionsViewModel.collectionsAppsDetails.collectAsState()
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
@@ -123,6 +128,7 @@ fun SteamTrackerApp(
     val newsUiState by newsViewModel.newsUiState.collectAsState()
     val searchUiState by searchViewModel.searchUiState.collectAsState()
     val appDetailsUiState by appDetailsViewModel.appDetailsUiState.collectAsState()
+    val collectionsUiState by collectionsViewModel.collectionsUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -228,8 +234,6 @@ fun SteamTrackerApp(
                     NewsScreen(
                         newsUiState = newsUiState,
                         trackedAppsDetails = trackedAppsDetails,
-                        getNameFromId = searchViewModel::getNameFromId,
-                        nameFromId = nameFromId,
                         navigateApp = {
                             navController.navigate(TrackerOtherScreens.App.name) {
                                 popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
@@ -240,7 +244,17 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerMainScreens.Collections.name
                 ) {
-                    // TODO: Implement Collections
+                    CollectionsScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        collectionsUiState = collectionsUiState,
+                        collectionsAppDetails = collectionsAppDetails,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
+                    )
                 }
                 composable(
                     route = TrackerMainScreens.Notifications.name

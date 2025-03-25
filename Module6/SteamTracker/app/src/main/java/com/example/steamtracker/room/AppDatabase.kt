@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.steamtracker.room.dao.AppDetailsDao
+import com.example.steamtracker.room.dao.CollectionsDao
 import com.example.steamtracker.room.dao.NewsAppsDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.dao.SpyDao
@@ -14,6 +15,8 @@ import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
+import com.example.steamtracker.room.entities.CollectionAppEntity
+import com.example.steamtracker.room.entities.CollectionEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
@@ -32,9 +35,11 @@ import com.example.steamtracker.room.entities.TagEntity
         AppNewsEntity::class,
         NewsItemEntity::class,
         NewsAppEntity::class,
-        AppDetailsEntity::class
+        AppDetailsEntity::class,
+        CollectionEntity::class,
+        CollectionAppEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -44,6 +49,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun steamworksDao(): SteamworksDao
     abstract fun newsAppsDao(): NewsAppsDao
     abstract fun appDetailsDao(): AppDetailsDao
+    abstract fun collectionsDao(): CollectionsDao
 
     companion object {
         @Volatile

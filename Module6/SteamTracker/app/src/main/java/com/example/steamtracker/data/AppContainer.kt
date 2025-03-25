@@ -21,6 +21,7 @@ interface AppContainer {
     val spyRepository: SpyRepository
     val steamworksRepository: SteamworksRepository
     val appDetailsRepository: AppDetailsRepository
+    val collectionsRepository: CollectionsRepository
     val appDatabase: AppDatabase
 }
 
@@ -118,6 +119,15 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val appDetailsRepository: AppDetailsRepository by lazy {
         NetworkAppDetailsRepository(
             appDatabase.appDetailsDao()
+        )
+    }
+
+    /**
+     * Initialize the collectionsRepository with the database table
+     */
+    override val collectionsRepository: CollectionsRepository by lazy {
+        NetworkCollectionsRepository(
+            appDatabase.collectionsDao()
         )
     }
 }
