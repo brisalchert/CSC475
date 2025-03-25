@@ -48,29 +48,20 @@ class AppDetailsViewModel(
             // Check database for app details
             val appDetails = appDetailsRepository.getAppDetails(appId)
 
-            if (appDetails != null) {
-                try {
+            try {
+                if (appDetails != null) {
                     val spyInfo = spyRepository.getSpyAppInfo(appId)
-
                     _appDetailsUiState.update { AppDetailsUiState.Success(appDetails, spyInfo, appId) }
 
                     return@launch
-                } catch (e: CancellationException) {
-                    throw e // Don't suppress coroutine exceptions
-                } catch (e: IOException) {
-                    _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
-                } catch (e: HttpException) {
-                    _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
+                } else {
+                    // Set UI state to loading before fetching
+                    _appDetailsUiState.update { AppDetailsUiState.Loading }
+
+                    val storeResponse = storeRepository.getAppDetails(appId)
+                    val spyResponse = spyRepository.getSpyAppInfo(appId)
+                    _appDetailsUiState.update { AppDetailsUiState.Success(storeResponse, spyResponse, appId) }
                 }
-            }
-
-            // Set UI state to loading before fetching
-            _appDetailsUiState.update { AppDetailsUiState.Loading }
-
-            try {
-                val storeResponse = storeRepository.getAppDetails(appId)
-                val spyResponse = spyRepository.getSpyAppInfo(appId)
-                _appDetailsUiState.update { AppDetailsUiState.Success(storeResponse, spyResponse, appId) }
             } catch (e: CancellationException) {
                 throw e // Don't suppress coroutine exceptions
             } catch (e: IOException) {
