@@ -56,7 +56,7 @@ fun WishlistBox(
 
             Text(
                 text = "Add to Wishlist",
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 color = colorResource(R.color.collections_text)
             )
         }
