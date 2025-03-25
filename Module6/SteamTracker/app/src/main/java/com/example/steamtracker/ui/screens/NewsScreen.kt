@@ -20,8 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -33,10 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.NewsItem
-import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.NewsCard
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Composable
 fun NewsScreen(

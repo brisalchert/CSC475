@@ -13,8 +13,8 @@ interface NewsAppsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNewsApp(app: NewsAppEntity)
 
-    @Delete
-    suspend fun deleteNewsApp(app: NewsAppEntity)
+    @Query("DELETE FROM news_apps WHERE appid = :appId")
+    suspend fun deleteNewsApp(appId: Int)
 
     @Query("SELECT appid FROM news_apps")
     fun getNewsAppIds(): Flow<List<Int>>

@@ -13,8 +13,6 @@ import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 interface SteamworksRepository {
     val newsApps: Flow<List<Int>>
@@ -23,7 +21,7 @@ interface SteamworksRepository {
     suspend fun addNewsApp(appid: Int)
     suspend fun removeNewsApp(appid: Int)
     suspend fun checkNewsApp(appId: Int): Boolean
-    fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
+    suspend fun getAllAppNews(): List<AppNewsWithDetails>
 }
 
 class NetworkSteamworksRepository(
@@ -78,11 +76,11 @@ class NetworkSteamworksRepository(
     }
 
     override suspend fun removeNewsApp(appid: Int) {
-        newsAppsDao.deleteNewsApp(NewsAppEntity(appid))
+        newsAppsDao.deleteNewsApp(appid)
     }
 
     /** Allows the view model to access news items */
-    override fun getAllAppNews(): Flow<List<AppNewsWithDetails>> {
+    override suspend fun getAllAppNews(): List<AppNewsWithDetails> {
         return steamworksDao.getAllAppNews()
     }
 

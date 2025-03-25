@@ -9,7 +9,6 @@ import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SteamworksDao {
@@ -31,7 +30,7 @@ interface SteamworksDao {
 
     @Transaction
     @Query("SELECT * FROM app_news_requests")
-    fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
+    suspend fun getAllAppNews(): List<AppNewsWithDetails>
 
     @Transaction
     @Query("SELECT MAX(lastUpdated) FROM app_news_requests")

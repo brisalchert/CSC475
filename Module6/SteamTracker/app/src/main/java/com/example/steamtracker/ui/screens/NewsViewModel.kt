@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,10 +38,6 @@ sealed interface NewsUiState {
 class NewsViewModel(
     private val steamworksRepository: SteamworksRepository
 ): ViewModel() {
-    /** Observe state of flow object from repository */
-    val newsList = steamworksRepository.getAllAppNews()
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
     /** Observe state of flow object from repository */
     val newsApps: StateFlow<List<Int>> =
         steamworksRepository.newsApps
@@ -73,18 +70,18 @@ class NewsViewModel(
                             steamworksRepository.refreshAppNews()
                         }
 
-                        // Collect newsList asynchronously to ensure correct status
-                        newsList.collectLatest { newsListEntities ->
-                            // Only proceed if newsListEntities is not empty
-                            if (newsListEntities.isNotEmpty()) {
-                                _newsUiState.value = NewsUiState.Success(
-                                    mapEntitiesToRequests(newsListEntities).map {
-                                        it.appnews.newsitems
-                                    }
-                                )
-                            } else {
-                                _newsUiState.value = NewsUiState.NoNewsApps
-                            }
+                        // Get the updated news list
+                        val newsListEntities = fetchNewsList()
+
+                        // Only proceed if newsListEntities is not empty
+                        if (newsListEntities.isNotEmpty()) {
+                            _newsUiState.value = NewsUiState.Success(
+                                mapEntitiesToRequests(newsListEntities).map {
+                                    it.appnews.newsitems
+                                }
+                            )
+                        } else {
+                            _newsUiState.value = NewsUiState.NoNewsApps
                         }
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
@@ -96,6 +93,10 @@ class NewsViewModel(
                 }
             }
         }
+    }
+
+    private suspend fun fetchNewsList(): List<AppNewsWithDetails> {
+        return steamworksRepository.getAllAppNews()
     }
 
     /**
