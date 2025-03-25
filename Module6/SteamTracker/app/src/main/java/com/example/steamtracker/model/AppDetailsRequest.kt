@@ -43,11 +43,11 @@ data class AppDetails(
     val capsuleImageV5: String = "",
     val website: String? = "",
     @SerializedName(value = "pc_requirements")
-    val pcRequirements: SystemRequirements = SystemRequirements(),
+    val pcRequirements: SystemRequirements? = null,
     @SerializedName(value = "mac_requirements")
-    val macRequirements: SystemRequirements? = SystemRequirements(),
+    val macRequirements: SystemRequirements? = null,
     @SerializedName(value = "linux_requirements")
-    val linuxRequirements: SystemRequirements? = SystemRequirements(),
+    val linuxRequirements: SystemRequirements? = null,
     @SerializedName(value = "legal_notice")
     val legalNotice: String? = null,
     val developers: List<String>? = null,
@@ -229,22 +229,9 @@ data class Rating(
     val interactiveElements: String? = null
 )
 
-class RequiredAgeDeserializer: JsonDeserializer<Int> {
-    override fun deserialize(
-        json: JsonElement,
-        typeOfT: Type?,
-        context: JsonDeserializationContext?
-    ): Int? {
-        return when {
-            json.isJsonPrimitive -> {
-                try {
-                    json.asInt
-                } catch (e: NumberFormatException) {
-                    json.asString.toIntOrNull()
-                }
-            }
-            else -> null
-        }
+class RequiredAgeDeserializer : JsonDeserializer<Int> {
+    override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): Int? {
+        return json.asString.toIntOrNull() ?: json.asInt
     }
 }
 

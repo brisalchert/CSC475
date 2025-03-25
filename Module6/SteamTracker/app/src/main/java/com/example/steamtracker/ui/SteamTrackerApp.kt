@@ -2,6 +2,7 @@
 
 package com.example.steamtracker.ui
 
+import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -52,6 +54,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
+import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.data.AppInitializer
 import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.StoreScreen
@@ -133,6 +137,15 @@ fun SteamTrackerApp(
         }
     }
 
+    val context = LocalContext.current
+    val appContainer = (context.applicationContext as SteamTrackerApplication).container
+    val appInitializer = AppInitializer(context, appContainer)
+
+    // Ensure database wiped on first launch
+    LaunchedEffect(Unit) {
+        appInitializer.checkAndClearDatabase()
+    }
+
     Scaffold(
         modifier = Modifier
             .pointerInput(Unit) {
@@ -187,7 +200,10 @@ fun SteamTrackerApp(
                         featuredUiState = featuredUiState,
                         getFeatured = featuredViewModel::getFeaturedCategories,
                         salesUiState = salesUiState,
-                        getSales = salesViewModel::getSalesGames,
+                        getSales = {
+                            salesViewModel.getSalesGames()
+                            salesViewModel.getSalesAppDetails()
+                        },
                         salesAppDetails = salesAppDetails,
                         searchStore = searchViewModel::getAutocompleteResults,
                         clearSearch = searchViewModel::clearSearchResults,

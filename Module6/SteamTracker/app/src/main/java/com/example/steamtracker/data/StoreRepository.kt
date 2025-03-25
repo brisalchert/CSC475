@@ -6,6 +6,7 @@ import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.SpotlightCategory
 import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
+import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
@@ -13,6 +14,8 @@ import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.toAppInfoEntityList
 import com.example.steamtracker.utils.isDataOutdated
+import com.example.steamtracker.utils.toAppDetails
+import com.example.steamtracker.utils.toAppDetailsEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -28,7 +31,8 @@ interface StoreRepository {
 
 class NetworkStoreRepository(
     private val storeApiService: StoreApiService,
-    private val storeDao: StoreDao
+    private val storeDao: StoreDao,
+    private val appDetailsDao: AppDetailsDao
 ): StoreRepository {
     override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
         storeDao.getAllFeaturedCategories()
@@ -137,10 +141,23 @@ class NetworkStoreRepository(
      * provided App ID, or null if no app is found
      */
     override suspend fun getAppDetails(appId: Int): AppDetails? {
-        val response = storeApiService.getAppDetails(appId)
+        // Check the database first
+        val databaseResponse = appDetailsDao.getAppDetails(appId)
 
-        // App ID is contained within gameInfo; outer App ID not needed
-        return response["$appId"]?.appDetails
+        if (databaseResponse != null && !isDataOutdated(databaseResponse.lastUpdated)) {
+            return databaseResponse.toAppDetails()
+        }
+
+        val apiResponse = storeApiService.getAppDetails(appId)
+
+        // Add response to the database
+        if (apiResponse["$appId"]?.appDetails != null) {
+            val appDetailsEntity = apiResponse["$appId"]!!.appDetails!!.toAppDetailsEntity()
+
+            appDetailsDao.insertAppDetails(appDetailsEntity)
+        }
+
+        return apiResponse["$appId"]?.appDetails
     }
 
     override suspend fun getAppName(appId: Int): String {

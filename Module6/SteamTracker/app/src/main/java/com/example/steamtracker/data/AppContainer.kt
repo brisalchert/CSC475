@@ -11,6 +11,7 @@ import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
 import com.example.steamtracker.room.AppDatabase
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,6 +20,8 @@ interface AppContainer {
     val storeRepository: StoreRepository
     val spyRepository: SpyRepository
     val steamworksRepository: SteamworksRepository
+    val appDetailsRepository: AppDetailsRepository
+    val appDatabase: AppDatabase
 }
 
 /**
@@ -27,7 +30,7 @@ interface AppContainer {
  */
 class DefaultAppContainer(private val application: Application): AppContainer {
     // Initialize the database instance
-    val appDatabase: AppDatabase by lazy {
+    override val appDatabase: AppDatabase by lazy {
         Room.databaseBuilder(
             application,
             AppDatabase::class.java,
@@ -61,7 +64,8 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val storeRepository: StoreRepository by lazy {
         NetworkStoreRepository(
             retrofitServiceStore,
-            appDatabase.storeDao()
+            appDatabase.storeDao(),
+            appDatabase.appDetailsDao()
         )
     }
 
@@ -105,6 +109,15 @@ class DefaultAppContainer(private val application: Application): AppContainer {
             retrofitServiceSteamworks,
             appDatabase.steamworksDao(),
             appDatabase.newsAppsDao()
+        )
+    }
+
+    /**
+     * Initialize the appDetailsRepository with the database table
+     */
+    override val appDetailsRepository: AppDetailsRepository by lazy {
+        NetworkAppDetailsRepository(
+            appDatabase.appDetailsDao()
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.components
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.SteamworksRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +21,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class NewsAppsViewModel(
     private val steamworksRepository: SteamworksRepository,
@@ -42,13 +46,29 @@ class NewsAppsViewModel(
 
     fun addNewsApp(appId: Int) {
         viewModelScope.launch {
-            steamworksRepository.addNewsApp(appId)
+            try {
+                steamworksRepository.addNewsApp(appId)
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
+            } catch (e: IOException) {
+                Log.d("Debug", "IOException in NewsAppsViewModel")
+            } catch (e: HttpException) {
+                Log.d("Debug", "HttpException in NewsAppsViewModel")
+            }
         }
     }
 
     fun removeNewsApp(appId: Int) {
         viewModelScope.launch {
-            steamworksRepository.removeNewsApp(appId)
+            try {
+                steamworksRepository.removeNewsApp(appId)
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
+            } catch (e: IOException) {
+                Log.d("Debug", "IOException in NewsAppsViewModel")
+            } catch (e: HttpException) {
+                Log.d("Debug", "HttpException in NewsAppsViewModel")
+            }
         }
     }
 
@@ -58,10 +78,18 @@ class NewsAppsViewModel(
 
     fun getTrackedAppsDetails() {
         viewModelScope.launch {
-            newsApps.collect { newsAppsList ->
-                _trackedAppsDetails.value = newsAppsList.map {
-                    storeRepository.getAppDetails(it) ?: AppDetails()
+            try {
+                newsApps.collect { newsAppsList ->
+                    _trackedAppsDetails.value = newsAppsList.map {
+                        storeRepository.getAppDetails(it) ?: AppDetails()
+                    }
                 }
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
+            } catch (e: IOException) {
+                Log.d("Debug", "IOException in NewsAppsViewModel")
+            } catch (e: HttpException) {
+                Log.d("Debug", "HttpException in NewsAppsViewModel")
             }
         }
     }

@@ -71,9 +71,9 @@ class SalesViewModel(
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
                     } catch (e: IOException) {
-                        SalesUiState.Error
+                        _salesUiState.value = SalesUiState.Error
                     } catch (e: HttpException) {
-                        SalesUiState.Error
+                        _salesUiState.value = SalesUiState.Error
                     }
                 }
             }
@@ -82,10 +82,18 @@ class SalesViewModel(
 
     fun getSalesAppDetails() {
         viewModelScope.launch {
-            spyRepository.topSales.collect { salesApps ->
-                _salesAppDetails.value = salesApps.map {
-                    storeRepository.getAppDetails(it.app.appid)
+            try {
+                spyRepository.topSales.collect { salesApps ->
+                    _salesAppDetails.value = salesApps.map {
+                        storeRepository.getAppDetails(it.app.appid)
+                    }
                 }
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
+            } catch (e: IOException) {
+                _salesUiState.value = SalesUiState.Error
+            } catch (e: HttpException) {
+                _salesUiState.value = SalesUiState.Error
             }
         }
     }

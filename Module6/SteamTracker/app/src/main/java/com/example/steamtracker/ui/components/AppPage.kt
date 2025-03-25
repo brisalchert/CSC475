@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -355,7 +356,7 @@ fun Tags(
             Row(
                 modifier = modifier
                     .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(MaterialTheme.colorScheme.surfaceDim),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -366,6 +367,8 @@ fun Tags(
                 )
             }
         }
+        Log.d("Debug", "TAGS: ${appSpyInfo.tags}")
+        Log.d("Debug", "AppInfo name: ${appSpyInfo.name}")
 
         items(items = appSpyInfo.tags!!.keys.toList()) { key ->
             Tag(

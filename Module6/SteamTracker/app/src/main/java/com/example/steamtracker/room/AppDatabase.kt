@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.NewsAppsDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.dao.SpyDao
 import com.example.steamtracker.room.dao.SteamworksDao
+import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
@@ -28,16 +31,19 @@ import com.example.steamtracker.room.entities.TagEntity
         AppNewsRequestEntity::class,
         AppNewsEntity::class,
         NewsItemEntity::class,
-        NewsAppEntity::class
+        NewsAppEntity::class,
+        AppDetailsEntity::class
     ],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun storeDao(): StoreDao
     abstract fun salesDao(): SpyDao
     abstract fun steamworksDao(): SteamworksDao
     abstract fun newsAppsDao(): NewsAppsDao
+    abstract fun appDetailsDao(): AppDetailsDao
 
     companion object {
         @Volatile

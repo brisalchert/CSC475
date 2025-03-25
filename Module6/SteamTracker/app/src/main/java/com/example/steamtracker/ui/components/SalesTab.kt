@@ -1,6 +1,5 @@
 package com.example.steamtracker.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -70,7 +69,7 @@ fun SalesGamesList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn( // TODO: Implement clicking on app cards
+    LazyColumn(
         modifier = modifier,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.Top,

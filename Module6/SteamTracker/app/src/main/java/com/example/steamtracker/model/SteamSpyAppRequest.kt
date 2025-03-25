@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class SteamSpyAppRequest(
     val appid: Int = 0,
-    val name: String = "Name",
+    val name: String? = "Name",
     val developer: String = "Developer",
     val publisher: String = "Publisher",
     @SerializedName(value = "score_rank")
@@ -27,5 +27,5 @@ data class SteamSpyAppRequest(
     val ccu: Int = 0,
     val languages: String? = null,
     val genre: String? = null,
-    val tags: Map<String, Integer>? = null
+    val tags: Map<String, Int>? = null
 )

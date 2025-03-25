@@ -50,6 +50,6 @@ fun SteamSpyAppEntity.toSteamSpyAppRequest(tags: List<TagEntity>?): SteamSpyAppR
         ccu = this.ccu,
         languages = this.languages,
         genre = this.genre,
-        tags = tags?.associate { it.tagName to it.tagCount as Integer }
+        tags = tags?.associate { it.tagName to it.tagCount }
     )
 }

@@ -81,7 +81,7 @@ fun SalesApp(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text(
-                    text = appInfo.name,
+                    text = appInfo.name ?: "Name Missing",
                     fontSize = 20.sp,
                     modifier = modifier.padding(start = 12.dp, top = 12.dp)
                 )

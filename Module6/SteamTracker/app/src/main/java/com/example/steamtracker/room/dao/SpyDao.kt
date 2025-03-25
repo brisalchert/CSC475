@@ -24,6 +24,19 @@ interface SpyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<SteamSpyAppEntity>)
 
+    // Insert all entities in a single transaction
+    @Transaction
+    suspend fun insertAppInfoWithTags(spyEntities: List<SteamSpyAppEntity>, tagEntities: List<List<TagEntity>>) {
+        insertAll(spyEntities)
+        tagEntities.forEach { tagList ->
+            insertTags(tagList)
+        }
+    }
+
+    @Transaction
+    @Query("SELECT * FROM steam_spy_apps WHERE appid = :appId")
+    suspend fun getSpyInfo(appId: Int): SteamSpyAppWithTags?
+
     @Transaction
     @Query("SELECT * FROM steam_spy_apps")
     fun getAllGames(): Flow<List<SteamSpyAppWithTags>>

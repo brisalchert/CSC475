@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -7,14 +8,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.data.AppDetailsRepository
 import com.example.steamtracker.data.SpyRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.room.entities.AppDetailsEntity
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -32,7 +37,8 @@ sealed interface AppDetailsUiState {
 
 class AppDetailsViewModel(
     private val storeRepository: StoreRepository,
-    private val spyRepository: SpyRepository
+    private val spyRepository: SpyRepository,
+    private val appDetailsRepository: AppDetailsRepository
 ): ViewModel() {
     // State flow for observing UI updates
     private val _appDetailsUiState = MutableStateFlow<AppDetailsUiState>(AppDetailsUiState.Loading)
@@ -43,6 +49,26 @@ class AppDetailsViewModel(
      */
     fun getAppDetails(appId: Int) {
         viewModelScope.launch {
+            // Check database for app details
+            val appDetails = appDetailsRepository.getAppDetails(appId)
+
+            if (appDetails != null) {
+                Log.d("Debug", "Found existing app data in App View Model for app ID $appId")
+                try {
+                    val spyInfo = spyRepository.getSpyAppInfo(appId)
+
+                    _appDetailsUiState.update { AppDetailsUiState.Success(appDetails, spyInfo, appId) }
+
+                    return@launch
+                } catch (e: CancellationException) {
+                    throw e // Don't suppress coroutine exceptions
+                } catch (e: IOException) {
+                    _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
+                } catch (e: HttpException) {
+                    _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
+                }
+            }
+
             // Set UI state to loading before fetching
             _appDetailsUiState.update { AppDetailsUiState.Loading }
 
@@ -69,7 +95,12 @@ class AppDetailsViewModel(
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val storeRepository = application.container.storeRepository
                 val spyRepository = application.container.spyRepository
-                AppDetailsViewModel(storeRepository = storeRepository, spyRepository = spyRepository)
+                val appDetailsRepository = application.container.appDetailsRepository
+                AppDetailsViewModel(
+                    storeRepository = storeRepository,
+                    spyRepository = spyRepository,
+                    appDetailsRepository = appDetailsRepository
+                )
             }
         }
     }
