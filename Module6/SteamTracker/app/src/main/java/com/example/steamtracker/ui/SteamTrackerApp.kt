@@ -2,7 +2,6 @@
 
 package com.example.steamtracker.ui
 
-import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -63,6 +62,7 @@ import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
+import com.example.steamtracker.ui.screens.CollectionListScreen
 import com.example.steamtracker.ui.screens.CollectionsScreen
 import com.example.steamtracker.ui.screens.CollectionsViewModel
 import com.example.steamtracker.ui.screens.NewsScreen
@@ -79,7 +79,8 @@ enum class TrackerMainScreens {
 
 enum class TrackerOtherScreens {
     Search,
-    App
+    App,
+    Collection
 }
 
 @Composable
@@ -119,8 +120,9 @@ fun SteamTrackerApp(
     // AppDetails state for sales page
     val salesAppDetails by salesViewModel.salesAppDetails.collectAsState()
 
-    // AppDetails state for collections page
+    // States for collections page
     val collectionsAppDetails by collectionsViewModel.collectionsAppsDetails.collectAsState()
+    val currentCollection by collectionsViewModel.currentCollection.collectAsState()
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
@@ -248,12 +250,12 @@ fun SteamTrackerApp(
                         collectionsViewModel = collectionsViewModel,
                         collectionsUiState = collectionsUiState,
                         collectionsAppDetails = collectionsAppDetails,
-                        navigateApp = {
-                            navController.navigate(TrackerOtherScreens.App.name) {
-                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                        navigateCollection = {
+                            navController.navigate(TrackerOtherScreens.Collection.name) {
+                                popUpTo(TrackerOtherScreens.Collection.name) { inclusive = true }
                             }
                         },
-                        onAppSelect = appDetailsViewModel::getAppDetails
+                        onCollectionSelect = collectionsViewModel::setCollection
                     )
                 }
                 composable(
@@ -296,6 +298,21 @@ fun SteamTrackerApp(
                         appDetailsUiState = appDetailsUiState,
                         getAppDetails = appDetailsViewModel::getAppDetails,
                         newsAppsViewModel = newsAppsViewModel,
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.Collection.name
+                ) {
+                    CollectionListScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        collection = currentCollection,
+                        collectionAppDetails = collectionsAppDetails,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
                     )
                 }
             }

@@ -13,9 +13,6 @@ import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.room.relations.CollectionWithApps
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,11 +39,24 @@ class CollectionsViewModel(
     private val _collectionsAppDetails = MutableStateFlow<List<AppDetails?>>(emptyList())
     val collectionsAppsDetails: StateFlow<List<AppDetails?>> = _collectionsAppDetails.asStateFlow()
 
+    /** StateFlow for the last selected collections screen */
+    private val _currentCollection = MutableStateFlow<Pair<String, List<CollectionApp>>>(Pair("", emptyList()))
+    val currentCollection: StateFlow<Pair<String, List<CollectionApp>>> = _currentCollection.asStateFlow()
+
     /**
      * Call getAllCollections() on init to display collections immediately
      */
     init {
         getAllCollections()
+    }
+
+    /**
+     * Function for setting the current selection displayed
+     */
+    fun setCollection(collection: Pair<String, List<CollectionApp>>) {
+        viewModelScope.launch {
+            _currentCollection.value = collection
+        }
     }
 
     fun addCollection(name: String) {

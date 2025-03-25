@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -32,15 +30,15 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
-import com.example.steamtracker.ui.screens.CollectionsViewModel
-import com.example.steamtracker.ui.theme.SteamTrackerTheme
+import com.example.steamtracker.model.CollectionApp
 
 @Composable
-fun CollectionAppCard(
+fun CollectionCard(
     onRemoveClick: () -> Unit,
-    appDetails: AppDetails,
-    navigateApp: () -> Unit,
-    onAppSelect: (appId: Int) -> Unit,
+    collection: Pair<String, List<CollectionApp>>,
+    collectionsAppDetails: List<AppDetails?>,
+    navigateCollection: () -> Unit,
+    onCollectionSelect: (Pair<String, List<CollectionApp>>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -48,10 +46,19 @@ fun CollectionAppCard(
             .fillMaxWidth()
             .padding(12.dp),
         onClick = {
-            onAppSelect(appDetails.steamAppId)
-            navigateApp()
+            onCollectionSelect(collection)
+            navigateCollection()
         }
     ) {
+        val firstCollectionApp = if (collection.second.isNotEmpty()) {
+            collection.second[0]
+        } else {
+            null
+        }
+        val firstAppDetails = collectionsAppDetails.find {
+            it?.steamAppId == firstCollectionApp?.appId
+        }
+
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -59,12 +66,12 @@ fun CollectionAppCard(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(appDetails.capsuleImage)
+                    .data(firstAppDetails?.capsuleImage)
                     .crossfade(true)
                     .build(),
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
-                contentDescription = "Image for ${appDetails.name}",
+                contentDescription = "Image for ${firstAppDetails?.name}",
                 contentScale = ContentScale.Crop,
                 modifier = modifier
                     .width(128.dp)
@@ -72,7 +79,7 @@ fun CollectionAppCard(
             )
 
             Text(
-                text = appDetails.name,
+                text = collection.first,
                 fontSize = 14.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -107,8 +114,8 @@ fun CollectionAppCard(
 }
 
 @Composable
-fun AppRemoveAlert(
-    appName: String,
+fun CollectionRemoveAlert(
+    collectionName: String,
     onDismiss: () -> Unit,
     onSubmit: () -> Unit
 ) {
@@ -127,12 +134,12 @@ fun AppRemoveAlert(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Remove from Collection",
+                    text = "Remove Collection",
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Text(
-                    text = "Are you sure you want to remove $appName from this collection?",
+                    text = "Are you sure you want to remove the $collectionName collection?",
                     fontSize = 14.sp
                 )
 
@@ -160,7 +167,7 @@ fun AppRemoveAlert(
                             disabledContentColor = MaterialTheme.colorScheme.error,
                         )
                     ) {
-                        Text("Remove App")
+                        Text("Remove Collection")
                     }
                 }
             }

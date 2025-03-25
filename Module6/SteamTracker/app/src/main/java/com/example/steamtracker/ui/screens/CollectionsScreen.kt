@@ -1,7 +1,6 @@
 package com.example.steamtracker.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,9 +9,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,14 +39,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.model.CollectionApp
+import com.example.steamtracker.ui.components.CollectionCard
+import com.example.steamtracker.ui.components.CollectionRemoveAlert
 
 @Composable
 fun CollectionsScreen(
     collectionsViewModel: CollectionsViewModel,
     collectionsUiState: CollectionsUiState,
     collectionsAppDetails: List<AppDetails?>,
-    navigateApp: () -> Unit,
-    onAppSelect: (appId: Int) -> Unit,
+    navigateCollection: () -> Unit,
+    onCollectionSelect: (Pair<String, List<CollectionApp>>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // State variable for collections dialog windows
@@ -60,7 +66,10 @@ fun CollectionsScreen(
                 is CollectionsUiState.Loading -> null
                 else -> {
                     FloatingActionButton(
-                        onClick = { showCreateDialog = true }
+                        onClick = {
+                            collectionName = ""
+                            showCreateDialog = true
+                        }
                     ) {
                         Icon(
                             Icons.Default.Add,
@@ -79,6 +88,7 @@ fun CollectionsScreen(
                 onDismiss = { showCreateDialog = false },
                 onSubmit = {
                     collectionsViewModel.addCollection(it)
+                    showCreateDialog = false
                 }
             )
         }
@@ -86,10 +96,10 @@ fun CollectionsScreen(
         when (collectionsUiState) {
             is CollectionsUiState.Success -> CollectionsMenu(
                 collectionsViewModel = collectionsViewModel,
-                collectionsUiState = collectionsUiState,
+                collections = collectionsUiState.collections,
                 collectionsAppDetails = collectionsAppDetails,
-                navigateApp = navigateApp,
-                onAppSelect = onAppSelect,
+                navigateCollection = navigateCollection,
+                onCollectionSelect = onCollectionSelect,
                 contentPadding = innerPadding
             )
             CollectionsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
@@ -119,14 +129,44 @@ fun CollectionsScreen(
 @Composable
 fun CollectionsMenu(
     collectionsViewModel: CollectionsViewModel,
-    collectionsUiState: CollectionsUiState,
+    collections: Map<String, List<CollectionApp>>,
     collectionsAppDetails: List<AppDetails?>,
-    navigateApp: () -> Unit,
-    onAppSelect: (Int) -> Unit,
+    navigateCollection: () -> Unit,
+    onCollectionSelect: (Pair<String, List<CollectionApp>>) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
+    var showRemoveDialog by remember { mutableStateOf(false) }
 
+    LazyColumn(
+        modifier = modifier
+    ) {
+        items(items = collections.entries.toList()) { collection ->
+            // Sort collection apps by their index
+            val collectionPair = Pair(collection.key, collection.value.sortedBy { it.index })
+
+            if (showRemoveDialog) {
+                CollectionRemoveAlert(
+                    collectionName = collectionPair.first,
+                    onDismiss = { showRemoveDialog = false },
+                    onSubmit = {
+                        collectionsViewModel.removeCollection(
+                            collectionPair.first
+                        )
+                        showRemoveDialog = false
+                    }
+                )
+            }
+
+            CollectionCard(
+                onRemoveClick = { showRemoveDialog = true },
+                collection = collectionPair,
+                collectionsAppDetails = collectionsAppDetails,
+                navigateCollection = navigateCollection,
+                onCollectionSelect = onCollectionSelect,
+            )
+        }
+    }
 }
 
 @Composable
@@ -158,17 +198,34 @@ fun CreateCollectionDialog(
                 TextField(
                     value = collectionName,
                     onValueChange = onNameChange,
+                    singleLine = true,
                     placeholder = { Text("Collection Name") }
                 )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    TextButton(onClick = onDismiss) {
+                    TextButton(
+                        onClick = onDismiss,
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error,
+                            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
+                            disabledContentColor = MaterialTheme.colorScheme.error,
+                        )
+                    ) {
                         Text("Cancel")
                     }
-                    TextButton(onClick = { onSubmit(collectionName) }) {
+                    TextButton(
+                        onClick = { onSubmit(collectionName) },
+                        colors = ButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                        )
+                    ) {
                         Text("Submit")
                     }
                 }
