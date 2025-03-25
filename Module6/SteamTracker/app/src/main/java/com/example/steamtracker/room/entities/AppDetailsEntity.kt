@@ -64,6 +64,6 @@ data class AppDetailsEntity(
     val background: String = "",
     val backgroundRaw: String = "",
     val contentDescriptors: ContentDescriptors = ContentDescriptors(),
-    val ratings: Map<String, Rating> = mapOf(),
+    val ratings: Map<String, Rating>? = mapOf(),
     val lastUpdated: Long
 )

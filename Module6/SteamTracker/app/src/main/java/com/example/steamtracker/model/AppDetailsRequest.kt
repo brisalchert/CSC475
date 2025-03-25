@@ -75,7 +75,7 @@ data class AppDetails(
     val backgroundRaw: String = "",
     @SerializedName(value = "content_descriptors")
     val contentDescriptors: ContentDescriptors = ContentDescriptors(),
-    val ratings: Map<String, Rating> = mapOf()
+    val ratings: Map<String, Rating>? = mapOf()
 )
 
 data class FullGame(

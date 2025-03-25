@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import android.util.Log
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.room.dao.SpyDao
@@ -49,24 +48,17 @@ class NetworkSpyRepository(
     override suspend fun getSpyAppInfo(appId: Int): SteamSpyAppRequest {
         // Check database first
         var databaseResponse = spyDao.getSpyInfo(appId)
-        Log.d("Debug", "Database Response: $databaseResponse")
 
         if (databaseResponse != null && !isDataOutdated(databaseResponse.app.lastUpdated)) {
-            Log.d("Debug", "Data exists for app $appId")
             val spyRequest = databaseResponse.app.toSteamSpyAppRequest(databaseResponse.tags)
-            Log.d("Debug", "Mapped Tags from DB: ${databaseResponse.tags}")
             return spyRequest
         }
 
         val apiResponse = spyApiService.getAppDetails(appId)
 
-        Log.d("Debug", "TAGS AFTER API REQUEST: ${apiResponse.tags}")
-
         // Add response to the database
         val spyEntity = mapRequestsToEntities(listOf(apiResponse))
         val tagEntity = mapTagsToEntities(listOf(apiResponse))
-
-        Log.d("Debug", "Mapped Tags: $tagEntity")
 
         spyDao.insertAppInfoWithTags(spyEntity, tagEntity)
 
@@ -90,7 +82,6 @@ class NetworkSpyRepository(
             val tagList = mutableListOf<TagEntity>()
 
             request.tags?.map { (key, value) ->
-                Log.d("Debug", "Tag key-value: $key, $value")
                 tagList.add(
                     TagEntity(
                         appid = request.appid,

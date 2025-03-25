@@ -34,7 +34,7 @@ import com.example.steamtracker.room.entities.TagEntity
         NewsAppEntity::class,
         AppDetailsEntity::class
     ],
-    version = 4,
+    version = 1,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

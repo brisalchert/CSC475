@@ -151,9 +151,9 @@ class NetworkStoreRepository(
         val apiResponse = storeApiService.getAppDetails(appId)
 
         // Add response to the database
-        if (apiResponse["$appId"]?.appDetails != null) {
-            val appDetailsEntity = apiResponse["$appId"]!!.appDetails!!.toAppDetailsEntity()
+        val appDetailsEntity = apiResponse["$appId"]?.appDetails?.toAppDetailsEntity()
 
+        if (appDetailsEntity != null) {
             appDetailsDao.insertAppDetails(appDetailsEntity)
         }
 
