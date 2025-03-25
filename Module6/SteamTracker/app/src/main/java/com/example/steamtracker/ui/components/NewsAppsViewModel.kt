@@ -46,29 +46,13 @@ class NewsAppsViewModel(
 
     fun addNewsApp(appId: Int) {
         viewModelScope.launch {
-            try {
-                steamworksRepository.addNewsApp(appId)
-            } catch (e: CancellationException) {
-                throw e // Don't suppress coroutine exceptions
-            } catch (e: IOException) {
-                Log.d("Debug", "IOException in NewsAppsViewModel")
-            } catch (e: HttpException) {
-                Log.d("Debug", "HttpException in NewsAppsViewModel")
-            }
+            steamworksRepository.addNewsApp(appId)
         }
     }
 
     fun removeNewsApp(appId: Int) {
         viewModelScope.launch {
-            try {
-                steamworksRepository.removeNewsApp(appId)
-            } catch (e: CancellationException) {
-                throw e // Don't suppress coroutine exceptions
-            } catch (e: IOException) {
-                Log.d("Debug", "IOException in NewsAppsViewModel")
-            } catch (e: HttpException) {
-                Log.d("Debug", "HttpException in NewsAppsViewModel")
-            }
+            steamworksRepository.removeNewsApp(appId)
         }
     }
 
