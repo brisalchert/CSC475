@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.room.dao.SpyDao
@@ -23,7 +22,7 @@ class NetworkSpyRepository(
     private val spyDao: SpyDao
 ): SpyRepository {
     override val topSales: Flow<List<SteamSpyAppWithTags>> =
-        spyDao.getAllGames().asFlow()
+        spyDao.getAllGames()
 
     override suspend fun refreshTopSales() {
         // Get the timestamp of the current sales data

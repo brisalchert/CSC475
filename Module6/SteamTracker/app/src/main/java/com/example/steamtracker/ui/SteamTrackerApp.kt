@@ -204,7 +204,6 @@ fun SteamTrackerApp(
                 ) {
                     NewsScreen(
                         newsUiState = newsUiState,
-                        getNews = newsViewModel::getNews,
                         getNameFromId = searchViewModel::getNameFromId,
                         nameFromId = nameFromId,
                         navigateApp = {

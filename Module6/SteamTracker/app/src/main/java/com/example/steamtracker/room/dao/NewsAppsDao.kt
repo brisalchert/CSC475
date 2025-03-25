@@ -16,12 +16,9 @@ interface NewsAppsDao {
     @Delete
     suspend fun deleteNewsApp(app: NewsAppEntity)
 
-    @Query("SELECT * FROM news_apps")
-    fun getAllNewsApps(): Flow<List<NewsAppEntity>>
-
     @Query("SELECT appid FROM news_apps")
-    suspend fun getNewsAppIds(): List<Int>
+    fun getNewsAppIds(): Flow<List<Int>>
 
     @Query("SELECT * FROM news_apps WHERE appid = :appId")
-    suspend fun getNewsAppById(appId: Int): Int?
+    suspend fun checkForId(appId: Int): Int?
 }

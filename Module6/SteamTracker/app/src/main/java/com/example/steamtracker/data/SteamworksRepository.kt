@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.room.dao.NewsAppsDao
@@ -10,24 +9,21 @@ import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
-import com.example.steamtracker.utils.isDataOutdated
 import com.example.steamtracker.utils.toNewsItemEntity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.first
 import java.time.Instant
-import java.time.temporal.ChronoUnit
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 interface SteamworksRepository {
-    val newsList: Flow<List<AppNewsWithDetails>>
     val newsApps: Flow<List<Int>>
 
     suspend fun refreshAppNews()
     suspend fun addNewsApp(appid: Int)
     suspend fun removeNewsApp(appid: Int)
-    suspend fun getNewsAppIds(): List<Int>
     suspend fun checkNewsApp(appId: Int): Boolean
+    fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
 }
 
 class NetworkSteamworksRepository(
@@ -35,48 +31,48 @@ class NetworkSteamworksRepository(
     private val steamworksDao: SteamworksDao,
     private val newsAppsDao: NewsAppsDao
 ): SteamworksRepository {
-    override val newsList: Flow<List<AppNewsWithDetails>> =
-        steamworksDao.getAllAppNews().asFlow()
-
     // List of apps specified by the user for tracking
     override val newsApps: Flow<List<Int>> =
-        newsAppsDao.getAllNewsApps().map { list -> list.map { it.appid } }
+        newsAppsDao.getNewsAppIds()
 
     override suspend fun refreshAppNews() {
-        newsApps.collect { appids ->
-            if (appids.isNotEmpty()) {
-                // Get the timestamp of the current sales data
-                val lastUpdated = steamworksDao.getLastUpdatedTimestamp()
+        // Clear previous news from the database
+        steamworksDao.clearAllAppNews()
 
-                // Check if the data is outdated (not from today)
-                if (isDataOutdated(lastUpdated)) {
-                    // Get data from the API
-                    val responseList = mutableListOf<AppNewsRequest>()
-                    appids.forEach { app -> responseList.add(steamworksApiService.getAppNews(app)) }
+        val appids = newsApps.first()
 
-                    // Filter out news from over two months ago
-                    responseList.forEach { request ->
-                        request.appnews.newsitems.filter { item ->
-                            val now = Instant.now()
-                            val twoMonthsAgo = now.minus(2, ChronoUnit.MONTHS)
-
-                            Instant.ofEpochMilli(item.date).isAfter(twoMonthsAgo)
-                        }
-                    }
-
-                    // Convert API response to Room database entities
-                    val appNewsRequestEntities = mapRequestsToEntities(responseList)
-                    val appNewsEntities = mapAppNewsToEntities(responseList)
-                    val newsItemEntities = mapNewsItemsToEntities(responseList).flatten()
-
-                    // Insert into Room Database using transactions
-                    steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
-                    steamworksDao.insertAppNews(appNewsEntities)
-                    steamworksDao.insertNews(newsItemEntities)
-                }
+        if (appids.isNotEmpty()) {
+            // Get data from the API
+            val responseList = appids.map { app ->
+                steamworksApiService.getAppNews(app)
             }
-        }
 
+            // Filter out news from over two months ago
+            val filteredResponseList = responseList.map { request ->
+                val filteredItems = request.appnews.newsitems.filter { item ->
+                    val now = LocalDateTime.now()
+                    val twoMonthsAgo = now.minusMonths(2)
+
+                    val itemDateTime = Instant.ofEpochMilli(item.date)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime()
+
+                    itemDateTime.isAfter(twoMonthsAgo)
+                }
+
+                request.copy(appnews = request.appnews.copy(newsitems = filteredItems))
+            }
+
+            // Convert API response to Room database entities
+            val appNewsRequestEntities = mapRequestsToEntities(responseList)
+            val appNewsEntities = mapAppNewsToEntities(responseList)
+            val newsItemEntities = mapNewsItemsToEntities(responseList).flatten()
+
+            // Insert into Room Database using transactions
+            steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
+            steamworksDao.insertAppNews(appNewsEntities)
+            steamworksDao.insertNews(newsItemEntities)
+        }
     }
 
     override suspend fun addNewsApp(appid: Int) {
@@ -87,14 +83,13 @@ class NetworkSteamworksRepository(
         newsAppsDao.deleteNewsApp(NewsAppEntity(appid))
     }
 
-    override suspend fun checkNewsApp(appId: Int): Boolean {
-        return newsAppsDao.getNewsAppById(appId) != null
+    /** Allows the view model to access news items */
+    override fun getAllAppNews(): Flow<List<AppNewsWithDetails>> {
+        return steamworksDao.getAllAppNews()
     }
 
-    override suspend fun getNewsAppIds(): List<Int> {
-        return withContext(Dispatchers.IO) {
-            newsAppsDao.getNewsAppIds()
-        }
+    override suspend fun checkNewsApp(appId: Int): Boolean {
+        return newsAppsDao.checkForId(appId) != null
     }
 
     /**

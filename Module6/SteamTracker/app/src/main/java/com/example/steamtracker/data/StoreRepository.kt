@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import androidx.lifecycle.asFlow
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.RegularCategory
@@ -32,7 +31,7 @@ class NetworkStoreRepository(
     private val storeDao: StoreDao
 ): StoreRepository {
     override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        storeDao.getAllFeaturedCategories().asFlow()
+        storeDao.getAllFeaturedCategories()
 
     /**
      * Refresh featured categories with API and update Room Database

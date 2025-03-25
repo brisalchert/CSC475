@@ -5,7 +5,6 @@ import com.example.steamtracker.room.relations.AppNewsWithDetails
 import kotlinx.coroutines.flow.Flow
 
 class MockSteamworksRepository(
-    override val newsList: Flow<List<AppNewsWithDetails>>,
     override val newsApps: Flow<List<Int>>
 ) : SteamworksRepository {
     override suspend fun refreshAppNews() {
@@ -20,11 +19,11 @@ class MockSteamworksRepository(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getNewsAppIds(): List<Int> {
+    override suspend fun checkNewsApp(appId: Int): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun checkNewsApp(appId: Int): Boolean {
+    override fun getAllAppNews(): Flow<List<AppNewsWithDetails>> {
         TODO("Not yet implemented")
     }
 }

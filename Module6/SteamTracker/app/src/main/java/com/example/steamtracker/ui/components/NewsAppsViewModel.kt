@@ -7,15 +7,21 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.SteamworksRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class NewsAppsViewModel(
     private val steamworksRepository: SteamworksRepository
 ): ViewModel() {
-    val newsApps: Flow<List<Int>> = steamworksRepository.newsApps
+    /** Observe state of flow object from repository */
+    val newsApps: StateFlow<List<Int>> =
+        steamworksRepository.newsApps
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun addNewsApp(appId: Int) {
         viewModelScope.launch {
@@ -29,19 +35,8 @@ class NewsAppsViewModel(
         }
     }
 
-    suspend fun checkNewsApp(appId: Int): Boolean {
-        return withContext(Dispatchers.IO) {
-            val appExists = steamworksRepository.checkNewsApp(appId)
-            appExists
-        }
-    }
-
-    // Checks (asynchronously) if an app is registered for the news list
-    fun checkNewsAppAsync(appId: Int, onResult: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            val exists = checkNewsApp(appId)
-            onResult(exists)
-        }
+    fun isAppTracked(appId: Int): Flow<Boolean> {
+        return newsApps.map { list -> appId in list }
     }
 
     /**

@@ -2,18 +2,15 @@ package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,22 +43,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.mock.MockSteamworksRepository
-import com.example.steamtracker.model.Achievement
-import com.example.steamtracker.model.AchievementsContainer
 import com.example.steamtracker.model.AppDetails
-import com.example.steamtracker.model.Category
-import com.example.steamtracker.model.ContentDescriptors
-import com.example.steamtracker.model.Genre
-import com.example.steamtracker.model.MetaCritic
-import com.example.steamtracker.model.Platforms
-import com.example.steamtracker.model.PriceOverview
-import com.example.steamtracker.model.Rating
-import com.example.steamtracker.model.Recommendations
-import com.example.steamtracker.model.ReleaseDate
-import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.model.SteamSpyAppRequest
-import com.example.steamtracker.model.SupportInfo
-import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
@@ -193,7 +175,6 @@ fun CollectionsRow(
 
         NewsListBox(
             appDetails = appDetails,
-            onList = false,
             newsAppsViewModel = newsAppsViewModel
         )
 
@@ -473,7 +454,6 @@ fun AppPagePreview() {
             appSpyInfo = SteamSpyAppRequest(),
             newsAppsViewModel = NewsAppsViewModel(
                 MockSteamworksRepository(
-                    listOf(listOf<AppNewsWithDetails>()).asFlow(),
                     listOf(listOf<Int>()).asFlow()
                 )
             ),

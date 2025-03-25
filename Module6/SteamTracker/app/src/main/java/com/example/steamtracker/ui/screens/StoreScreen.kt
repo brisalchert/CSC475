@@ -123,16 +123,7 @@ fun StoreScreenPreview() {
             tabIndex = 0,
             onTabChange = {},
             featuredUiState = FeaturedUiState.Success(
-                FeaturedCategoriesRequest(
-                    spotlightCategories = null,
-                    specials = null,
-                    comingSoon = null,
-                    topSellers = null,
-                    newReleases = null,
-                    genres = null,
-                    trailerslideshow = null,
-                    status = 0
-                )
+                FeaturedCategoriesRequest()
             ),
             getFeatured = {},
             salesUiState = SalesUiState.Success(listOf()),

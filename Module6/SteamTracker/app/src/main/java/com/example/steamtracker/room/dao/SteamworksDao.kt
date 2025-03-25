@@ -1,6 +1,5 @@
 package com.example.steamtracker.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,9 +9,14 @@ import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SteamworksDao {
+    @Transaction
+    @Query("DELETE FROM app_news_requests")
+    suspend fun clearAllAppNews()
+
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNews(newsitems: List<NewsItemEntity>)
@@ -26,13 +30,10 @@ interface SteamworksDao {
     suspend fun insertAppNewsRequests(appnews: List<AppNewsRequestEntity>)
 
     @Transaction
-    @Query("SELECT * FROM app_news_requests WHERE appid = :appid")
-    fun getAppNews(appid: Int): LiveData<AppNewsWithDetails>
+    @Query("SELECT * FROM app_news_requests")
+    fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
 
     @Transaction
-    @Query("SELECT * FROM app_news_requests")
-    fun getAllAppNews(): LiveData<List<AppNewsWithDetails>>
-
     @Query("SELECT MAX(lastUpdated) FROM app_news_requests")
     suspend fun getLastUpdatedTimestamp(): Long?
 }

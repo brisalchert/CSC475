@@ -14,70 +14,81 @@ import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.utils.toNewsItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
 
 sealed interface NewsUiState {
     data class Success(val newsItems: List<List<NewsItem>>) : NewsUiState
-    data object Error : NewsUiState
     data object Loading : NewsUiState
+    data object Error : NewsUiState
     data object NoNewsApps : NewsUiState
 }
 
 class NewsViewModel(
     private val steamworksRepository: SteamworksRepository
 ): ViewModel() {
+    /** Observe state of flow object from repository */
+    val newsList = steamworksRepository.getAllAppNews()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    /** Observe state of flow object from repository */
+    val newsApps: StateFlow<List<Int>> =
+        steamworksRepository.newsApps
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     /** The mutable StateFlow that stores the status of the most recent request */
     private val _newsUiState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val newsUiState: StateFlow<NewsUiState> = _newsUiState.asStateFlow()
 
     /**
-     * Call getNews() on init so we can display status immediately.
+     * Call observeTrackedApps() on init so we can display status immediately.
      */
     init {
-        getNews()
+        observeTrackedApps()
     }
 
     /**
-     * Gets news games from the API Retrofit services and updates the
-     * list of news games
+     * Observes the list of tracked apps and updates the UI if the list changes
      */
-    fun getNews() {
+    private fun observeTrackedApps() {
         viewModelScope.launch {
-            // Set UI state to loading when retrieving news
-            _newsUiState.value = NewsUiState.Loading
-
-            // If there are no news apps being tracked, set the UI state appropriately
-            val newsApps = steamworksRepository.getNewsAppIds()
-            if (newsApps.isEmpty()) {
-                _newsUiState.value = NewsUiState.NoNewsApps
-                return@launch
-            }
-
-            steamworksRepository.newsList.collectLatest { cachedData ->
-                if (cachedData.isNotEmpty()) {
-                    _newsUiState.value = NewsUiState.Success(
-                        mapEntitiesToRequests(cachedData).map { it.appnews.newsitems }
-                    )
-                }
-
-                // Check if the data is outdated
-                val isDataStale = cachedData.isEmpty() || isDataOutdated(cachedData)
-                if (isDataStale) {
+            newsApps.collectLatest { newsAppsList ->
+                // Set UI to NoNewsApps state if there are no apps in the list
+                if (newsAppsList.isEmpty()) {
+                    _newsUiState.value = NewsUiState.NoNewsApps
+                } else {
                     try {
-                        steamworksRepository.refreshAppNews()
-                    } catch (e: IOException) {
-                        NewsUiState.Error
-                    } catch (e: HttpException) {
-                        NewsUiState.Error
+                        // Wait for network request to complete
+                        withContext(Dispatchers.IO) {
+                            steamworksRepository.refreshAppNews()
+                        }
+
+                        // Collect newsList asynchronously to ensure correct status
+                        newsList.collectLatest { newsListEntities ->
+                            // Only proceed if newsListEntities is not empty
+                            if (newsListEntities.isNotEmpty()) {
+                                _newsUiState.value = NewsUiState.Success(
+                                    mapEntitiesToRequests(newsListEntities).map {
+                                        it.appnews.newsitems
+                                    }
+                                )
+                            } else {
+                                _newsUiState.value = NewsUiState.NoNewsApps
+                            }
+                        }
+                    } catch(e: IOException) {
+                        _newsUiState.value = NewsUiState.Error
+                    } catch(e: HttpException) {
+                        _newsUiState.value = NewsUiState.Error
                     }
                 }
             }
@@ -88,8 +99,14 @@ class NewsViewModel(
      * Maps database entities from the Room Database to AppNewsRequest objects
      */
     private fun mapEntitiesToRequests(entities: List<AppNewsWithDetails>): List<AppNewsRequest> {
-        val appNews = entities.map { entity ->
+        val appNews = entities.mapNotNull { entity ->
             val newsItems = entity.appNewsWithItems.newsitems.map { it.toNewsItem() }
+
+            if (newsItems.isEmpty()) {
+                Log.d("Debug", "Skipping appid ${entity.request.appid} because it has no news items.")
+                return@mapNotNull null
+            }
+
             Log.d("Debug", "Fetched ${newsItems.size} news items for appid ${entity.request.appid}")
             AppNews(
                 appid = newsItems.first().appid,
@@ -102,18 +119,6 @@ class NewsViewModel(
                 appnews = news
             )
         }
-    }
-
-    /**
-     * Checks if the data is outdated and needs to be fetched again
-     */
-    private fun isDataOutdated(data: List<AppNewsWithDetails>): Boolean {
-        val lastUpdatedTimestamp = data.maxOfOrNull { it.request.lastUpdated } ?: return true
-        val lastUpdatedDate = Instant.ofEpochMilli(lastUpdatedTimestamp)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-        val currentDate = LocalDate.now()
-        return lastUpdatedDate.isBefore(currentDate)
     }
 
     /**

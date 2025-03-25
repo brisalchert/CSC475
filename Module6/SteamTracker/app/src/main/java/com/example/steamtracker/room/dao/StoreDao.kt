@@ -1,6 +1,5 @@
 package com.example.steamtracker.room.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,6 +9,7 @@ import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StoreDao {
@@ -27,7 +27,7 @@ interface StoreDao {
 
     @Transaction
     @Query("SELECT * FROM featured_categories")
-    fun getAllFeaturedCategories(): LiveData<List<FeaturedCategoryWithDetails>>
+    fun getAllFeaturedCategories(): Flow<List<FeaturedCategoryWithDetails>>
 
     @Query("SELECT MAX(lastUpdated) FROM featured_categories")
     suspend fun getLastUpdatedTimestamp(): Long?
