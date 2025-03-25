@@ -50,7 +50,7 @@ class NewsViewModel(
     val newsUiState: StateFlow<NewsUiState> = _newsUiState.asStateFlow()
 
     /**
-     * Call observeTrackedApps() on init so we can display status immediately.
+     * Call observeTrackedApps() on init to display status immediately
      */
     init {
         observeTrackedApps()
@@ -61,7 +61,7 @@ class NewsViewModel(
      */
     private fun observeTrackedApps() {
         viewModelScope.launch {
-            newsApps.collectLatest { newsAppsList ->
+            newsApps.collect { newsAppsList ->
                 // Set UI to NoNewsApps state if there are no apps in the list
                 if (newsAppsList.isEmpty()) {
                     _newsUiState.value = NewsUiState.NoNewsApps

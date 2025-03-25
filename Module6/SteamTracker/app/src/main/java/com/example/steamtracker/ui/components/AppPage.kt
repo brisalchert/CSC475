@@ -36,19 +36,14 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
-import com.example.steamtracker.mock.MockSteamworksRepository
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
-import com.example.steamtracker.room.relations.AppNewsWithDetails
-import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
-import kotlinx.coroutines.flow.asFlow
 import java.util.Locale
 
 @Composable
@@ -441,24 +436,5 @@ fun ReviewScore(
                 modifier = modifier.padding(8.dp)
             )
         }
-    }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AppPagePreview() {
-    SteamTrackerTheme {
-        AppPage(
-            appDetails = AppDetails(),
-            appSpyInfo = SteamSpyAppRequest(),
-            newsAppsViewModel = NewsAppsViewModel(
-                MockSteamworksRepository(
-                    listOf(listOf<Int>()).asFlow()
-                )
-            ),
-            modifier = Modifier,
-            contentPadding = PaddingValues(0.dp)
-        )
     }
 }

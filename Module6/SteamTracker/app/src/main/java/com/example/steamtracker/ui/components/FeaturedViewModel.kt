@@ -40,7 +40,7 @@ class FeaturedViewModel(
     val featuredUiState: StateFlow<FeaturedUiState> = _featuredUiState.asStateFlow()
 
     /**
-     * Call getFeaturedGames() on init so we can display status immediately.
+     * Call getFeaturedGames() on init to display status immediately
      */
     init {
         getFeaturedCategories()

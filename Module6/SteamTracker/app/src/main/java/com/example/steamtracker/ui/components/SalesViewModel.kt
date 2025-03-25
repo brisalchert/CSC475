@@ -36,7 +36,7 @@ class SalesViewModel(
     val salesUiState: StateFlow<SalesUiState> = _salesUiState.asStateFlow()
 
     /**
-     * Call getSalesGames() on init so we can display status immediately.
+     * Call getSalesGames() on init to display status immediately
      */
     init {
         getSalesGames()

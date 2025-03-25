@@ -20,6 +20,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +31,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
+import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.NewsItem
+import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.NewsCard
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun NewsScreen(
     newsUiState: NewsUiState,
+    trackedAppsDetails: List<AppDetails>,
     getNameFromId: (appId: Int) -> Unit,
     nameFromId: String,
     navigateApp: () -> Unit,
@@ -46,6 +52,7 @@ fun NewsScreen(
         is NewsUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is NewsUiState.Success -> NewsItemList(
             newsUiState.newsItems,
+            trackedAppsDetails = trackedAppsDetails,
             getNameFromId = getNameFromId,
             nameFromId = nameFromId,
             modifier = modifier,
@@ -77,6 +84,7 @@ fun NewsScreen(
 @Composable
 fun NewsItemList(
     newsLists: List<List<NewsItem>>,
+    trackedAppsDetails: List<AppDetails>,
     getNameFromId: (Int) -> Unit,
     nameFromId: String,
     modifier: Modifier = Modifier,
@@ -116,6 +124,16 @@ fun NewsItemList(
             }
         }
     } else {
+        // Sort by most recent posts
+        val sortedLists = newsLists.flatten().sortedByDescending { it.date }
+
+        // Connect posts to appDetails for images
+        val appDetailsMap = trackedAppsDetails.associateBy { it.steamAppId }
+        val newsDetailsPairs = sortedLists.map { news ->
+            val appDetails = appDetailsMap[news.appid]
+            news to appDetails
+        }
+
         LazyColumn(
             modifier = modifier,
             contentPadding = contentPadding,
@@ -123,36 +141,47 @@ fun NewsItemList(
             horizontalAlignment = Alignment.Start
         ) {
             stickyHeader {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .shadow(8.dp, RoundedCornerShape(0.dp))
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "NEWS",
-                        fontSize = 30.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-            items(items = newsLists) { newsLists ->
-                newsLists.forEach { news ->
-                    // Use remember to ensure name updates
-                    val appName = remember(news.appid) {
-                        getNameFromId(news.appid)
-                        nameFromId
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(64.dp)
+                            .shadow(8.dp, RoundedCornerShape(0.dp))
+                            .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "NEWS",
+                            fontSize = 30.sp,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            textAlign = TextAlign.Center
+                        )
                     }
 
-                    NewsCard(
-                        newsItem = news,
-                        appName = appName,
-                        modifier = modifier
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp)
+                            .shadow(8.dp, RoundedCornerShape(0.dp))
+                            .background(MaterialTheme.colorScheme.outlineVariant),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Showing posts from the past 60 days",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
+
+            }
+            items(items = newsDetailsPairs) { newsPair ->
+                NewsCard(
+                    newsItem = newsPair.first,
+                    appDetails = newsPair.second!!,
+                    modifier = modifier
+                )
             }
         }
     }

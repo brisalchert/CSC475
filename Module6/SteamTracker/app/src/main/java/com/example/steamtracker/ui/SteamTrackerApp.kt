@@ -107,6 +107,9 @@ fun SteamTrackerApp(
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    // UI states for news page
+    val trackedAppsDetails by newsAppsViewModel.trackedAppDetails.collectAsState()
+
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
     val salesUiState by salesViewModel.salesUiState.collectAsState()
@@ -204,6 +207,7 @@ fun SteamTrackerApp(
                 ) {
                     NewsScreen(
                         newsUiState = newsUiState,
+                        trackedAppsDetails = trackedAppsDetails,
                         getNameFromId = searchViewModel::getNameFromId,
                         nameFromId = nameFromId,
                         navigateApp = {
