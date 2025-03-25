@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SpyDao {
-    @Transaction
+    @Query("DELETE FROM steam_spy_apps")
+    suspend fun clearAllSpyApps()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGame(game: SteamSpyAppEntity)
 
-    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTags(tags: List<TagEntity>)
 
-    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<SteamSpyAppEntity>)
 
@@ -33,7 +33,6 @@ interface SpyDao {
         }
     }
 
-    @Transaction
     @Query("SELECT * FROM steam_spy_apps WHERE appid = :appId")
     suspend fun getSpyInfo(appId: Int): SteamSpyAppWithTags?
 

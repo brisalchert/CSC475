@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.steamtracker.room.entities.NewsAppEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +17,7 @@ interface NewsAppsDao {
     @Query("DELETE FROM news_apps WHERE appid = :appId")
     suspend fun deleteNewsApp(appId: Int)
 
+    @Transaction
     @Query("SELECT appid FROM news_apps")
     fun getNewsAppIds(): Flow<List<Int>>
 

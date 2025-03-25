@@ -13,15 +13,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StoreDao {
-    @Transaction
+    @Query("DELETE FROM featured_categories")
+    suspend fun clearAllFeaturedCategories()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFeaturedCategories(categories: List<FeaturedCategoryEntity>)
 
-    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAppItems(items: List<AppInfoEntity>)
 
-    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSpotlightItems(items: List<SpotlightItemEntity>)
 
@@ -31,4 +31,16 @@ interface StoreDao {
 
     @Query("SELECT MAX(lastUpdated) FROM featured_categories")
     suspend fun getLastUpdatedTimestamp(): Long?
+
+    @Transaction
+    suspend fun insertFeaturedCategoryWithDetails(
+        categoryEntities: List<FeaturedCategoryEntity>,
+        appInfoEntities: List<AppInfoEntity>,
+        spotlightItemEntities: List<SpotlightItemEntity>
+    ) {
+        insertFeaturedCategories(categoryEntities)
+        insertAppItems(appInfoEntities)
+        insertSpotlightItems(spotlightItemEntities)
+    }
+
 }

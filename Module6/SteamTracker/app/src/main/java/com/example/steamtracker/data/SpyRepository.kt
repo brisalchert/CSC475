@@ -16,6 +16,7 @@ interface SpyRepository {
 
     suspend fun refreshTopSales()
     suspend fun getSpyAppInfo(appId: Int): SteamSpyAppRequest
+    suspend fun clearAllSpyApps()
 }
 
 class NetworkSpyRepository(
@@ -32,8 +33,8 @@ class NetworkSpyRepository(
         // Check if the data is outdated (not from today)
         if (isDataOutdated(lastUpdated)) {
             // Get data from the API
-            val response = spyApiService.getFirstPage().values
-                .toList()
+            val response = spyApiService.getFirstPage()
+                .map { it.value }
                 .filter { it.discount != "0" }
 
             // Convert API response to Room database entities
@@ -49,7 +50,10 @@ class NetworkSpyRepository(
         // Check database first
         var databaseResponse = spyDao.getSpyInfo(appId)
 
-        if (databaseResponse != null && !isDataOutdated(databaseResponse.app.lastUpdated)) {
+        // Need to check tags, since "spyApiService.getFirstPage()" Does not
+        // return tags, languages, or genres
+        if (databaseResponse != null && databaseResponse.tags.isNotEmpty()
+            && !isDataOutdated(databaseResponse.app.lastUpdated)) {
             val spyRequest = databaseResponse.app.toSteamSpyAppRequest(databaseResponse.tags)
             return spyRequest
         }
@@ -63,6 +67,13 @@ class NetworkSpyRepository(
         spyDao.insertAppInfoWithTags(spyEntity, tagEntity)
 
         return apiResponse
+    }
+
+    /**
+     * Clears old data from the database
+     */
+    override suspend fun clearAllSpyApps() {
+        spyDao.clearAllSpyApps()
     }
 
     /**

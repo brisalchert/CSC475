@@ -27,6 +27,7 @@ interface StoreRepository {
     suspend fun getAppDetails(appId: Int): AppDetails?
     suspend fun getSearchResults(query: String): StoreSearchRequest
     suspend fun getAppName(appId: Int): String
+    suspend fun clearFeaturedCategories()
 }
 
 class NetworkStoreRepository(
@@ -46,6 +47,9 @@ class NetworkStoreRepository(
 
         // Check if the data is outdated (not from today)
         if (isDataOutdated(lastUpdated)) {
+            // Clear old categories data
+            storeDao.clearAllFeaturedCategories()
+
             // Get data from the API
             val response = storeApiService.getFeaturedCategories()
 
@@ -57,9 +61,11 @@ class NetworkStoreRepository(
             val spotlightEntities = mapSpotlightItemsToEntities(response)
 
             // Insert into Room Database using transactions
-            storeDao.insertFeaturedCategories(categoryEntities)
-            storeDao.insertAppItems(appEntities)
-            storeDao.insertSpotlightItems(spotlightEntities)
+            storeDao.insertFeaturedCategoryWithDetails(
+                categoryEntities,
+                appEntities,
+                spotlightEntities
+            )
         }
     }
 
@@ -172,5 +178,12 @@ class NetworkStoreRepository(
      */
     override suspend fun getSearchResults(query: String): StoreSearchRequest = withContext(Dispatchers.IO) {
         return@withContext storeApiService.getSearchResults(query)
+    }
+
+    /**
+     * Clears all existing entries for featured categories
+     */
+    override suspend fun clearFeaturedCategories() {
+        storeDao.clearAllFeaturedCategories()
     }
 }

@@ -86,8 +86,10 @@ class NewsViewModel(
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
                     } catch(e: IOException) {
+                        Log.d("Debug", "${e.message}")
                         _newsUiState.value = NewsUiState.Error
                     } catch(e: HttpException) {
+                        Log.d("Debug", "${e.message}")
                         _newsUiState.value = NewsUiState.Error
                     }
                 }

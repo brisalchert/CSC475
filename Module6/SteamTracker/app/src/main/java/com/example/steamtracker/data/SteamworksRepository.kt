@@ -81,7 +81,7 @@ class NetworkSteamworksRepository(
 
     /** Allows the view model to access news items */
     override suspend fun getAllAppNews(): List<AppNewsWithDetails> {
-        return steamworksDao.getAllAppNews()
+        return steamworksDao.getAllAppNews().first()
     }
 
     override suspend fun checkNewsApp(appId: Int): Boolean {

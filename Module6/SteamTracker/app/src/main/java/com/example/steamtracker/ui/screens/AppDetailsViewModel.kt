@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.screens
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -52,8 +53,6 @@ class AppDetailsViewModel(
                 if (appDetails != null) {
                     val spyInfo = spyRepository.getSpyAppInfo(appId)
                     _appDetailsUiState.update { AppDetailsUiState.Success(appDetails, spyInfo, appId) }
-
-                    return@launch
                 } else {
                     // Set UI state to loading before fetching
                     _appDetailsUiState.update { AppDetailsUiState.Loading }
@@ -65,8 +64,10 @@ class AppDetailsViewModel(
             } catch (e: CancellationException) {
                 throw e // Don't suppress coroutine exceptions
             } catch (e: IOException) {
+                Log.d("Debug", "${e.message}")
                 _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
             } catch (e: HttpException) {
+                Log.d("Debug", "${e.message}")
                 _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
             }
         }

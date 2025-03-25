@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.components
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -19,7 +20,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -53,7 +53,7 @@ class FeaturedViewModel(
      */
     fun getFeaturedCategories() {
         viewModelScope.launch {
-            storeRepository.allFeaturedCategories.collectLatest { cachedData ->
+            storeRepository.allFeaturedCategories.collect { cachedData ->
                 if (cachedData.isNotEmpty()) {
                     _featuredUiState.value = FeaturedUiState.Success(mapEntitiesToRequest(cachedData))
                 }
@@ -66,8 +66,10 @@ class FeaturedViewModel(
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
                     } catch (e: IOException) {
+                        Log.d("Debug", "${e.message}")
                         _featuredUiState.value = FeaturedUiState.Error
                     } catch (e: HttpException) {
+                        Log.d("Debug", "${e.message}")
                         _featuredUiState.value = FeaturedUiState.Error
                     }
                 }

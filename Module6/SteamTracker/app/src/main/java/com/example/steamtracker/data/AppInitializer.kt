@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class AppInitializer(
@@ -36,7 +37,14 @@ class AppInitializer(
         withContext(Dispatchers.IO) {
             Log.d("AppInitializer", "Clearing database...")
             container.appDatabase.clearAllTables()
-            Log.d("AppInitializer", "Database cleared successfully")
+            Log.d("AppInitializer", "Database cleared")
+            Log.d("AppInitializer", "Tables after clearing: " +
+                    "${container.appDatabase.storeDao().getAllFeaturedCategories().first()}, " +
+                    "${container.appDatabase.salesDao().getAllGames().first()}, " +
+                    "${container.appDatabase.appDetailsDao().getAllAppDetails().first()}, " +
+                    "${container.appDatabase.steamworksDao().getAllAppNews().first()}, " +
+                    "${container.appDatabase.newsAppsDao().getNewsAppIds().first()}"
+            )
         }
     }
 }

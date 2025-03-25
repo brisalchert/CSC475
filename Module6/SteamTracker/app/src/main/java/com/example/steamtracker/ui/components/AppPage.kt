@@ -367,8 +367,9 @@ fun Tags(
                 )
             }
         }
-        Log.d("Debug", "TAGS: ${appSpyInfo.tags}")
         Log.d("Debug", "AppInfo name: ${appSpyInfo.name}")
+        Log.d("Debug", "TAGS: ${appSpyInfo.tags}")
+        Log.d("Debug", "AppInfo: $appSpyInfo")
 
         items(items = appSpyInfo.tags!!.keys.toList()) { key ->
             Tag(

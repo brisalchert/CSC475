@@ -40,29 +40,17 @@ fun NewsCard(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            if (appDetails != null) {
-                // Image for the game
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(appDetails.headerImage)
-                        .crossfade(true)
-                        .build(),
-                    error = painterResource(R.drawable.ic_broken_image),
-                    placeholder = painterResource(R.drawable.loading_img),
-                    contentDescription = "Image for ${appDetails.name}",
-                    contentScale = ContentScale.Crop,
-                    modifier = modifier.fillMaxWidth()
-                )
-            } else {
-                Box(
-                    modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Image Unavailable"
-                    )
-                }
-            }
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(appDetails?.headerImage)
+                    .crossfade(true)
+                    .build(),
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
+                contentDescription = "Image for ${appDetails?.name}",
+                contentScale = ContentScale.Crop,
+                modifier = modifier.fillMaxWidth()
+            )
 
             Column(
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
