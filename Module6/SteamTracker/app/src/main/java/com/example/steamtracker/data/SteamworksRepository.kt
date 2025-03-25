@@ -50,23 +50,21 @@ class NetworkSteamworksRepository(
             // Filter out news from over two months ago
             val filteredResponseList = responseList.map { request ->
                 val filteredItems = request.appnews.newsitems.filter { item ->
-                    val now = LocalDateTime.now()
-                    val twoMonthsAgo = now.minusMonths(2)
+                    val now = Instant.now()
+                    val twoMonthsAgo = now.minusSeconds(2 * 30 * 24 * 60 * 60L) // 60 days
 
-                    val itemDateTime = Instant.ofEpochMilli(item.date)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
+                    val itemInstant = Instant.ofEpochSecond(item.date)
 
-                    itemDateTime.isAfter(twoMonthsAgo)
+                    itemInstant.isAfter(twoMonthsAgo)
                 }
 
                 request.copy(appnews = request.appnews.copy(newsitems = filteredItems))
             }
 
             // Convert API response to Room database entities
-            val appNewsRequestEntities = mapRequestsToEntities(responseList)
-            val appNewsEntities = mapAppNewsToEntities(responseList)
-            val newsItemEntities = mapNewsItemsToEntities(responseList).flatten()
+            val appNewsRequestEntities = mapRequestsToEntities(filteredResponseList)
+            val appNewsEntities = mapAppNewsToEntities(filteredResponseList)
+            val newsItemEntities = mapNewsItemsToEntities(filteredResponseList).flatten()
 
             // Insert into Room Database using transactions
             steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
