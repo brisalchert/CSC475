@@ -107,8 +107,11 @@ fun SteamTrackerApp(
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // UI states for news page
+    // UI state for news page
     val trackedAppsDetails by newsAppsViewModel.trackedAppDetails.collectAsState()
+
+    // UI state for sales page
+    val salesAppDetails by salesViewModel.salesAppDetails.collectAsState()
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
@@ -185,6 +188,7 @@ fun SteamTrackerApp(
                         getFeatured = featuredViewModel::getFeaturedCategories,
                         salesUiState = salesUiState,
                         getSales = salesViewModel::getSalesGames,
+                        salesAppDetails = salesAppDetails,
                         searchStore = searchViewModel::getAutocompleteResults,
                         clearSearch = searchViewModel::clearSearchResults,
                         autocompleteResults = autocompleteResults.items,

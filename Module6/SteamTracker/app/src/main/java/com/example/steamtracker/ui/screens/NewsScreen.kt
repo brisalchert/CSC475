@@ -41,7 +41,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun NewsScreen(
     newsUiState: NewsUiState,
-    trackedAppsDetails: List<AppDetails>,
+    trackedAppsDetails: List<AppDetails?>,
     getNameFromId: (appId: Int) -> Unit,
     nameFromId: String,
     navigateApp: () -> Unit,
@@ -84,7 +84,7 @@ fun NewsScreen(
 @Composable
 fun NewsItemList(
     newsLists: List<List<NewsItem>>,
-    trackedAppsDetails: List<AppDetails>,
+    trackedAppsDetails: List<AppDetails?>,
     getNameFromId: (Int) -> Unit,
     nameFromId: String,
     modifier: Modifier = Modifier,
@@ -128,7 +128,7 @@ fun NewsItemList(
         val sortedLists = newsLists.flatten().sortedByDescending { it.date }
 
         // Connect posts to appDetails for images
-        val appDetailsMap = trackedAppsDetails.associateBy { it.steamAppId }
+        val appDetailsMap = trackedAppsDetails.associateBy { it?.steamAppId ?: 0 }
         val newsDetailsPairs = sortedLists.map { news ->
             val appDetails = appDetailsMap[news.appid]
             news to appDetails
@@ -179,7 +179,7 @@ fun NewsItemList(
             items(items = newsDetailsPairs) { newsPair ->
                 NewsCard(
                     newsItem = newsPair.first,
-                    appDetails = newsPair.second!!,
+                    appDetails = newsPair.second,
                     modifier = modifier
                 )
             }

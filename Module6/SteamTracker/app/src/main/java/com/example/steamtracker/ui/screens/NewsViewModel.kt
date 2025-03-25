@@ -14,6 +14,7 @@ import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.utils.toNewsItem
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -85,6 +86,8 @@ class NewsViewModel(
                                 _newsUiState.value = NewsUiState.NoNewsApps
                             }
                         }
+                    } catch (e: CancellationException) {
+                        throw e // Don't suppress coroutine exceptions
                     } catch(e: IOException) {
                         _newsUiState.value = NewsUiState.Error
                     } catch(e: HttpException) {

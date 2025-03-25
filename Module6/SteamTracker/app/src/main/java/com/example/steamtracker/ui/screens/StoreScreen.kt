@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.FeaturedTab
@@ -42,6 +43,7 @@ fun StoreScreen(
     getFeatured: () -> Unit,
     salesUiState: SalesUiState,
     getSales: () -> Unit,
+    salesAppDetails: List<AppDetails?>,
     searchStore: (query: String) -> Unit,
     clearSearch: () -> Unit,
     autocompleteResults: List<SearchAppInfo>,
@@ -94,20 +96,21 @@ fun StoreScreen(
             // Display the correct screen for the current selected tab
             when (storeTabIndex) {
                 0 -> FeaturedTab(
-                    featuredUiState,
-                    getFeatured,
-                    navigateApp,
-                    onAppSelect,
-                    modifier,
-                    contentPadding
+                    featuredUiState = featuredUiState,
+                    getFeatured = getFeatured,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier,
+                    contentPadding = contentPadding
                 )
                 1 -> SalesTab(
-                    salesUiState,
-                    getSales,
-                    navigateApp,
-                    onAppSelect,
-                    modifier,
-                    contentPadding
+                    salesUiState = salesUiState,
+                    getSales = getSales,
+                    salesAppDetails = salesAppDetails,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier,
+                    contentPadding = contentPadding
                 )
                 2 -> Column {} // TODO: Implement recommendations
             }
@@ -128,6 +131,7 @@ fun StoreScreenPreview() {
             getFeatured = {},
             salesUiState = SalesUiState.Success(listOf()),
             getSales = {},
+            salesAppDetails = listOf(),
             searchStore = { string: String -> },
             clearSearch = {},
             autocompleteResults = listOf(),

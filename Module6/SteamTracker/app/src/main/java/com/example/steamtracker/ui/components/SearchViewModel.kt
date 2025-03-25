@@ -11,6 +11,7 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.model.StoreSearchRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,6 +58,8 @@ class SearchViewModel(
             try {
                 val response = storeRepository.getSearchResults(query)
                 _autocompleteResults.update { response }
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
             } catch(e: IOException) {
                 _errorMessage.value = "Error: No Internet connection"
             } catch(e: HttpException) {

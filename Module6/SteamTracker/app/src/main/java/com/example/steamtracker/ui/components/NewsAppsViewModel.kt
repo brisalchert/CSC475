@@ -29,8 +29,9 @@ class NewsAppsViewModel(
         steamworksRepository.newsApps
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    private val _trackedAppsDetails = MutableStateFlow<List<AppDetails>>(emptyList())
-    val trackedAppDetails: StateFlow<List<AppDetails>> = _trackedAppsDetails.asStateFlow()
+    /** The mutable StateFlow that stores the AppDetails for tracked apps */
+    private val _trackedAppsDetails = MutableStateFlow<List<AppDetails?>>(emptyList())
+    val trackedAppDetails: StateFlow<List<AppDetails?>> = _trackedAppsDetails.asStateFlow()
 
     /**
      * Call getTrackedAppsDetails on init to observe changes

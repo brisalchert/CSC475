@@ -26,7 +26,7 @@ import com.example.steamtracker.utils.formatUnixTimestampSeconds
 @Composable
 fun NewsCard(
     newsItem: NewsItem,
-    appDetails: AppDetails,
+    appDetails: AppDetails?,
     modifier: Modifier = Modifier
 ) {
     Card( // TODO: Implement clicking on news card to go to details
@@ -40,7 +40,7 @@ fun NewsCard(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            if (appDetails.capsuleImage != "") {
+            if (appDetails != null) {
                 // Image for the game
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
@@ -69,7 +69,7 @@ fun NewsCard(
             ) {
                 // Display the game this post is for
                 Text(
-                    text = appDetails.name,
+                    text = appDetails?.name ?: "Name Unavailable",
                     fontSize = 18.sp,
                 )
 

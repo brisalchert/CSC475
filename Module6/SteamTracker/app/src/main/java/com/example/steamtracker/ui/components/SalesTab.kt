@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
@@ -19,6 +21,7 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 fun SalesTab(
     salesUiState: SalesUiState,
     getSales: () -> Unit,
+    salesAppDetails: List<AppDetails?>,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -29,6 +32,7 @@ fun SalesTab(
         is SalesUiState.Success -> SalesGamesList(
             salesGames = salesUiState.salesGames
                 .sortedByDescending { it.discount },
+            salesAppDetails = salesAppDetails,
             navigateApp = navigateApp,
             onAppSelect = onAppSelect,
             modifier = modifier,
@@ -48,10 +52,11 @@ fun SalesTab(
 fun SalesTabPreview() {
     SteamTrackerTheme {
         SalesTab(
-            SalesUiState.Success(listOf()),
-            {},
-            {},
-            {}
+            salesUiState = SalesUiState.Success(listOf()),
+            getSales = {},
+            salesAppDetails = listOf(),
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }
@@ -59,6 +64,7 @@ fun SalesTabPreview() {
 @Composable
 fun SalesGamesList(
     salesGames: List<SteamSpyAppRequest>,
+    salesAppDetails: List<AppDetails?>,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -70,17 +76,17 @@ fun SalesGamesList(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        var gamesCSV = ""
-
-        // Create a CSV list of app IDs for games on sale
-        salesGames.forEach { game ->
-            gamesCSV += game.appid
-            gamesCSV += ","
+        // Connect salesGames to appDetails for images
+        val appDetailsMap = salesAppDetails.associateBy { it?.steamAppId ?: 0 }
+        val salesDetailsPairs = salesGames.map { sales ->
+            val appDetails = appDetailsMap[sales.appid]
+            sales to appDetails
         }
 
-        items(items = salesGames) { game ->
+        items(items = salesDetailsPairs) { details ->
             SalesApp(
-                appInfo = game,
+                appInfo = details.first,
+                appDetails = details.second,
                 navigateApp = navigateApp,
                 onAppSelect = onAppSelect,
                 modifier = modifier

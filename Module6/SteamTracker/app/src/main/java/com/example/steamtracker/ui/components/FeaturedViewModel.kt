@@ -15,6 +15,7 @@ import com.example.steamtracker.model.SpotlightItem
 import com.example.steamtracker.model.StaticCategory
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.toAppInfo
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,6 +63,8 @@ class FeaturedViewModel(
                 if (isDataStale) {
                     try {
                         storeRepository.refreshFeaturedCategories()
+                    } catch (e: CancellationException) {
+                        throw e // Don't suppress coroutine exceptions
                     } catch (e: IOException) {
                         _featuredUiState.value = FeaturedUiState.Error
                     } catch (e: HttpException) {

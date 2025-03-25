@@ -11,6 +11,7 @@ import com.example.steamtracker.data.SpyRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,6 +50,8 @@ class AppDetailsViewModel(
                 val storeResponse = storeRepository.getAppDetails(appId)
                 val spyResponse = spyRepository.getSpyAppInfo(appId)
                 _appDetailsUiState.update { AppDetailsUiState.Success(storeResponse, spyResponse, appId) }
+            } catch (e: CancellationException) {
+                throw e // Don't suppress coroutine exceptions
             } catch (e: IOException) {
                 _appDetailsUiState.update { AppDetailsUiState.Error(appId) }
             } catch (e: HttpException) {

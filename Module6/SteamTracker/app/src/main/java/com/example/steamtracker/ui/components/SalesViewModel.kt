@@ -8,9 +8,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.SpyRepository
+import com.example.steamtracker.data.StoreRepository
+import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.room.relations.SteamSpyAppWithTags
 import com.example.steamtracker.utils.toSteamSpyAppRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,17 +32,24 @@ sealed interface SalesUiState {
 }
 
 class SalesViewModel(
-    private val spyRepository: SpyRepository
+    private val spyRepository: SpyRepository,
+    private val storeRepository: StoreRepository
 ): ViewModel() {
     /** The mutable StateFlow that stores the status of the most recent request */
     private val _salesUiState = MutableStateFlow<SalesUiState>(SalesUiState.Loading)
     val salesUiState: StateFlow<SalesUiState> = _salesUiState.asStateFlow()
 
+    /** The mutable StateFlow that stores the AppDetails for discounted apps */
+    private val _salesAppDetails = MutableStateFlow<List<AppDetails?>>(emptyList())
+    val salesAppDetails: StateFlow<List<AppDetails?>> = _salesAppDetails.asStateFlow()
+
     /**
      * Call getSalesGames() on init to display status immediately
+     * Call getSalesAppDetails() on init to store state of app details
      */
     init {
         getSalesGames()
+        getSalesAppDetails()
     }
 
     /**
@@ -48,7 +58,7 @@ class SalesViewModel(
      */
     fun getSalesGames() {
         viewModelScope.launch {
-            spyRepository.topSales.collectLatest { cachedData ->
+            spyRepository.topSales.collect { cachedData ->
                 if (cachedData.isNotEmpty()) {
                     _salesUiState.value = SalesUiState.Success(mapEntitiesToRequests(cachedData))
                 }
@@ -58,11 +68,23 @@ class SalesViewModel(
                 if (isDataStale) {
                     try {
                         spyRepository.refreshTopSales()
+                    } catch (e: CancellationException) {
+                        throw e // Don't suppress coroutine exceptions
                     } catch (e: IOException) {
                         SalesUiState.Error
                     } catch (e: HttpException) {
                         SalesUiState.Error
                     }
+                }
+            }
+        }
+    }
+
+    fun getSalesAppDetails() {
+        viewModelScope.launch {
+            spyRepository.topSales.collect { salesApps ->
+                _salesAppDetails.value = salesApps.map {
+                    storeRepository.getAppDetails(it.app.appid)
                 }
             }
         }
@@ -97,7 +119,11 @@ class SalesViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val spyRepository = application.container.spyRepository
-                SalesViewModel(spyRepository = spyRepository)
+                val storeRepository = application.container.storeRepository
+                SalesViewModel(
+                    spyRepository = spyRepository,
+                    storeRepository = storeRepository
+                )
             }
         }
     }
