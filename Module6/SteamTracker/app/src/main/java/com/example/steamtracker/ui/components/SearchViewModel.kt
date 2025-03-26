@@ -99,6 +99,24 @@ class SearchViewModel(
     }
 
     /**
+     * Sorts the current search results by the given criterion
+     */
+    fun sortResults(by: String) {
+        _searchResults.update { currentRequest ->
+            val sortedItems = when (by) {
+                "priceAscending" -> currentRequest.items.sortedBy { it.price?.final }
+                "priceDescending" -> currentRequest.items.sortedByDescending { it.price?.final }
+                "nameAscending" -> currentRequest.items.sortedBy { it.name.uppercase() }
+                "nameDescending" -> currentRequest.items.sortedByDescending { it.name.uppercase() }
+                "metascoreAscending" -> currentRequest.items.sortedBy { it.metascore }
+                "metascoreDescending" -> currentRequest.items.sortedByDescending { it.metascore }
+                else -> currentRequest.items // Keep the order unchanged if sorting criteria is unknown
+            }
+            currentRequest.copy(items = sortedItems)
+        }
+    }
+
+    /**
      * Factory companion object to allow repository to be passed to view model on creation
      */
     companion object {
