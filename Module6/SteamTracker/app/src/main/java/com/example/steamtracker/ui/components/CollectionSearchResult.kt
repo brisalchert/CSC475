@@ -20,6 +20,8 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -50,6 +52,10 @@ fun CollectionSearchResult(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
+    val onList by collectionsViewModel.isInCollection(currentCollection.first, app.id).collectAsState(
+        initial = false
+    )
+
     val context = LocalContext.current
 
     Card(
@@ -99,7 +105,7 @@ fun CollectionSearchResult(
                 IconButton(
                     onClick = {
                         // Check if app is currently in the collection
-                        if (currentCollection.second.find { it.appId == app.id } != null) {
+                        if (onList) {
                             onRemoveApp(currentCollection.first, app.id)
 
                             Toast.makeText(
@@ -122,7 +128,7 @@ fun CollectionSearchResult(
                     )
                 ) {
                     // Check if app is currently in the collection
-                    if (currentCollection.second.find { it.appId == app.id } != null) {
+                    if (onList) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             tint = MaterialTheme.colorScheme.primary,

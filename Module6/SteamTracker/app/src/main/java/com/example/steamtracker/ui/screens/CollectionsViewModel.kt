@@ -107,6 +107,12 @@ class CollectionsViewModel(
         }
     }
 
+    fun getCollectionContents(collectionName: String): Flow<List<CollectionApp>> {
+        return allCollections.map { collections ->
+            mapEntitiesToCollections(collections)[collectionName] ?: emptyList()
+        }
+    }
+
     fun getAllCollections() {
         viewModelScope.launch {
             collectionsRepository.allCollections.collect { collections ->

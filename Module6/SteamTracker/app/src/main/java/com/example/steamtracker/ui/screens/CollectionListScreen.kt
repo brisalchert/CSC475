@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,14 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.ui.components.AppRemoveAlert
 import com.example.steamtracker.ui.components.CollectionAppCard
-import java.util.Locale
 
 @Composable
 fun CollectionListScreen(
@@ -46,6 +45,10 @@ fun CollectionListScreen(
     navigateAddApp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val currentCollection by collectionsViewModel.getCollectionContents(collection.first).collectAsState(
+        initial = emptyList()
+    )
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -94,7 +97,7 @@ fun CollectionListScreen(
                 )
             }
 
-            if (collection.second.isEmpty()) {
+            if (currentCollection.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -117,7 +120,7 @@ fun CollectionListScreen(
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Top
                 ) {
-                    items(items = collection.second, key = { it.appId }) { app ->
+                    items(items = currentCollection, key = { it.appId }) { app ->
                         val appDetails = collectionAppDetails.find {
                             it?.steamAppId == app.appId
                         }
