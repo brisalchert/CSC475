@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.CollectionsBookmark
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -67,6 +69,7 @@ import com.example.steamtracker.ui.screens.CollectionListScreen
 import com.example.steamtracker.ui.screens.CollectionSearchScreen
 import com.example.steamtracker.ui.screens.CollectionsScreen
 import com.example.steamtracker.ui.screens.CollectionsViewModel
+import com.example.steamtracker.ui.screens.MenuScreen
 import com.example.steamtracker.ui.screens.NewsDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
@@ -85,7 +88,8 @@ enum class TrackerOtherScreens {
     App,
     Collection,
     CollectionSearch,
-    NewsDetails
+    NewsDetails,
+    Settings
 }
 
 @Composable
@@ -105,7 +109,13 @@ fun SteamTrackerApp(
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
-    val selectedScreen = remember { mutableStateOf(TrackerMainScreens.Store.name) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val selectedScreen = remember { mutableStateOf(navBackStackEntry?.destination?.route ?: TrackerMainScreens.Store.name) }
+
+    // Keep track of selected screen
+    LaunchedEffect(navBackStackEntry) {
+        selectedScreen.value = navBackStackEntry?.destination?.route ?: TrackerMainScreens.Store.name
+    }
 
     // Dynamically update navigation status based on current navigation destination
     var canNavigateBack by remember { mutableStateOf(navController.previousBackStackEntry != null) }
@@ -273,7 +283,40 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerMainScreens.Menu.name
                 ) {
-                    // TODO: Implement Menu/Settings/Preferences
+                    val navMap = mapOf(
+                        TrackerMainScreens.Store.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Store.name
+                            )
+                        },
+                        TrackerMainScreens.News.name to {
+                            navController.navigate(
+                                TrackerMainScreens.News.name
+                            )
+                        },
+                        TrackerMainScreens.Collections.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Collections.name
+                            )
+                        },
+                        TrackerMainScreens.Notifications.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Notifications.name
+                            )
+                        },
+                        TrackerOtherScreens.Search.name to {
+                            navController.navigate(
+                                TrackerOtherScreens.Search.name
+                            )
+                        },
+                        TrackerOtherScreens.Settings.name to {
+                            navController.navigate(
+                                TrackerOtherScreens.Settings.name
+                            )
+                        }
+                    )
+
+                    MenuScreen(navigation = navMap)
                 }
                 composable(
                     route = TrackerOtherScreens.Search.name
@@ -284,6 +327,7 @@ fun SteamTrackerApp(
                         clearSearch = searchViewModel::clearSearchResults,
                         autocompleteResults = autocompleteResults.items,
                         searchResults = searchResults.items,
+                        sortResults = searchViewModel::sortResults,
                         navigateSearch = {
                             navController.navigate(TrackerOtherScreens.Search.name) {
                                 popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
