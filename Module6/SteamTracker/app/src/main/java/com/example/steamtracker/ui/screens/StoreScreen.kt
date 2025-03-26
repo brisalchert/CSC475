@@ -30,6 +30,7 @@ import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
+import com.example.steamtracker.ui.components.RecommendedTab
 import com.example.steamtracker.ui.components.SalesTab
 import com.example.steamtracker.ui.components.SalesUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
@@ -112,7 +113,13 @@ fun StoreScreen(
                     modifier = modifier,
                     contentPadding = contentPadding
                 )
-                2 -> Column {} // TODO: Implement recommendations
+                2 -> RecommendedTab(
+                    featuredUiState = featuredUiState,
+                    getFeatured = getFeatured,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier
+                )
             }
         }
     }
