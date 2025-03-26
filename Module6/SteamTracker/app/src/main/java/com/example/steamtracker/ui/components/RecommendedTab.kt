@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,7 +24,6 @@ import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
-import kotlin.collections.forEach
 
 @Composable
 fun RecommendedTab(
@@ -48,7 +48,6 @@ fun RecommendedTab(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecommendedCategoriesList(
     featuredCategories: FeaturedCategoriesRequest,
@@ -56,66 +55,61 @@ fun RecommendedCategoriesList(
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        featuredCategories.specials?.let {
-            stickyHeader {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .shadow(8.dp, RoundedCornerShape(0.dp))
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "NEW RELEASES",
-                        fontSize = 30.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-            item {
-                RecommendedGamesList(
-                    featuredCategories.newReleases?.items!!,
-                    navigateApp = navigateApp,
-                    onAppSelect = onAppSelect
-                )
-            }
+        featuredCategories.newReleases?.let {
+            RecommendedGamesList(
+                featuredCategories.newReleases.items!!,
+                header = "NEW RELEASES",
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect
+            )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecommendedGamesList(
     featuredGames: List<AppInfo>,
+    header: String,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val seenIds = mutableSetOf<Int>()
-
-        featuredGames.forEach { game ->
-            // Prevent duplicate entries in the list
-            if (!seenIds.contains(game.id)) {
-                seenIds.add(game.id)
-
-                FeaturedApp(
-                    appInfo = game,
-                    navigateApp = navigateApp,
-                    onAppSelect = onAppSelect,
-                    modifier = modifier
+        stickyHeader {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .shadow(8.dp, RoundedCornerShape(0.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = header,
+                    fontSize = 30.sp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    textAlign = TextAlign.Center
                 )
             }
+        }
+
+        items(items = featuredGames) { game ->
+            FeaturedApp(
+                appInfo = game,
+                navigateApp = navigateApp,
+                onAppSelect = onAppSelect,
+                modifier = modifier
+            )
         }
     }
 }

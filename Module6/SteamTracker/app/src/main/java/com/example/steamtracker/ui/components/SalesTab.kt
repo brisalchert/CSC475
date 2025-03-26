@@ -73,7 +73,7 @@ fun SalesGamesList(
         modifier = modifier,
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Connect salesGames to appDetails for images
         val appDetailsMap = salesAppDetails.associateBy { it?.steamAppId ?: 0 }
