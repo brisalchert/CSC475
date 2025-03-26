@@ -86,6 +86,7 @@ class CollectionsViewModel(
     fun getAllCollections() {
         viewModelScope.launch {
             collectionsRepository.allCollections.collect { collections ->
+                Log.d("Debug", "Collected state from collections repository")
                 val collections = mapEntitiesToCollections(collections)
 
                 if (collections.isNotEmpty()) {
@@ -97,6 +98,7 @@ class CollectionsViewModel(
                                 }
                             }
 
+                        // Update UI State
                         _collectionsUiState.value = CollectionsUiState.Success(collections)
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions

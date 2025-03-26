@@ -21,17 +21,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.model.SearchAppInfo
-import com.example.steamtracker.ui.components.SearchResult
+import com.example.steamtracker.ui.components.CollectionSearchResult
 import com.example.steamtracker.ui.components.SearchUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
-import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun SearchScreen( // TODO: Add search sorting/filtering
+fun CollectionSearchScreen(
+    collectionsViewModel: CollectionsViewModel,
+    currentCollection: Pair<String, List<CollectionApp>>,
+    onAddApp: (collectionName: String, appId: Int) -> Unit,
+    onRemoveApp: (collectionName: String, appId: Int) -> Unit,
     searchUiState: SearchUiState,
     getAutocomplete: (query: String) -> Unit,
     clearSearch: () -> Unit,
@@ -55,12 +58,16 @@ fun SearchScreen( // TODO: Add search sorting/filtering
 
             when (searchUiState) {
                 is SearchUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-                is SearchUiState.Success -> SearchResults(
-                    searchResults,
-                    navigateApp,
-                    onAppSelect,
-                    modifier,
-                    contentPadding
+                is SearchUiState.Success -> CollectionSearchResults(
+                    collectionsViewModel = collectionsViewModel,
+                    currentCollection = currentCollection,
+                    onAddApp = onAddApp,
+                    onRemoveApp = onRemoveApp,
+                    searchResults = searchResults,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier,
+                    contentPadding = contentPadding
                 )
                 is SearchUiState.Error -> StoreErrorScreen(
                     retryAction = navigateSearch,
@@ -100,26 +107,12 @@ fun SearchScreen( // TODO: Add search sorting/filtering
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun SearchScreenPreview() {
-    SteamTrackerTheme {
-        SearchScreen(
-            searchUiState = SearchUiState.Success(listOf()),
-            getAutocomplete = { query -> },
-            clearSearch = {},
-            autocompleteResults = listOf(),
-            searchResults = listOf(),
-            navigateSearch = {},
-            onSearch = {},
-            navigateApp = {},
-            onAppSelect = {}
-        )
-    }
-}
-
-@Composable
-fun SearchResults(
+fun CollectionSearchResults(
+    collectionsViewModel: CollectionsViewModel,
+    currentCollection: Pair<String, List<CollectionApp>>,
+    onAddApp: (collectionName: String, appId: Int) -> Unit,
+    onRemoveApp: (collectionName: String, appId: Int) -> Unit,
     searchResults: List<SearchAppInfo>,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
@@ -133,12 +126,16 @@ fun SearchResults(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             itemsIndexed(searchResults) { index, result ->
-                SearchResult(
-                    result,
-                    navigateApp,
-                    onAppSelect,
-                    modifier,
-                    contentPadding
+                CollectionSearchResult(
+                    collectionsViewModel = collectionsViewModel,
+                    currentCollection = currentCollection,
+                    onAddApp = onAddApp,
+                    onRemoveApp = onRemoveApp,
+                    app = result,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier,
+                    contentPadding = contentPadding
                 )
 
                 if (index < searchResults.lastIndex) { // Avoid adding a divider after the last item

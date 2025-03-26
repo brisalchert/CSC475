@@ -10,6 +10,8 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.SteamworksRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.model.NewsItem
+import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +34,10 @@ class NewsAppsViewModel(
         steamworksRepository.newsApps
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    /** StateFlow for the currently selected news post */
+    private val _currentNews = MutableStateFlow<NewsItem>(NewsItem())
+    val currentNews: StateFlow<NewsItem> = _currentNews.asStateFlow()
+
     /** The mutable StateFlow that stores the AppDetails for tracked apps */
     private val _trackedAppsDetails = MutableStateFlow<List<AppDetails?>>(emptyList())
     val trackedAppDetails: StateFlow<List<AppDetails?>> = _trackedAppsDetails.asStateFlow()
@@ -41,6 +47,21 @@ class NewsAppsViewModel(
      */
     init {
         getTrackedAppsDetails()
+    }
+
+    /**
+     * Sets the current news item for viewing
+     */
+    fun setCurrentNews(gid: Int) {
+        viewModelScope.launch {
+            _currentNews.value = getNewsByGid(gid)
+        }
+    }
+
+    suspend fun getNewsByGid(gid: Int): NewsItem {
+        val response = steamworksRepository.getNewsByGid(gid)
+
+        return response.toNewsItem()
     }
 
     fun addNewsApp(appId: Int) {

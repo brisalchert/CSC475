@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -89,11 +90,9 @@ fun CollectionAppCard(
             ) {
                 TextButton(
                     onClick = onRemoveClick,
-                    colors = ButtonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error,
-                        disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                        disabledContentColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
                     Text(
@@ -142,22 +141,18 @@ fun AppRemoveAlert(
                 ) {
                     TextButton(
                         onClick = onDismiss,
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Text("Cancel")
                     }
                     TextButton(
                         onClick = onSubmit,
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.error,
-                            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
                         Text("Remove App")

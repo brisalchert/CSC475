@@ -27,13 +27,16 @@ import com.example.steamtracker.utils.formatUnixTimestampSeconds
 fun NewsCard(
     newsItem: NewsItem,
     appDetails: AppDetails?,
+    navigateNews: () -> Unit,
+    onNewsSelected: (gid: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card( // TODO: Implement clicking on news card to go to details
         modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        onClick = {}
     ) {
         Column(
             modifier = modifier,

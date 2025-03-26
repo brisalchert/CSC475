@@ -37,7 +37,8 @@ import com.example.steamtracker.ui.components.NewsCard
 fun NewsScreen(
     newsUiState: NewsUiState,
     trackedAppsDetails: List<AppDetails?>,
-    navigateApp: () -> Unit,
+    navigateNews: () -> Unit,
+    onNewsSelected: (gid: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -46,6 +47,8 @@ fun NewsScreen(
         is NewsUiState.Success -> NewsItemList(
             newsUiState.newsItems,
             trackedAppsDetails = trackedAppsDetails,
+            navigateNews = navigateNews,
+            onNewsSelected = onNewsSelected,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -76,6 +79,8 @@ fun NewsScreen(
 fun NewsItemList(
     newsLists: List<List<NewsItem>>,
     trackedAppsDetails: List<AppDetails?>,
+    navigateNews: () -> Unit,
+    onNewsSelected: (gid: Int) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -169,6 +174,8 @@ fun NewsItemList(
                 NewsCard(
                     newsItem = newsPair.first,
                     appDetails = newsPair.second,
+                    navigateNews = navigateNews,
+                    onNewsSelected = onNewsSelected,
                     modifier = modifier
                 )
             }

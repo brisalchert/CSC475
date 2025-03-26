@@ -1,6 +1,7 @@
 package com.example.steamtracker.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,13 +9,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,12 +27,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -136,35 +138,53 @@ fun CollectionsMenu(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
-    var showRemoveDialog by remember { mutableStateOf(false) }
+    var collectionNameToRemove by remember { mutableStateOf<String?>(null) }
 
-    LazyColumn(
-        modifier = modifier
-    ) {
-        items(items = collections.entries.toList()) { collection ->
-            // Sort collection apps by their index
-            val collectionPair = Pair(collection.key, collection.value.sortedBy { it.index })
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .shadow(8.dp, RoundedCornerShape(0.dp))
+                .background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "COLLECTIONS",
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                textAlign = TextAlign.Center
+            )
+        }
 
-            if (showRemoveDialog) {
-                CollectionRemoveAlert(
-                    collectionName = collectionPair.first,
-                    onDismiss = { showRemoveDialog = false },
-                    onSubmit = {
-                        collectionsViewModel.removeCollection(
-                            collectionPair.first
-                        )
-                        showRemoveDialog = false
-                    }
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(items = collections.entries.toList()) { collection ->
+                // Sort collection apps by their index
+                val collectionPair = Pair(collection.key, collection.value.sortedBy { it.index })
+
+                if (collectionNameToRemove.equals(collectionPair.first)) {
+                    CollectionRemoveAlert(
+                        collectionName = collectionPair.first,
+                        onDismiss = { collectionNameToRemove = null },
+                        onSubmit = {
+                            collectionsViewModel.removeCollection(
+                                collectionPair.first
+                            )
+                            collectionNameToRemove = null
+                        }
+                    )
+                }
+
+                CollectionCard(
+                    onRemoveClick = { collectionNameToRemove = collectionPair.first },
+                    collection = collectionPair,
+                    collectionsAppDetails = collectionsAppDetails,
+                    navigateCollection = navigateCollection,
+                    onCollectionSelect = onCollectionSelect,
                 )
             }
-
-            CollectionCard(
-                onRemoveClick = { showRemoveDialog = true },
-                collection = collectionPair,
-                collectionsAppDetails = collectionsAppDetails,
-                navigateCollection = navigateCollection,
-                onCollectionSelect = onCollectionSelect,
-            )
         }
     }
 }
@@ -208,22 +228,18 @@ fun CreateCollectionDialog(
                 ) {
                     TextButton(
                         onClick = onDismiss,
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.error,
-                            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
                         Text("Cancel")
                     }
                     TextButton(
                         onClick = { onSubmit(collectionName) },
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Text("Submit")

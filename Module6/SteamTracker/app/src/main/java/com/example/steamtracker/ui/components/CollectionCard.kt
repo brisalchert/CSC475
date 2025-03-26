@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -80,7 +81,7 @@ fun CollectionCard(
 
             Text(
                 text = collection.first,
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = modifier
@@ -96,11 +97,9 @@ fun CollectionCard(
             ) {
                 TextButton(
                     onClick = onRemoveClick,
-                    colors = ButtonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error,
-                        disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                        disabledContentColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {
                     Text(
@@ -149,22 +148,18 @@ fun CollectionRemoveAlert(
                 ) {
                     TextButton(
                         onClick = onDismiss,
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.primary,
-                            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
                         Text("Cancel")
                     }
                     TextButton(
                         onClick = onSubmit,
-                        colors = ButtonColors(
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.error,
-                            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                            disabledContentColor = MaterialTheme.colorScheme.error,
+                            contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
                         Text("Remove Collection")

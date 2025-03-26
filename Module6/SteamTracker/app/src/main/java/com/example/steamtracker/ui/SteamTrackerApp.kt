@@ -45,6 +45,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -63,8 +64,10 @@ import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
 import com.example.steamtracker.ui.screens.CollectionListScreen
+import com.example.steamtracker.ui.screens.CollectionSearchScreen
 import com.example.steamtracker.ui.screens.CollectionsScreen
 import com.example.steamtracker.ui.screens.CollectionsViewModel
+import com.example.steamtracker.ui.screens.NewsDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 import com.example.steamtracker.ui.screens.SearchScreen
@@ -80,7 +83,9 @@ enum class TrackerMainScreens {
 enum class TrackerOtherScreens {
     Search,
     App,
-    Collection
+    Collection,
+    CollectionSearch,
+    NewsDetails
 }
 
 @Composable
@@ -114,15 +119,16 @@ fun SteamTrackerApp(
     val searchErrorMessage by searchViewModel.errorMessage.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // AppDetails state for news page
+    // States for news page
     val trackedAppsDetails by newsAppsViewModel.trackedAppDetails.collectAsState()
+    val currentNews by newsAppsViewModel.currentNews.collectAsState()
 
     // AppDetails state for sales page
     val salesAppDetails by salesViewModel.salesAppDetails.collectAsState()
 
     // States for collections page
     val collectionsAppDetails by collectionsViewModel.collectionsAppsDetails.collectAsState()
-    val currentCollection by collectionsViewModel.currentCollection.collectAsState()
+    val currentCollection by collectionsViewModel.currentCollection.collectAsStateWithLifecycle()
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
@@ -236,11 +242,12 @@ fun SteamTrackerApp(
                     NewsScreen(
                         newsUiState = newsUiState,
                         trackedAppsDetails = trackedAppsDetails,
-                        navigateApp = {
-                            navController.navigate(TrackerOtherScreens.App.name) {
-                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                        navigateNews = {
+                            navController.navigate(TrackerOtherScreens.NewsDetails.name) {
+                                popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
                             }
-                        }
+                        },
+                        onNewsSelected = newsAppsViewModel::setCurrentNews,
                     )
                 }
                 composable(
@@ -273,7 +280,7 @@ fun SteamTrackerApp(
                 ) {
                     SearchScreen(
                         searchUiState = searchUiState,
-                        searchStore = searchViewModel::getAutocompleteResults,
+                        getAutocomplete = searchViewModel::getAutocompleteResults,
                         clearSearch = searchViewModel::clearSearchResults,
                         autocompleteResults = autocompleteResults.items,
                         searchResults = searchResults.items,
@@ -312,7 +319,46 @@ fun SteamTrackerApp(
                                 popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
                             }
                         },
+                        onAppSelect = appDetailsViewModel::getAppDetails,
+                        navigateAddApp = {
+                            navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
+                                popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.CollectionSearch.name
+                ) {
+                    CollectionSearchScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        currentCollection = currentCollection,
+                        onAddApp = collectionsViewModel::addCollectionApp,
+                        onRemoveApp = collectionsViewModel::removeCollectionApp,
+                        searchUiState = searchUiState,
+                        getAutocomplete = searchViewModel::getAutocompleteResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        autocompleteResults = autocompleteResults.items,
+                        searchResults = searchResults.items,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
+                                popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
+                            }
+                        },
+                        onSearch = searchViewModel::getSearchResults,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
                         onAppSelect = appDetailsViewModel::getAppDetails
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.NewsDetails.name
+                ) {
+                    NewsDetailsScreen(
+                        news = currentNews
                     )
                 }
             }
@@ -335,7 +381,7 @@ fun TrackerTopAppBar(
             Text(
                 text = stringResource(R.string.app_name),
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineMedium
             )
         },
         modifier = modifier,
