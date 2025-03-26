@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,7 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -105,7 +103,7 @@ fun AppPage(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.outlineVariant)
             ) {
-                Genres(appDetails, modifier)
+                GenresRow(appDetails, modifier)
             }
         }
 
@@ -116,7 +114,7 @@ fun AppPage(
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceDim)
                 ) {
-                    Tags(appSpyInfo, modifier)
+                    TagsRow(appSpyInfo, modifier)
                 }
             }
         }
@@ -161,10 +159,16 @@ fun CollectionsRow(
     collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val listState = rememberLazyListState()
+
     LazyRow(
-        modifier = Modifier.fillMaxWidth(),
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScrollbar(listState = listState),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(bottom = 8.dp)
     ) {
         item {
             WishlistBox(
@@ -176,7 +180,7 @@ fun CollectionsRow(
         item {
             FavoritesBox(
                 appDetails = appDetails,
-                collectionsViewModel = collectionsViewModel,
+                collectionsViewModel = collectionsViewModel
             )
         }
 
@@ -319,31 +323,46 @@ fun GeneralInfo(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Genres(
+fun GenresRow(
     appDetails: AppDetails,
     modifier: Modifier = Modifier
 ) {
-    FlowRow(
-        modifier = modifier.padding(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Box(
-            modifier = modifier.height(50.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "GENRES: ",
-                fontWeight = FontWeight.Bold
-            )
-        }
+    val listState = rememberLazyListState()
 
-        appDetails.genres?.forEach {
-            Box(
-                modifier = modifier.height(50.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Genre(it.description, true) // TODO: Add genre favorites
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.outlineVariant),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "GENRES:",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = modifier.padding(horizontal = 12.dp)
+        )
+
+        LazyRow(
+            state = listState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScrollbar(listState = listState),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item {
+                appDetails.genres?.forEach { genre ->
+                    Genre(
+                        genre.description,
+                        true,
+                        modifier = Modifier.padding(
+                            start = 4.dp,
+                            end = 4.dp,
+                            top = 8.dp,
+                            bottom = 16.dp
+                        )
+                    ) // TODO: Add genre favorites
+                }
             }
         }
     }
@@ -351,36 +370,48 @@ fun Genres(
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun Tags(
+fun TagsRow(
     appSpyInfo: SteamSpyAppRequest,
     modifier: Modifier = Modifier
 ) {
-    LazyRow(
-        modifier = modifier.height(56.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        stickyHeader {
-            Row(
-                modifier = modifier
-                    .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.surfaceDim),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "TAGS:",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = modifier.padding(12.dp)
-                )
-            }
-        }
+    val listState = rememberLazyListState()
 
-        items(items = appSpyInfo.tags!!.keys.toList()) { key ->
-            Tag(
-                tag = key,
-                favorite = true
-            ) // TODO: Add tag favorites
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceDim),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "TAGS:",
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = modifier.padding(horizontal = 12.dp)
+        )
+
+        LazyRow(
+            state = listState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScrollbar(listState = listState),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Use only one item to load all tags at once
+            item {
+                appSpyInfo.tags?.keys?.forEach { key ->
+                    Tag(
+                        tag = key,
+                        favorite = true,
+                        modifier = Modifier.padding(
+                            start = 4.dp,
+                            end = 4.dp,
+                            top = 8.dp,
+                            bottom = 16.dp
+                        )
+                    ) // TODO: Add tag favorites
+                }
+            }
         }
     }
 }

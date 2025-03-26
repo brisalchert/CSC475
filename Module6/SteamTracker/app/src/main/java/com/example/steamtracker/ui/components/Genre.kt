@@ -40,7 +40,6 @@ fun Genre(
 
     Card(
         modifier = modifier
-            .padding(2.dp)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
@@ -54,7 +53,7 @@ fun Genre(
         )
     ) {
         Row(
-            modifier = modifier.padding(8.dp),
+            modifier = Modifier.padding(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
