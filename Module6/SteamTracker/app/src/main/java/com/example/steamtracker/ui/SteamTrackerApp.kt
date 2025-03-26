@@ -407,6 +407,11 @@ fun SteamTrackerApp(
                         trackedAppsDetails = trackedAppsDetails
                     )
                 }
+                composable(
+                    route = TrackerOtherScreens.Settings.name
+                ) {
+                    // TODO: Add Settings Screen
+                }
             }
         }
     }
