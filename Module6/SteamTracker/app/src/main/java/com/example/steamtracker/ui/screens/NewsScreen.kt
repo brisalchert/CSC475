@@ -38,7 +38,7 @@ fun NewsScreen(
     newsUiState: NewsUiState,
     trackedAppsDetails: List<AppDetails?>,
     navigateNews: () -> Unit,
-    onNewsSelected: (gid: Int) -> Unit,
+    onNewsSelected: (gid: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -80,7 +80,7 @@ fun NewsItemList(
     newsLists: List<List<NewsItem>>,
     trackedAppsDetails: List<AppDetails?>,
     navigateNews: () -> Unit,
-    onNewsSelected: (gid: Int) -> Unit,
+    onNewsSelected: (gid: String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {

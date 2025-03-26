@@ -43,6 +43,7 @@ import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.ui.screens.CollectionsViewModel
 import com.example.steamtracker.utils.formatCurrency
 import java.util.Locale
 
@@ -51,6 +52,7 @@ fun AppPage(
     appDetails: AppDetails,
     appSpyInfo: SteamSpyAppRequest,
     newsAppsViewModel: NewsAppsViewModel,
+    collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -78,7 +80,8 @@ fun AppPage(
         item {
             CollectionsRow(
                 appDetails = appDetails,
-                newsAppsViewModel = newsAppsViewModel
+                newsAppsViewModel = newsAppsViewModel,
+                collectionsViewModel = collectionsViewModel
             )
         }
 
@@ -155,6 +158,7 @@ fun TitleCard(
 fun CollectionsRow(
     appDetails: AppDetails,
     newsAppsViewModel: NewsAppsViewModel,
+    collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -164,8 +168,7 @@ fun CollectionsRow(
     ) {
         WishlistBox(
             appDetails = appDetails,
-            onList = false,
-            onClick = { }
+            collectionsViewModel = collectionsViewModel
         )
 
         NewsListBox(

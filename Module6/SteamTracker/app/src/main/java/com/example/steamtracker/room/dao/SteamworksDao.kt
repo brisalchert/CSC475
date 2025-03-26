@@ -30,7 +30,7 @@ interface SteamworksDao {
     fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
 
     @Query("SELECT * FROM news_items WHERE gid = :gid")
-    suspend fun getNewsByGid(gid: Int): NewsItemEntity
+    suspend fun getNewsByGid(gid: String): NewsItemEntity
 
     @Query("SELECT MAX(lastUpdated) FROM app_news_requests")
     suspend fun getLastUpdatedTimestamp(): Long?

@@ -305,6 +305,7 @@ fun SteamTrackerApp(
                         appDetailsUiState = appDetailsUiState,
                         getAppDetails = appDetailsViewModel::getAppDetails,
                         newsAppsViewModel = newsAppsViewModel,
+                        collectionsViewModel = collectionsViewModel
                     )
                 }
                 composable(
@@ -358,7 +359,8 @@ fun SteamTrackerApp(
                     route = TrackerOtherScreens.NewsDetails.name
                 ) {
                     NewsDetailsScreen(
-                        news = currentNews
+                        news = currentNews,
+                        trackedAppsDetails = trackedAppsDetails
                     )
                 }
             }

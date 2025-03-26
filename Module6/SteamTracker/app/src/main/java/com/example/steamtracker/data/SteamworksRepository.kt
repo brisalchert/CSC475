@@ -23,7 +23,7 @@ interface SteamworksRepository {
     suspend fun removeNewsApp(appid: Int)
     suspend fun checkNewsApp(appId: Int): Boolean
     suspend fun getAllAppNews(): List<AppNewsWithDetails>
-    suspend fun getNewsByGid(gid: Int): NewsItemEntity
+    suspend fun getNewsByGid(gid: String): NewsItemEntity
 }
 
 class NetworkSteamworksRepository(
@@ -90,7 +90,7 @@ class NetworkSteamworksRepository(
         return newsAppsDao.checkForId(appId) != null
     }
 
-    override suspend fun getNewsByGid(gid: Int): NewsItemEntity {
+    override suspend fun getNewsByGid(gid: String): NewsItemEntity {
         return steamworksDao.getNewsByGid(gid)
     }
 

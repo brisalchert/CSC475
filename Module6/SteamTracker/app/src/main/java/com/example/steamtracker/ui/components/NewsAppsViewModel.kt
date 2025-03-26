@@ -52,13 +52,13 @@ class NewsAppsViewModel(
     /**
      * Sets the current news item for viewing
      */
-    fun setCurrentNews(gid: Int) {
+    fun setCurrentNews(gid: String) {
         viewModelScope.launch {
             _currentNews.value = getNewsByGid(gid)
         }
     }
 
-    suspend fun getNewsByGid(gid: Int): NewsItem {
+    suspend fun getNewsByGid(gid: String): NewsItem {
         val response = steamworksRepository.getNewsByGid(gid)
 
         return response.toNewsItem()

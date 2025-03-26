@@ -25,6 +25,7 @@ fun AppDetailsScreen(
     appDetailsUiState: AppDetailsUiState,
     getAppDetails: (appId: Int) -> Unit,
     newsAppsViewModel: NewsAppsViewModel,
+    collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -40,6 +41,7 @@ fun AppDetailsScreen(
                     appDetails = appDetailsUiState.appDetails,
                     appSpyInfo = appDetailsUiState.appSpyInfo,
                     newsAppsViewModel = newsAppsViewModel,
+                    collectionsViewModel = collectionsViewModel,
                     modifier = modifier,
                     contentPadding = contentPadding
                 )

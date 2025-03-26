@@ -95,17 +95,20 @@ fun CollectionCard(
                 modifier = modifier.padding(end = 8.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                TextButton(
-                    onClick = onRemoveClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Text(
-                        text = "Remove",
-                        fontSize = 14.sp
-                    )
+                // Don't allow removing Wishlist
+                if (collection.first != "Wishlist") {
+                    TextButton(
+                        onClick = onRemoveClick,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text(
+                            text = "Remove",
+                            fontSize = 14.sp
+                        )
+                    }
                 }
             }
         }

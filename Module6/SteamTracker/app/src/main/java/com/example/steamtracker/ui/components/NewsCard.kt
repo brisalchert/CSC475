@@ -28,15 +28,18 @@ fun NewsCard(
     newsItem: NewsItem,
     appDetails: AppDetails?,
     navigateNews: () -> Unit,
-    onNewsSelected: (gid: Int) -> Unit,
+    onNewsSelected: (gid: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card( // TODO: Implement clicking on news card to go to details
+    Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        onClick = {}
+        onClick = {
+            onNewsSelected(newsItem.gid)
+            navigateNews()
+        }
     ) {
         Column(
             modifier = modifier,

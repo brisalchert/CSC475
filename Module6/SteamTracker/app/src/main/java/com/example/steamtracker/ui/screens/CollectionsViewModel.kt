@@ -13,9 +13,14 @@ import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.room.relations.CollectionWithApps
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -31,6 +36,11 @@ class CollectionsViewModel(
     private val storeRepository: StoreRepository,
     private val collectionsRepository: CollectionsRepository
 ): ViewModel() {
+    /** Observe state of flow object from repository */
+    val allCollections: StateFlow<List<CollectionWithApps>> =
+        collectionsRepository.allCollections
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     /** The mutable StateFlow that stores the status of the collections screen */
     private val _collectionsUiState = MutableStateFlow<CollectionsUiState>(CollectionsUiState.Loading)
     val collectionsUiState: StateFlow<CollectionsUiState> = _collectionsUiState.asStateFlow()
@@ -83,11 +93,29 @@ class CollectionsViewModel(
         }
     }
 
+    fun isOnWishlist(appId: Int): Flow<Boolean> {
+        return allCollections.map { collections ->
+            val wishlist = mapEntitiesToCollections(collections)["Wishlist"]
+            wishlist?.any { it.appId == appId } == true
+        }
+    }
+
+    fun isInCollection(collectionName: String, appId: Int): Flow<Boolean> {
+        return allCollections.map { collections ->
+            val wishlist = mapEntitiesToCollections(collections)[collectionName]
+            wishlist?.any { it.appId == appId } == true
+        }
+    }
+
     fun getAllCollections() {
         viewModelScope.launch {
             collectionsRepository.allCollections.collect { collections ->
-                Log.d("Debug", "Collected state from collections repository")
                 val collections = mapEntitiesToCollections(collections)
+
+                // Create Wish list if it does not exist
+                if (!collections.contains("Wishlist")) {
+                    addCollection("Wishlist")
+                }
 
                 if (collections.isNotEmpty()) {
                     try {
