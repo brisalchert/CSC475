@@ -78,7 +78,7 @@ fun NewsListBox(
 
             Text(
                 text = "Track News",
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = colorResource(R.color.collections_text)
             )
         }

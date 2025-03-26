@@ -95,8 +95,8 @@ fun CollectionCard(
                 modifier = modifier.padding(end = 8.dp),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                // Don't allow removing Wishlist
-                if (collection.first != "Wishlist") {
+                // Don't allow removing Wishlist or Favorites
+                if (collection.first != "Wishlist" && collection.first != "Favorites") {
                     TextButton(
                         onClick = onRemoveClick,
                         colors = ButtonDefaults.buttonColors(

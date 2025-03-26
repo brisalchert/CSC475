@@ -93,13 +93,6 @@ class CollectionsViewModel(
         }
     }
 
-    fun isOnWishlist(appId: Int): Flow<Boolean> {
-        return allCollections.map { collections ->
-            val wishlist = mapEntitiesToCollections(collections)["Wishlist"]
-            wishlist?.any { it.appId == appId } == true
-        }
-    }
-
     fun isInCollection(collectionName: String, appId: Int): Flow<Boolean> {
         return allCollections.map { collections ->
             val wishlist = mapEntitiesToCollections(collections)[collectionName]
@@ -121,6 +114,11 @@ class CollectionsViewModel(
                 // Create Wish list if it does not exist
                 if (!collections.contains("Wishlist")) {
                     addCollection("Wishlist")
+                }
+
+                // Create Favorites if it does not exist
+                if (!collections.contains("Favorites")) {
+                    addCollection("Favorites")
                 }
 
                 if (collections.isNotEmpty()) {

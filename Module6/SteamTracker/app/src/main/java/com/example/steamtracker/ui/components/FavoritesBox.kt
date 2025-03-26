@@ -19,21 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.ui.screens.CollectionsViewModel
-import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
-fun WishlistBox(
+fun FavoritesBox(
     appDetails: AppDetails,
     collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier
 ) {
-    val onList by collectionsViewModel.isInCollection("Wishlist", appDetails.steamAppId).collectAsState(
+    val onList by collectionsViewModel.isInCollection("Favorites", appDetails.steamAppId).collectAsState(
         initial = false
     )
     val context = LocalContext.current
@@ -46,17 +44,17 @@ fun WishlistBox(
         ),
         onClick = {
             if (onList) {
-                collectionsViewModel.removeCollectionApp("Wishlist", appDetails.steamAppId)
+                collectionsViewModel.removeCollectionApp("Favorites", appDetails.steamAppId)
                 Toast.makeText(
                     context,
-                    "Removed ${appDetails.name} from Wishlist",
+                    "Removed ${appDetails.name} from Favorites",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                collectionsViewModel.addCollectionApp("Wishlist", appDetails.steamAppId)
+                collectionsViewModel.addCollectionApp("Favorites", appDetails.steamAppId)
                 Toast.makeText(
                     context,
-                    "Added ${appDetails.name} to Wishlist",
+                    "Added ${appDetails.name} to Favorites",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -75,12 +73,12 @@ fun WishlistBox(
 
             Icon(
                 imageVector = image,
-                contentDescription = "Wishlist Status",
+                contentDescription = "Favorites Status",
                 tint = colorResource(R.color.collections_text)
             )
 
             Text(
-                text = "Add to Wishlist",
+                text = "Add to Favorites",
                 fontSize = 16.sp,
                 color = colorResource(R.color.collections_text)
             )

@@ -161,20 +161,31 @@ fun CollectionsRow(
     collectionsViewModel: CollectionsViewModel,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    LazyRow(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        WishlistBox(
-            appDetails = appDetails,
-            collectionsViewModel = collectionsViewModel
-        )
+        item {
+            WishlistBox(
+                appDetails = appDetails,
+                collectionsViewModel = collectionsViewModel
+            )
+        }
 
-        NewsListBox(
-            appDetails = appDetails,
-            newsAppsViewModel = newsAppsViewModel
-        )
+        item {
+            FavoritesBox(
+                appDetails = appDetails,
+                collectionsViewModel = collectionsViewModel,
+            )
+        }
+
+        item {
+            NewsListBox(
+                appDetails = appDetails,
+                newsAppsViewModel = newsAppsViewModel
+            )
+        }
     }
 }
 
