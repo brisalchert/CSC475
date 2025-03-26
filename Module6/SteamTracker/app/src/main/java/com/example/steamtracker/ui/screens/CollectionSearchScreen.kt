@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,6 +60,23 @@ fun CollectionSearchScreen(
 
             when (searchUiState) {
                 is SearchUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+                is SearchUiState.NoResults -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceDim
+                            )
+                        ) {
+                            Text(
+                                text = "Enter a search query to see results!",
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    }
+                }
                 is SearchUiState.Success -> CollectionSearchResults(
                     collectionsViewModel = collectionsViewModel,
                     currentCollection = currentCollection,

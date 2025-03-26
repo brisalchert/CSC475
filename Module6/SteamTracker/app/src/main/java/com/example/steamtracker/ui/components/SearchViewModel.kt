@@ -24,6 +24,7 @@ sealed interface SearchUiState {
     data class Success(val searchResults: List<SearchAppInfo>) : SearchUiState
     data object Loading : SearchUiState
     data object Error : SearchUiState
+    data object NoResults : SearchUiState
 }
 
 @OptIn(FlowPreview::class)
@@ -31,7 +32,7 @@ class SearchViewModel(
     private val storeRepository: StoreRepository
 ): ViewModel() {
     // State flow for UI state
-    private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.Loading)
+    private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.NoResults)
     val searchUiState: StateFlow<SearchUiState> = _searchUiState.asStateFlow()
 
     // State flow for observing autocomplete search results
