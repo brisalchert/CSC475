@@ -49,14 +49,14 @@ fun WishlistBox(
                 collectionsViewModel.removeCollectionApp("Wishlist", appDetails.steamAppId)
                 Toast.makeText(
                     context,
-                    "Removed ${appDetails.name} from News List",
+                    "Removed ${appDetails.name} from Wishlist",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
                 collectionsViewModel.addCollectionApp("Wishlist", appDetails.steamAppId)
                 Toast.makeText(
                     context,
-                    "Added ${appDetails.name} to News List",
+                    "Added ${appDetails.name} to Wishlist",
                     Toast.LENGTH_SHORT
                 ).show()
             }
