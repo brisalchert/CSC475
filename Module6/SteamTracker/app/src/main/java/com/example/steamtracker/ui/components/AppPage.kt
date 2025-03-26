@@ -164,6 +164,7 @@ fun CollectionsRow(
     LazyRow(
         state = listState,
         modifier = Modifier
+            .padding(4.dp)
             .fillMaxWidth()
             .horizontalScrollbar(listState = listState),
         verticalAlignment = Alignment.CenterVertically,
@@ -345,8 +346,12 @@ fun GenresRow(
         LazyRow(
             state = listState,
             modifier = Modifier
+                .padding(4.dp)
                 .fillMaxWidth()
-                .horizontalScrollbar(listState = listState),
+                .horizontalScrollbar(
+                    listState = listState,
+                    color = MaterialTheme.colorScheme.outline
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -392,8 +397,12 @@ fun TagsRow(
         LazyRow(
             state = listState,
             modifier = Modifier
+                .padding(4.dp)
                 .fillMaxWidth()
-                .horizontalScrollbar(listState = listState),
+                .horizontalScrollbar(
+                    listState = listState,
+                    color = MaterialTheme.colorScheme.outline
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {

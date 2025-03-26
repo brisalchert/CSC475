@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui.components
 
+import androidx.annotation.Px
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.dp
 fun Modifier.horizontalScrollbar(
     listState: LazyListState,
     height: Dp = 8.dp,
-    color: Color = MaterialTheme.colorScheme.outline
+    color: Color = MaterialTheme.colorScheme.outlineVariant
 ): Modifier {
     return drawWithContent {
         drawContent()
@@ -41,11 +43,12 @@ fun Modifier.horizontalScrollbar(
         val scrollbarWidth = lazyRowWidth * (lazyRowWidth / totalWidth).coerceAtLeast(0.1f)
         val scrollbarOffsetX = scrollProgress * (lazyRowWidth - scrollbarWidth)
 
-        drawRect(
+        drawRoundRect(
             topLeft = Offset(scrollbarOffsetX, this.size.height - height.toPx()),
             color = color,
             size = Size(scrollbarWidth, height.toPx()),
-            alpha = 1f
+            alpha = 1f,
+            cornerRadius = CornerRadius(height.toPx() / 2)
         )
     }
 }
