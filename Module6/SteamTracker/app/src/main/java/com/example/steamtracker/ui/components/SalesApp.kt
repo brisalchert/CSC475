@@ -77,38 +77,40 @@ fun SalesApp(
                     modifier = modifier.padding(start = 12.dp, bottom = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        // Prices will not be null, since these are specifically discounted games
-                        text = formatCurrency(appInfo.initialprice!!.toInt().div(100.0)),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.LineThrough,
-                        color = MaterialTheme.colorScheme.outline
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Text(
-                        text = formatCurrency(appInfo.price!!.toInt().div(100.0)),
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Card(
-                        modifier = modifier.wrapContentSize(),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = colorResource(R.color.discount_background)
-                        )
-                    ) {
+                    if (appInfo.price != null) {
                         Text(
-                            text = "-${appInfo.discount}%",
-                            fontSize = 18.sp,
-                            color = colorResource(R.color.discount_text),
-                            modifier = modifier.padding(4.dp)
+                            // Prices will not be null, since these are specifically discounted games
+                            text = formatCurrency(appInfo.initialprice!!.toInt().div(100.0)),
+                            fontSize = 16.sp,
+                            textDecoration = TextDecoration.LineThrough,
+                            color = MaterialTheme.colorScheme.outline
                         )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = formatCurrency(appInfo.price.toInt().div(100.0)),
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Card(
+                            modifier = modifier.wrapContentSize(),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = colorResource(R.color.discount_background)
+                            )
+                        ) {
+                            Text(
+                                text = "-${appInfo.discount}%",
+                                fontSize = 18.sp,
+                                color = colorResource(R.color.discount_text),
+                                modifier = modifier.padding(4.dp)
+                            )
+                        }
                     }
                 }
             }
