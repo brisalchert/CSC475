@@ -8,9 +8,9 @@ import androidx.room.TypeConverters
 import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.CollectionsDao
 import com.example.steamtracker.room.dao.NewsAppsDao
-import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.dao.SpyDao
 import com.example.steamtracker.room.dao.SteamworksDao
+import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.AppNewsEntity

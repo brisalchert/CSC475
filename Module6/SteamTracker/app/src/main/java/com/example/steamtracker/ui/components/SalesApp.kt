@@ -1,7 +1,6 @@
 package com.example.steamtracker.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.steamtracker.model.SteamSpyAppRequest
-import com.example.steamtracker.utils.formatCurrency
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.utils.formatCurrency
 
 @Composable
 fun SalesApp(

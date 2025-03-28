@@ -13,8 +13,6 @@ import androidx.compose.material.icons.filled.CollectionsBookmark
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -58,13 +56,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.steamtracker.R
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.AppInitializer
-import com.example.steamtracker.ui.components.NewsAppsViewModel
-import com.example.steamtracker.ui.screens.AppDetailsViewModel
-import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.components.FeaturedViewModel
+import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
+import com.example.steamtracker.ui.screens.AppDetailsViewModel
 import com.example.steamtracker.ui.screens.CollectionListScreen
 import com.example.steamtracker.ui.screens.CollectionSearchScreen
 import com.example.steamtracker.ui.screens.CollectionsScreen
@@ -74,6 +71,7 @@ import com.example.steamtracker.ui.screens.NewsDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 import com.example.steamtracker.ui.screens.SearchScreen
+import com.example.steamtracker.ui.screens.StoreScreen
 
 enum class TrackerMainScreens {
     Store,

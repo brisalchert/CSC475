@@ -13,7 +13,6 @@ import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

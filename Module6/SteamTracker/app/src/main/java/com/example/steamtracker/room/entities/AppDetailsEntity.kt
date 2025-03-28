@@ -1,6 +1,8 @@
 package com.example.steamtracker.room.entities
 
-import androidx.room.*
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.example.steamtracker.model.AchievementsContainer
 import com.example.steamtracker.model.Category
 import com.example.steamtracker.model.ContentDescriptors

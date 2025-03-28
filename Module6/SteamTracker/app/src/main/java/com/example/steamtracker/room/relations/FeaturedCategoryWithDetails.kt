@@ -2,8 +2,8 @@ package com.example.steamtracker.room.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.AppInfoEntity
+import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
 
 data class FeaturedCategoryWithDetails(

@@ -1,7 +1,6 @@
 package com.example.steamtracker.data
 
 import com.example.steamtracker.model.AppNewsRequest
-import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.room.dao.NewsAppsDao
 import com.example.steamtracker.room.dao.SteamworksDao

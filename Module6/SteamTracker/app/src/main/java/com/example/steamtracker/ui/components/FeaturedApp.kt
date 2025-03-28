@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.R
+import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.utils.formatCurrency
 
 @Composable

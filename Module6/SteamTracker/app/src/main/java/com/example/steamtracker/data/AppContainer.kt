@@ -11,7 +11,6 @@ import com.example.steamtracker.network.SpyApiService
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.network.StoreApiService
 import com.example.steamtracker.room.AppDatabase
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import java.lang.reflect.Type
-import kotlin.math.min
 
 data class AppDetailsRequest(
     val success: Boolean = false,
