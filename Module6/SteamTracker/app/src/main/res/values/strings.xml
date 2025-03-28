@@ -5,4 +5,10 @@
     <string name="loading_failed">Failed to load</string>
     <string name="loading">Loading</string>
     <string name="photo">Photo</string>
+    <string name="news_channel">news</string>
+    <string name="news_channel_name">News</string>
+    <string name="news_channel_description">Notifications for news posts</string>
+    <string name="wishlist_channel">wishlist</string>
+    <string name="wishlist_channel_name">Wishlist</string>
+    <string name="wishlist_channel_description">Notifications for wishlist sales</string>
 </resources>

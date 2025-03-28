@@ -25,6 +25,7 @@ interface StoreRepository {
 
     suspend fun refreshFeaturedCategories()
     suspend fun getAppDetails(appId: Int): AppDetails?
+    suspend fun getAppDetailsFresh(appId: Int): AppDetails?
     suspend fun getSearchResults(query: String): StoreSearchRequest
     suspend fun clearFeaturedCategories()
 }
@@ -153,6 +154,24 @@ class NetworkStoreRepository(
             return databaseResponse.toAppDetails()
         }
 
+        val apiResponse = storeApiService.getAppDetails(appId)
+
+        // Add response to the database
+        val appDetailsEntity = apiResponse["$appId"]?.appDetails?.toAppDetailsEntity()
+
+        if (appDetailsEntity != null) {
+            appDetailsDao.insertAppDetails(appDetailsEntity)
+        }
+
+        return apiResponse["$appId"]?.appDetails
+    }
+
+    /**
+     * Returns an AppDetails object for the game corresponding to the
+     * provided App ID, or null if no app is found. Always makes an
+     * API call, passing the database
+     */
+    override suspend fun getAppDetailsFresh(appId: Int): AppDetails? {
         val apiResponse = storeApiService.getAppDetails(appId)
 
         // Add response to the database

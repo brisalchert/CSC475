@@ -1,13 +1,20 @@
 package com.example.steamtracker.ui.screens
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.background.NewsNotificationWorker
 import com.example.steamtracker.data.SteamworksRepository
 import com.example.steamtracker.model.AppNews
 import com.example.steamtracker.model.AppNewsRequest
@@ -25,6 +32,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 sealed interface NewsUiState {
     data class Success(val newsItems: List<List<NewsItem>>) : NewsUiState
@@ -34,8 +42,9 @@ sealed interface NewsUiState {
 }
 
 class NewsViewModel(
-    private val steamworksRepository: SteamworksRepository
-): ViewModel() {
+    private val steamworksRepository: SteamworksRepository,
+    private val application: Application
+): AndroidViewModel(application) {
     /** Observe state of flow object from repository */
     val newsApps: StateFlow<List<Int>> =
         steamworksRepository.newsApps
@@ -47,9 +56,30 @@ class NewsViewModel(
 
     /**
      * Call observeTrackedApps() on init to display status immediately
+     * Also set up the work request for notifications
      */
     init {
         observeTrackedApps()
+
+        // Set up notifications periodic background work
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val newsWorkRequest =
+            PeriodicWorkRequestBuilder<NewsNotificationWorker>(12, TimeUnit.HOURS)
+                .setInitialDelay(12, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager
+            .getInstance(application)
+            .enqueueUniquePeriodicWork(
+                "NewsNotificationsWork",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                newsWorkRequest
+            )
     }
 
     /**
@@ -133,7 +163,10 @@ class NewsViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val steamworksRepository = application.container.steamworksRepository
-                NewsViewModel(steamworksRepository = steamworksRepository)
+                NewsViewModel(
+                    steamworksRepository = steamworksRepository,
+                    application = application
+                )
             }
         }
     }

@@ -1,12 +1,21 @@
 package com.example.steamtracker.ui.screens
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.background.WishlistNotificationWorker
 import com.example.steamtracker.data.CollectionsRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
@@ -23,6 +32,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 sealed interface CollectionsUiState {
     data class Success(val collections: Map<String, List<CollectionApp>>) : CollectionsUiState
@@ -33,8 +43,9 @@ sealed interface CollectionsUiState {
 
 class CollectionsViewModel(
     private val storeRepository: StoreRepository,
-    private val collectionsRepository: CollectionsRepository
-): ViewModel() {
+    private val collectionsRepository: CollectionsRepository,
+    private val application: Application
+): AndroidViewModel(application) {
     /** Observe state of flow object from repository */
     val allCollections: StateFlow<List<CollectionWithApps>> =
         collectionsRepository.allCollections
@@ -54,9 +65,30 @@ class CollectionsViewModel(
 
     /**
      * Call getAllCollections() on init to display collections immediately
+     * Also set up the work request for wishlist notifications
      */
     init {
         getAllCollections()
+
+        // Set up notifications periodic background work
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val wishlistWorkRequest =
+            PeriodicWorkRequestBuilder<WishlistNotificationWorker>(12, TimeUnit.HOURS)
+                .setInitialDelay(12, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager
+            .getInstance(application)
+            .enqueueUniquePeriodicWork(
+                "WishlistNotificationsWork",
+                ExistingPeriodicWorkPolicy.REPLACE,
+                wishlistWorkRequest
+            )
     }
 
     /**
@@ -170,7 +202,8 @@ class CollectionsViewModel(
                 val collectionsRepository = application.container.collectionsRepository
                 CollectionsViewModel(
                     storeRepository = storeRepository,
-                    collectionsRepository = collectionsRepository
+                    collectionsRepository = collectionsRepository,
+                    application = application
                 )
             }
         }
