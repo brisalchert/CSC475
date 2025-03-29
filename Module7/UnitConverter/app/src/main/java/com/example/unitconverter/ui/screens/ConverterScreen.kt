@@ -87,18 +87,7 @@ fun ConverterScreen(
                 else -> "Error"
             }
 
-            valueEnding = if (result.toString().length <= 10) {
-                result.toString()
-            } else {
-                val formatted = String.format(Locale.getDefault(), "%.6f", result)
-                val trimmed = formatted.substring(0, 10)
-
-                if (trimmed.endsWith('.')) {
-                    trimmed.substring(0, trimmed.length - 1)
-                } else {
-                    trimmed
-                }
-            }
+            valueEnding = String.format(Locale.getDefault(), "%.5g", result)
         }
     }
 
@@ -156,7 +145,7 @@ fun ConverterScreen(
                     },
                     placeholder = { Text("Enter value") },
                     singleLine = true,
-                    modifier = Modifier.width(128.dp)
+                    modifier = Modifier.width(132.dp)
                 )
 
                 Text(
@@ -169,7 +158,7 @@ fun ConverterScreen(
                     placeholder = { Text("Result") },
                     singleLine = true,
                     readOnly = true,
-                    modifier = Modifier.width(128.dp)
+                    modifier = Modifier.width(132.dp)
                 )
             }
 
@@ -190,12 +179,15 @@ fun ConverterScreen(
                 val (unitStarting, setUnitStarting: (String) -> Unit) = when (selectedMeasurement) {
                     Measurements.Temperature.name -> Pair(unitTemperatureStarting) { option: String ->
                         unitTemperatureStarting = option
+                        updateConversion(valueStarting)
                     }
                     Measurements.Mass.name -> Pair(unitMassStarting) { option: String ->
                         unitMassStarting = option
+                        updateConversion(valueStarting)
                     }
                     Measurements.Length.name -> Pair(unitLengthStarting) { option: String ->
                         unitLengthStarting = option
+                        updateConversion(valueStarting)
                     }
                     else -> Pair("Error") { option:String -> }
                 }
