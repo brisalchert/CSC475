@@ -33,6 +33,7 @@ import com.example.unitconverter.logic.convertTemperature
 import com.example.unitconverter.ui.components.MeasurementSelector
 import com.example.unitconverter.ui.components.UnitSelector
 import com.example.unitconverter.ui.theme.UnitConverterTheme
+import java.util.Locale
 
 enum class Measurements {
     Temperature,
@@ -64,39 +65,41 @@ fun ConverterScreen(
         if (input == "" || input == "-") {
             valueEnding = "0.0"
         } else {
-            valueEnding = when (selectedMeasurement) {
+            val result = when (selectedMeasurement) {
                 Measurements.Temperature.name -> convertTemperature(
                     value = input.toDouble(),
-                    from = Temperature.entries.find {
-                        unitTemperatureStarting == it.name
-                    }!!,
-                    to = Temperature.entries.find {
-                        unitTemperatureEnding == it.name
-                    }!!
+                    from = Temperature.entries.find { unitTemperatureStarting == it.name }!!,
+                    to = Temperature.entries.find { unitTemperatureEnding == it.name }!!
                 )
 
                 Measurements.Mass.name -> convertMass(
                     value = input.toDouble(),
-                    from = Mass.entries.find {
-                        unitMassStarting == it.name
-                    }!!,
-                    to = Mass.entries.find {
-                        unitMassEnding == it.name
-                    }!!
+                    from = Mass.entries.find { unitMassStarting == it.name }!!,
+                    to = Mass.entries.find { unitMassEnding == it.name }!!
                 )
 
                 Measurements.Length.name -> convertLength(
                     value = input.toDouble(),
-                    from = Length.entries.find {
-                        unitLengthStarting == it.name
-                    }!!,
-                    to = Length.entries.find {
-                        unitLengthEnding == it.name
-                    }!!
+                    from = Length.entries.find { unitLengthStarting == it.name }!!,
+                    to = Length.entries.find { unitLengthEnding == it.name }!!
                 )
 
                 else -> "Error"
-            }.toString()
+            }
+
+            val formatted = String.format(Locale.getDefault(), "%.6f", result)
+
+            valueEnding = if (formatted.length <= 10) {
+                formatted
+            } else {
+                val trimmed = formatted.substring(0, 10)
+
+                if (trimmed.endsWith('.')) {
+                    trimmed.substring(0, trimmed.length - 1)
+                } else {
+                    trimmed
+                }
+            }
         }
     }
 
@@ -141,6 +144,9 @@ fun ConverterScreen(
                 TextField(
                     value = valueStarting,
                     onValueChange = { input ->
+                        // Prevent input values that are too large
+                        if (input.length > 10) return@TextField
+
                         // Ensure user input is a valid Double
                         if (input == "" || input == "-" ||
                             (input.toDoubleOrNull() != null && !input.endsWith('d'))) {
