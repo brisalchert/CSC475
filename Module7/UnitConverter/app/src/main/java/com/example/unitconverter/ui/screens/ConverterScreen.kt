@@ -87,11 +87,10 @@ fun ConverterScreen(
                 else -> "Error"
             }
 
-            val formatted = String.format(Locale.getDefault(), "%.6f", result)
-
-            valueEnding = if (formatted.length <= 10) {
-                formatted
+            valueEnding = if (result.toString().length <= 10) {
+                result.toString()
             } else {
+                val formatted = String.format(Locale.getDefault(), "%.6f", result)
                 val trimmed = formatted.substring(0, 10)
 
                 if (trimmed.endsWith('.')) {

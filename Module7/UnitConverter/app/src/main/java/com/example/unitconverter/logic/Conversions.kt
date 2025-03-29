@@ -43,13 +43,13 @@ fun convertTemperature(value: Double, from: Temperature, to: Temperature): Doubl
     val celsius = when (from) {
         Temperature.Celsius -> value
         Temperature.Fahrenheit -> (value - 32) * (5.0/9.0)
-        Temperature.Kelvin -> value + 273.15
+        Temperature.Kelvin -> value - 273.15
     }
 
     return when (to) {
         Temperature.Celsius -> celsius
         Temperature.Fahrenheit -> celsius * (9.0/5.0) + 32
-        Temperature.Kelvin -> celsius - 273.15
+        Temperature.Kelvin -> celsius + 273.15
     }
 }
 
