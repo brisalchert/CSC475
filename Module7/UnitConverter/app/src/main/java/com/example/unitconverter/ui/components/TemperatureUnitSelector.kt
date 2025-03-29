@@ -21,27 +21,31 @@ import com.example.unitconverter.ui.theme.UnitConverterTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeasurementSelector(
+fun TemperatureUnitSelector(
     modifier: Modifier = Modifier,
-    selectedMeasurement: String,
-    onMeasurementSelect: (String) -> Unit
+    selectedUnit: String,
+    onUnitSelected: (String) -> Unit
 ) {
-    val measurementOptions = listOf("Temperature", "Distance", "Weight")
-    var measurementExpanded by remember { mutableStateOf(false) }
+    val unitOptions = listOf(
+        "Fahrenheit",
+        "Celsius",
+        "Kelvin"
+    )
+    var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         modifier = modifier.width(128.dp),
-        expanded = measurementExpanded,
-        onExpandedChange = { measurementExpanded = !measurementExpanded }
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
     ) {
         OutlinedTextField(
-            value = selectedMeasurement,
+            value = selectedUnit,
             onValueChange = {},
             readOnly = true,
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable, true),
             label = {
                 Text(
-                    text = "Measurement"
+                    text = "Unit"
                 )
             },
             colors = TextFieldDefaults.colors(
@@ -51,17 +55,17 @@ fun MeasurementSelector(
         )
 
         ExposedDropdownMenu(
-            expanded = measurementExpanded,
-            onDismissRequest = { measurementExpanded = false },
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             shadowElevation = 8.dp,
         ) {
-            measurementOptions.forEach { option ->
+            unitOptions.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
-                        onMeasurementSelect(option)
-                        measurementExpanded = false
+                        onUnitSelected(option)
+                        expanded = false
                     }
                 )
             }
@@ -71,11 +75,11 @@ fun MeasurementSelector(
 
 @Preview(showBackground = true)
 @Composable
-fun MeasurementSelectorPreview() {
+fun TemperatureSelectorPreview() {
     UnitConverterTheme {
-        MeasurementSelector(
-            selectedMeasurement = "Temperature",
-            onMeasurementSelect = {}
+        TemperatureUnitSelector(
+            selectedUnit = "Fahrenheit",
+            onUnitSelected = {}
         )
     }
 }
