@@ -55,38 +55,38 @@ fun convertTemperature(value: Double, from: Temperature, to: Temperature): Doubl
 
 /**
  * Universal function for mass conversions. Converts to an
- * intermediate pounds value with 6 significant figures.
+ * intermediate pounds value.
  */
 fun convertMass(value: Double, from: Mass, to: Mass): Double {
     val pounds = when (from) {
         Mass.Ounces -> value / 16.0
         Mass.Pounds -> value
         Mass.Tons -> value * 2000.0
-        Mass.Grams -> value / 453.593
-        Mass.Kilograms -> value * 2.20462
-        Mass.MetricTons -> value * 2204.62
+        Mass.Grams -> value / 453.592
+        Mass.Kilograms -> value * 2.204624
+        Mass.MetricTons -> value * 2204.62442
     }
 
     return when (to) {
         Mass.Ounces -> pounds * 16.0
         Mass.Pounds -> pounds
         Mass.Tons -> pounds / 2000.0
-        Mass.Grams -> pounds * 453.593
-        Mass.Kilograms -> pounds / 2.20462
-        Mass.MetricTons -> pounds / 2204.62
+        Mass.Grams -> pounds * 453.592
+        Mass.Kilograms -> pounds / 2.204624
+        Mass.MetricTons -> pounds / 2204.62442
     }
 }
 
 /**
  * Universal function for length conversions. Converts to an
- * intermediate meters value with 6 significant figures.
+ * intermediate meters value.
  */
 fun convertLength(value: Double, from: Length, to: Length): Double {
     val meters = when (from) {
-        Length.Inches -> value / 39.3701
+        Length.Inches -> value / 39.370078
         Length.Feet -> value / 3.28084
-        Length.Yards -> value / 1.09361
-        Length.Miles -> value * 1609.34
+        Length.Yards -> value / 1.093613
+        Length.Miles -> value * 1609.344
         Length.Millimeters -> value / 1000.0
         Length.Centimeters -> value / 100.0
         Length.Meters -> value
@@ -94,10 +94,10 @@ fun convertLength(value: Double, from: Length, to: Length): Double {
     }
 
     return when (to) {
-        Length.Inches -> meters * 39.3701
+        Length.Inches -> meters * 39.370078
         Length.Feet -> meters * 3.28084
-        Length.Yards -> meters * 1.09361
-        Length.Miles -> meters / 1609.34
+        Length.Yards -> meters * 1.093613
+        Length.Miles -> meters / 1609.344
         Length.Millimeters -> meters * 1000.0
         Length.Centimeters -> meters * 100.0
         Length.Meters -> meters
