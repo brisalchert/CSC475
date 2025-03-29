@@ -21,16 +21,12 @@ import com.example.unitconverter.ui.theme.UnitConverterTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TemperatureUnitSelector(
-    modifier: Modifier = Modifier,
+fun UnitSelector(
+    unitOptions: List<String>,
     selectedUnit: String,
-    onUnitSelected: (String) -> Unit
+    onUnitSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val unitOptions = listOf(
-        "Fahrenheit",
-        "Celsius",
-        "Kelvin"
-    )
     var expanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -75,9 +71,10 @@ fun TemperatureUnitSelector(
 
 @Preview(showBackground = true)
 @Composable
-fun TemperatureSelectorPreview() {
+fun UnitSelectorPreview() {
     UnitConverterTheme {
-        TemperatureUnitSelector(
+        UnitSelector(
+            unitOptions = listOf(),
             selectedUnit = "Fahrenheit",
             onUnitSelected = {}
         )

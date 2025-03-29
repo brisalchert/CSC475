@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unitconverter.ui.components.MeasurementSelector
-import com.example.unitconverter.ui.components.TemperatureUnitSelector
+import com.example.unitconverter.ui.components.UnitSelector
 import com.example.unitconverter.ui.theme.UnitConverterTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,6 +33,15 @@ fun ConverterScreen(
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     var selectedMeasurement by remember { mutableStateOf("Temperature") }
+
+    var unitTemperatureStarting by remember { mutableStateOf("Fahrenheit") }
+    var unitTemperatureEnding by remember { mutableStateOf("Celsius") }
+
+    var unitWeightStarting by remember { mutableStateOf("Pounds") }
+    var unitWeightEnding by remember { mutableStateOf("Kilogram") }
+
+    var unitDistanceStarting by remember { mutableStateOf("Feet") }
+    var unitDistanceEnding by remember { mutableStateOf("Meters") }
 
     Card(
         modifier = modifier
@@ -61,8 +70,65 @@ fun ConverterScreen(
                 onMeasurementSelect = { option -> selectedMeasurement = option }
             )
 
-            when (selectedMeasurement) {
-                "Temperature" -> TemperatureConversion()
+            Row(
+                modifier = modifier.wrapContentWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Set unit options based on measurement selection
+                val unitOptions: List<String> = when (selectedMeasurement) {
+                    "Temperature" -> listOf(
+                        "Fahrenheit", "Celsius", "Kelvin"
+                    )
+                    "Weight" -> listOf("Ounces", "Pounds", "Tons", "Grams", "Kilograms", "Metric Tons"
+                    )
+                    "Distance" -> listOf("Inches", "Feet", "Yards", "Miles", "Millimeters", "Centimeters", "Meters", "Kilometers"
+                    )
+                    else -> emptyList()
+                }
+
+                // Set starting selections for selected measurements
+                val (unitStarting, setUnitStarting: (String) -> Unit) = when (selectedMeasurement) {
+                    "Temperature" -> Pair(unitTemperatureStarting) { option: String ->
+                        unitTemperatureStarting = option
+                    }
+                    "Weight" -> Pair(unitWeightStarting) { option: String ->
+                        unitWeightStarting = option
+                    }
+                    "Distance" -> Pair(unitDistanceStarting) { option: String ->
+                        unitDistanceStarting = option
+                    }
+                    else -> Pair("Error") { option:String -> }
+                }
+
+                val (unitEnding, setUnitEnding: (String) -> Unit) = when (selectedMeasurement) {
+                    "Temperature" -> Pair(unitTemperatureEnding) { option: String ->
+                        unitTemperatureEnding = option
+                    }
+                    "Weight" -> Pair(unitWeightEnding) { option: String ->
+                        unitWeightEnding = option
+                    }
+                    "Distance" -> Pair(unitDistanceEnding) { option: String ->
+                        unitDistanceEnding = option
+                    }
+                    else -> Pair("Error") { option:String -> }
+                }
+
+                UnitSelector(
+                    unitOptions = unitOptions,
+                    selectedUnit = unitStarting,
+                    onUnitSelected = setUnitStarting
+                )
+
+                Text(
+                    text = "to"
+                )
+
+                UnitSelector(
+                    unitOptions = unitOptions,
+                    selectedUnit = unitEnding,
+                    onUnitSelected = setUnitEnding
+                )
             }
         }
     }
@@ -73,33 +139,5 @@ fun ConverterScreen(
 fun ConverterScreenPreview() {
     UnitConverterTheme {
         ConverterScreen()
-    }
-}
-
-@Composable
-fun TemperatureConversion(
-    modifier: Modifier = Modifier
-) {
-    var unitStarting by remember { mutableStateOf("Fahrenheit") }
-    var unitEnding by remember { mutableStateOf("Celsius") }
-
-    Row(
-        modifier = modifier.wrapContentWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TemperatureUnitSelector(
-            selectedUnit = unitStarting,
-            onUnitSelected = { option -> unitStarting = option }
-        )
-
-        Text(
-            text = "to"
-        )
-
-        TemperatureUnitSelector(
-            selectedUnit = unitEnding,
-            onUnitSelected = { option -> unitEnding = option }
-        )
     }
 }
