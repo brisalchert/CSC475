@@ -1,6 +1,5 @@
 package com.example.unitconverter.ui.components
 
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -26,11 +25,11 @@ fun MeasurementSelector(
     selectedMeasurement: String,
     onMeasurementSelect: (String) -> Unit
 ) {
-    val measurementOptions = listOf("Temperature", "Distance", "Weight")
+    val measurementOptions = listOf("Temperature", "Length", "Mass")
     var measurementExpanded by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
-        modifier = modifier.width(128.dp),
+        modifier = modifier,
         expanded = measurementExpanded,
         onExpandedChange = { measurementExpanded = !measurementExpanded }
     ) {
