@@ -70,6 +70,8 @@ import com.example.steamtracker.ui.screens.MenuScreen
 import com.example.steamtracker.ui.screens.NewsDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
+import com.example.steamtracker.ui.screens.NotificationsScreen
+import com.example.steamtracker.ui.screens.NotificationsViewModel
 import com.example.steamtracker.ui.screens.SearchScreen
 import com.example.steamtracker.ui.screens.StoreScreen
 
@@ -99,6 +101,7 @@ fun SteamTrackerApp(
     appDetailsViewModel: AppDetailsViewModel = viewModel(factory = AppDetailsViewModel.Factory),
     newsAppsViewModel: NewsAppsViewModel = viewModel(factory = NewsAppsViewModel.Factory),
     collectionsViewModel: CollectionsViewModel = viewModel(factory = CollectionsViewModel.Factory),
+    notificationsViewModel: NotificationsViewModel = viewModel(factory = NotificationsViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     // Tab index for store screen
@@ -106,7 +109,6 @@ fun SteamTrackerApp(
 
     val focusManager = LocalFocusManager.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route.orEmpty()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val selectedScreen = remember { mutableStateOf(navBackStackEntry?.destination?.route ?: TrackerMainScreens.Store.name) }
 
@@ -145,6 +147,7 @@ fun SteamTrackerApp(
     val searchUiState by searchViewModel.searchUiState.collectAsState()
     val appDetailsUiState by appDetailsViewModel.appDetailsUiState.collectAsState()
     val collectionsUiState by collectionsViewModel.collectionsUiState.collectAsState()
+    val notificationsUiState by notificationsViewModel.notificationsUiState.collectAsState()
 
     // Dynamically check for search error messages
     LaunchedEffect(searchErrorMessage) {
@@ -276,7 +279,24 @@ fun SteamTrackerApp(
                 composable(
                     route = TrackerMainScreens.Notifications.name
                 ) {
-                    // TODO: Implement Notifications
+                    NotificationsScreen(
+                        notificationsUiState = notificationsUiState,
+                        trackedAppsDetails = trackedAppsDetails,
+                        navigateNews = {
+                            navController.navigate(TrackerOtherScreens.NewsDetails.name) {
+                                popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
+                            }
+                        },
+                        onNewsSelected = newsAppsViewModel::setCurrentNews,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails,
+                        onNewsRemoved = notificationsViewModel::deleteNewsNotification,
+                        onWishlistRemoved = notificationsViewModel::deleteWishlistNotification
+                    )
                 }
                 composable(
                     route = TrackerMainScreens.Menu.name
@@ -285,22 +305,30 @@ fun SteamTrackerApp(
                         TrackerMainScreens.Store.name to {
                             navController.navigate(
                                 TrackerMainScreens.Store.name
-                            )
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         TrackerMainScreens.News.name to {
                             navController.navigate(
                                 TrackerMainScreens.News.name
-                            )
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         TrackerMainScreens.Collections.name to {
                             navController.navigate(
                                 TrackerMainScreens.Collections.name
-                            )
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         TrackerMainScreens.Notifications.name to {
                             navController.navigate(
                                 TrackerMainScreens.Notifications.name
-                            )
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         TrackerOtherScreens.Search.name to {
                             navController.navigate(

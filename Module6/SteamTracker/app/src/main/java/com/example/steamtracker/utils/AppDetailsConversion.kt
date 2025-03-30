@@ -2,6 +2,7 @@ package com.example.steamtracker.utils
 
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.room.entities.AppDetailsEntity
+import com.example.steamtracker.room.entities.AppDetailsNotificationEntity
 
 fun AppDetails.toAppDetailsEntity(): AppDetailsEntity {
     return AppDetailsEntity(
@@ -51,6 +52,100 @@ fun AppDetails.toAppDetailsEntity(): AppDetailsEntity {
 }
 
 fun AppDetailsEntity.toAppDetails(): AppDetails {
+    return AppDetails(
+        steamAppId = this.steamAppId,
+        type = this.type,
+        name = this.name,
+        requiredAge = this.requiredAge,
+        isFree = this.isFree,
+        controllerSupport = this.controllerSupport,
+        dlc = this.dlc,
+        detailedDescription = this.detailedDescription,
+        aboutTheGame = this.aboutTheGame,
+        shortDescription = this.shortDescription,
+        fullgame = this.fullgame, // Assuming FullGame can be mapped directly
+        supportedLanguages = this.supportedLanguages,
+        reviews = this.reviews,
+        headerImage = this.headerImage,
+        capsuleImage = this.capsuleImage,
+        capsuleImageV5 = this.capsuleImageV5,
+        website = this.website,
+        pcRequirements = this.pcRequirements,
+        macRequirements = this.macRequirements,
+        linuxRequirements = this.linuxRequirements,
+        legalNotice = this.legalNotice,
+        developers = this.developers,
+        publishers = this.publishers,
+        demos = this.demos,
+        priceOverview = this.priceOverview,
+        packages = this.packages,
+        packageGroups = this.packageGroups,
+        platforms = this.platforms,
+        metacritic = this.metacritic,
+        categories = this.categories,
+        genres = this.genres,
+        screenshots = this.screenshots,
+        movies = this.movies,
+        recommendations = this.recommendations,
+        achievements = this.achievements,
+        releaseDate = this.releaseDate,
+        supportInfo = this.supportInfo,
+        background = this.background,
+        backgroundRaw = this.backgroundRaw,
+        contentDescriptors = this.contentDescriptors,
+        ratings = this.ratings,
+    )
+}
+
+fun AppDetails.toAppDetailsNotificationEntity(timestamp: Long): AppDetailsNotificationEntity {
+    return AppDetailsNotificationEntity(
+        steamAppId = this.steamAppId,
+        type = this.type,
+        name = this.name,
+        requiredAge = this.requiredAge,
+        isFree = this.isFree,
+        controllerSupport = this.controllerSupport,
+        dlc = this.dlc,
+        detailedDescription = this.detailedDescription,
+        aboutTheGame = this.aboutTheGame,
+        shortDescription = this.shortDescription,
+        fullgame = this.fullgame, // Assuming FullGame can be mapped directly
+        supportedLanguages = this.supportedLanguages,
+        reviews = this.reviews,
+        headerImage = this.headerImage,
+        capsuleImage = this.capsuleImage,
+        capsuleImageV5 = this.capsuleImageV5,
+        website = this.website,
+        pcRequirements = this.pcRequirements,
+        macRequirements = this.macRequirements,
+        linuxRequirements = this.linuxRequirements,
+        legalNotice = this.legalNotice,
+        developers = this.developers,
+        publishers = this.publishers,
+        demos = this.demos,
+        priceOverview = this.priceOverview,
+        packages = this.packages,
+        packageGroups = this.packageGroups,
+        platforms = this.platforms,
+        metacritic = this.metacritic,
+        categories = this.categories,
+        genres = this.genres,
+        screenshots = this.screenshots,
+        movies = this.movies,
+        recommendations = this.recommendations,
+        achievements = this.achievements,
+        releaseDate = this.releaseDate,
+        supportInfo = this.supportInfo,
+        background = this.background,
+        backgroundRaw = this.backgroundRaw,
+        contentDescriptors = this.contentDescriptors,
+        ratings = this.ratings,
+        lastUpdated = System.currentTimeMillis(),
+        timestamp = timestamp
+    )
+}
+
+fun AppDetailsNotificationEntity.toAppDetails(): AppDetails {
     return AppDetails(
         steamAppId = this.steamAppId,
         type = this.type,

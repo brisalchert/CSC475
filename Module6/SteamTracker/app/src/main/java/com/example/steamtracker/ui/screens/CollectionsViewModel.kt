@@ -78,7 +78,7 @@ class CollectionsViewModel(
 
         val wishlistWorkRequest =
             PeriodicWorkRequestBuilder<WishlistNotificationWorker>(12, TimeUnit.HOURS)
-                .setInitialDelay(12, TimeUnit.HOURS)
+                .setInitialDelay(5, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build()
 

@@ -21,6 +21,7 @@ interface AppContainer {
     val steamworksRepository: SteamworksRepository
     val appDetailsRepository: AppDetailsRepository
     val collectionsRepository: CollectionsRepository
+    val notificationsRepository: NotificationsRepository
     val appDatabase: AppDatabase
 }
 
@@ -127,6 +128,15 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val collectionsRepository: CollectionsRepository by lazy {
         NetworkCollectionsRepository(
             appDatabase.collectionsDao()
+        )
+    }
+
+    /**
+     * Initialize the notificationsRepository with the database table
+     */
+    override val notificationsRepository: NotificationsRepository by lazy {
+        NetworkNotificationsRepository(
+            appDatabase.notificationsDao()
         )
     }
 }

@@ -69,7 +69,7 @@ class NewsViewModel(
 
         val newsWorkRequest =
             PeriodicWorkRequestBuilder<NewsNotificationWorker>(12, TimeUnit.HOURS)
-                .setInitialDelay(12, TimeUnit.HOURS)
+                .setInitialDelay(5, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build()
 

@@ -43,8 +43,8 @@ class AppInitializer(
                     "${container.appDatabase.salesDao().getAllGames().first()}, " +
                     "${container.appDatabase.appDetailsDao().getAllAppDetails().first()}, " +
                     "${container.appDatabase.steamworksDao().getAllAppNews().first()}, " +
-                    "${container.appDatabase.newsAppsDao().getNewsAppIds().first()}" +
-                    "${container.appDatabase.notificationsDao().getAllNewsNotifications().first()}" +
+                    "${container.appDatabase.newsAppsDao().getNewsAppIds().first()}, " +
+                    "${container.appDatabase.notificationsDao().getAllNewsNotifications().first()}, " +
                     "${container.appDatabase.notificationsDao().getAllWishlistNotifications().first()}"
             )
         }

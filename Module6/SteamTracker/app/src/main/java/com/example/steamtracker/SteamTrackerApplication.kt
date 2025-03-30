@@ -30,7 +30,8 @@ class SteamTrackerApplication: Application() {
                 NewsWorkerFactory(
                     container.steamworksRepository,
                     container.collectionsRepository,
-                    container.storeRepository
+                    container.storeRepository,
+                    container.notificationsRepository
                 )
             )
             .build()

@@ -12,8 +12,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.steamtracker.R
 import com.example.steamtracker.data.CollectionsRepository
+import com.example.steamtracker.data.NotificationsRepository
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.model.WishlistNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -23,7 +25,8 @@ class WishlistNotificationWorker(
     appContext: Context,
     workerParameters: WorkerParameters,
     private val collectionsRepository: CollectionsRepository,
-    private val storeRepository: StoreRepository
+    private val storeRepository: StoreRepository,
+    private val notificationsRepository: NotificationsRepository
 ): CoroutineWorker(appContext, workerParameters) {
     override suspend fun doWork(): Result {
         try {
@@ -50,16 +53,16 @@ class WishlistNotificationWorker(
                     }
                 }
 
-            // Filter out apps with unchanged price information
+            // Filter out apps with unchanged price information or null AppDetails
             val newSales = updatedWishlistAppDetails?.filter { appDetails ->
                 val oldAppDetails = wishlistAppDetails?.find { it?.steamAppId == appDetails?.steamAppId }
 
                 appDetails?.priceOverview != null && oldAppDetails?.priceOverview != null &&
                         appDetails.priceOverview.final < oldAppDetails.priceOverview.final
-            } ?: emptyList()
+            }?.filterNotNull() ?: emptyList()
 
             // Send a notification for the new posts
-            if (true) {
+            if (newSales.isNotEmpty()) {
                 if (ContextCompat.checkSelfPermission(
                         applicationContext, Manifest.permission.POST_NOTIFICATIONS
                     ) == PackageManager.PERMISSION_GRANTED) {
@@ -81,7 +84,7 @@ class WishlistNotificationWorker(
         }
     }
 
-    private fun sendNotification(newSales: List<AppDetails?>) {
+    private suspend fun sendNotification(newSales: List<AppDetails>) {
         val context = applicationContext
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -92,6 +95,15 @@ class WishlistNotificationWorker(
                 .setContentText("There are ${newSales.size} new discounts for games on your wishlist.")
                 .build()
 
+            // Add notification to database
+            notificationsRepository.insertWishlistNotification(
+                WishlistNotification(
+                    timestamp = System.currentTimeMillis(),
+                    newSales = newSales
+                )
+            )
+
+            // Send notification
             Log.d("WishlistNotificationWorker", "Sending notification with ${newSales.size} new discounts.")
             notificationManager.notify(2, notification)
         }
