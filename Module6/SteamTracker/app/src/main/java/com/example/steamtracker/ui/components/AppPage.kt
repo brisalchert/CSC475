@@ -470,7 +470,7 @@ fun ReviewScore(
             Text(
                 text = "Reviews: ${String.format(Locale.US, "%.1f", percentPositive)}% positive",
                 modifier = modifier.padding(8.dp),
-                color = MaterialTheme.colorScheme.onPrimary
+                color = colorResource(R.color.black)
             )
         }
     } else {
