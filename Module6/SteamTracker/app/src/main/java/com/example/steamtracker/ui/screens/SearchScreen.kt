@@ -194,7 +194,7 @@ fun SearchResults(
                             modifier = Modifier
                                 .pointerInput(Unit) {
                                     detectTapGestures(
-                                        onLongPress = {
+                                        onPress = {
                                             showMenu = true
                                         }
                                     )

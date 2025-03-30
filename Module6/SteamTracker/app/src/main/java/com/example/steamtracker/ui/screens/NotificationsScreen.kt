@@ -78,7 +78,7 @@ fun NotificationsScreen(
             is NotificationsUiState.NoNotifications -> {
                 Box(
                     modifier = modifier
-                        .padding(16.dp)
+                        .padding(12.dp)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
