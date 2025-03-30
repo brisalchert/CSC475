@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface StoreApiService {
-    @GET("featuredcategories")
+    @GET("featuredcategories?cc=us&l=en")
     suspend fun getFeaturedCategories(): FeaturedCategoriesRequest
 
-    @GET("appdetails?")
+    @GET("appdetails?cc=us&l=en")
     suspend fun getAppDetails(@Query("appids") gameId: Int): Map<String, AppDetailsRequest>
 
     @GET("storesearch/?cc=us&l=en")
