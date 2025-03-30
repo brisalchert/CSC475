@@ -68,8 +68,8 @@ class NewsViewModel(
             .build()
 
         val newsWorkRequest =
-            PeriodicWorkRequestBuilder<NewsNotificationWorker>(12, TimeUnit.HOURS)
-                .setInitialDelay(5, TimeUnit.SECONDS)
+            PeriodicWorkRequestBuilder<NewsNotificationWorker>(1, TimeUnit.HOURS)
+                .setInitialDelay(10, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build()
 
@@ -77,7 +77,7 @@ class NewsViewModel(
             .getInstance(application)
             .enqueueUniquePeriodicWork(
                 "NewsNotificationsWork",
-                ExistingPeriodicWorkPolicy.REPLACE,
+                ExistingPeriodicWorkPolicy.KEEP,
                 newsWorkRequest
             )
     }
