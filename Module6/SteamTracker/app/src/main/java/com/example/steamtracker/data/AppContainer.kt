@@ -22,6 +22,7 @@ interface AppContainer {
     val appDetailsRepository: AppDetailsRepository
     val collectionsRepository: CollectionsRepository
     val notificationsRepository: NotificationsRepository
+    val preferencesRepository: PreferencesRepository
     val appDatabase: AppDatabase
 }
 
@@ -137,6 +138,15 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     override val notificationsRepository: NotificationsRepository by lazy {
         NetworkNotificationsRepository(
             appDatabase.notificationsDao()
+        )
+    }
+
+    /**
+     * Initialize preferences repository
+     */
+    override val preferencesRepository: PreferencesRepository by lazy {
+        PreferencesRepository(
+            application.applicationContext
         )
     }
 }

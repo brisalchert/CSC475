@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,15 +24,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -45,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
@@ -62,6 +53,7 @@ fun AppPage(
     appSpyInfo: SteamSpyAppRequest,
     newsAppsViewModel: NewsAppsViewModel,
     collectionsViewModel: CollectionsViewModel,
+    preferencesViewModel: PreferencesViewModel,
     navigateScreenshot: () -> Unit,
     onScreenshotSelect: (Screenshot) -> Unit,
     modifier: Modifier = Modifier,
@@ -132,7 +124,11 @@ fun AppPage(
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.outlineVariant)
             ) {
-                GenresRow(appDetails, modifier)
+                GenresRow(
+                    appDetails,
+                    preferencesViewModel,
+                    modifier
+                )
             }
         }
 
@@ -143,7 +139,11 @@ fun AppPage(
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceDim)
                 ) {
-                    TagsRow(appSpyInfo, modifier)
+                    TagsRow(
+                        appSpyInfo,
+                        preferencesViewModel,
+                        modifier
+                    )
                 }
             }
         }
@@ -192,7 +192,7 @@ fun CollectionsRow(
 
     LazyRow(
         state = listState,
-        modifier = Modifier
+        modifier = modifier
             .padding(4.dp)
             .fillMaxWidth()
             .horizontalScrollbar(listState = listState),
@@ -454,6 +454,7 @@ fun ScreenshotsRow(
 @Composable
 fun GenresRow(
     appDetails: AppDetails,
+    preferencesViewModel: PreferencesViewModel,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -474,7 +475,7 @@ fun GenresRow(
         LazyRow(
             state = listState,
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp)
                 .fillMaxWidth()
                 .horizontalScrollbar(
                     listState = listState,
@@ -487,14 +488,13 @@ fun GenresRow(
                 appDetails.genres?.forEach { genre ->
                     Genre(
                         genre.description,
-                        true,
+                        preferencesViewModel,
                         modifier = Modifier.padding(
                             start = 4.dp,
                             end = 4.dp,
-                            top = 8.dp,
-                            bottom = 16.dp
+                            bottom = 8.dp
                         )
-                    ) // TODO: Add genre favorites
+                    )
                 }
             }
         }
@@ -505,6 +505,7 @@ fun GenresRow(
 @Composable
 fun TagsRow(
     appSpyInfo: SteamSpyAppRequest,
+    preferencesViewModel: PreferencesViewModel,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -525,7 +526,7 @@ fun TagsRow(
         LazyRow(
             state = listState,
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp)
                 .fillMaxWidth()
                 .horizontalScrollbar(
                     listState = listState,
@@ -539,14 +540,13 @@ fun TagsRow(
                 appSpyInfo.tags?.keys?.forEach { key ->
                     Tag(
                         tag = key,
-                        favorite = true,
+                        preferencesViewModel = preferencesViewModel,
                         modifier = Modifier.padding(
                             start = 4.dp,
                             end = 4.dp,
-                            top = 8.dp,
-                            bottom = 16.dp
+                            bottom = 8.dp
                         )
-                    ) // TODO: Add tag favorites
+                    )
                 }
             }
         }

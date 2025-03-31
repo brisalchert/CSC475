@@ -60,6 +60,7 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.AppInitializer
 import com.example.steamtracker.ui.components.FeaturedViewModel
 import com.example.steamtracker.ui.components.NewsAppsViewModel
+import com.example.steamtracker.ui.components.PreferencesViewModel
 import com.example.steamtracker.ui.components.SalesViewModel
 import com.example.steamtracker.ui.components.SearchViewModel
 import com.example.steamtracker.ui.screens.AppDetailsScreen
@@ -111,6 +112,7 @@ fun SteamTrackerApp(
     notificationsViewModel: NotificationsViewModel = viewModel(factory = NotificationsViewModel.Factory),
     themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModel.Factory),
     imageViewModel: ImageViewModel = viewModel(),
+    preferencesViewModel: PreferencesViewModel = viewModel(factory = PreferencesViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     // Tab index for store screen
@@ -395,6 +397,7 @@ fun SteamTrackerApp(
                             getAppDetails = appDetailsViewModel::getAppDetails,
                             newsAppsViewModel = newsAppsViewModel,
                             collectionsViewModel = collectionsViewModel,
+                            preferencesViewModel = preferencesViewModel,
                             navigateScreenshot = {
                                 navController.navigate(TrackerOtherScreens.Image.name) {
                                     popUpTo(TrackerOtherScreens.Image.name) { inclusive = true }

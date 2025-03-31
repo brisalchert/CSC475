@@ -19,6 +19,7 @@ import com.example.steamtracker.R
 import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.ui.components.AppPage
 import com.example.steamtracker.ui.components.NewsAppsViewModel
+import com.example.steamtracker.ui.components.PreferencesViewModel
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
@@ -27,6 +28,7 @@ fun AppDetailsScreen(
     getAppDetails: (appId: Int) -> Unit,
     newsAppsViewModel: NewsAppsViewModel,
     collectionsViewModel: CollectionsViewModel,
+    preferencesViewModel: PreferencesViewModel,
     navigateScreenshot: () -> Unit,
     onScreenshotSelect: (screenshot: Screenshot) -> Unit,
     modifier: Modifier = Modifier,
@@ -45,6 +47,7 @@ fun AppDetailsScreen(
                     appSpyInfo = appDetailsUiState.appSpyInfo,
                     newsAppsViewModel = newsAppsViewModel,
                     collectionsViewModel = collectionsViewModel,
+                    preferencesViewModel = preferencesViewModel,
                     navigateScreenshot = navigateScreenshot,
                     onScreenshotSelect = onScreenshotSelect,
                     modifier = modifier,

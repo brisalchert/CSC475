@@ -6,35 +6,38 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.data.PreferencesRepository
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun Tag(
     tag: String,
-    favorite: Boolean,
+    preferencesViewModel: PreferencesViewModel,
     modifier: Modifier = Modifier
 ) {
+    val favoriteTags by preferencesViewModel.favoriteTags.collectAsState()
+
     var showMenu by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -50,51 +53,46 @@ fun Tag(
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.tag_container)
-        )
+        ),
+        onClick = {
+            if (favoriteTags.contains(tag)) {
+                preferencesViewModel.removeFavoriteTag(tag)
+                Toast.makeText(
+                    context,
+                    "Removed \"$tag\" from favorite tags",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                preferencesViewModel.addFavoriteTag(tag)
+                Toast.makeText(
+                    context,
+                    "Added \"$tag\" to favorite tags",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     ) {
         Row(
             modifier = Modifier.padding(4.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (favorite) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = "Check Icon",
-                    tint = colorResource(R.color.tag_text)
-                )
+            val imageVector: ImageVector = if (favoriteTags.contains(tag)) {
+                Icons.Default.Check
+            } else {
+                Icons.Default.Add
             }
+
+            Icon(
+                imageVector = imageVector,
+                contentDescription = "Check Icon",
+                tint = colorResource(R.color.tag_text)
+            )
 
             Text(
                 text = tag,
                 color = colorResource(R.color.tag_text),
             )
-
-            DropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false },
-                offset = DpOffset.Zero
-            ) {
-                val text: String = if (favorite) {
-                    "Remove tag from favorites"
-                } else {
-                    "Add tag to favorites"
-                }
-
-                DropdownMenuItem(
-                    text = { Text(text) },
-                    onClick = {
-                        val text: String = if (favorite) {
-                            "Tag \"$tag\" removed from favorites"
-                        } else {
-                            "Tag \"$tag\" added to favorites"
-                        }
-
-                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-                        showMenu = false
-                    }
-                )
-            }
         }
     }
 }
@@ -103,6 +101,6 @@ fun Tag(
 @Composable
 fun TagPreview() {
     SteamTrackerTheme {
-        Tag("Tag", true)
+        Tag("Tag", PreferencesViewModel(PreferencesRepository(LocalContext.current)))
     }
 }
