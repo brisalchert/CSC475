@@ -77,6 +77,7 @@ import com.example.steamtracker.ui.screens.NewsScreen
 import com.example.steamtracker.ui.screens.NewsViewModel
 import com.example.steamtracker.ui.screens.NotificationsScreen
 import com.example.steamtracker.ui.screens.NotificationsViewModel
+import com.example.steamtracker.ui.screens.PreferencesScreen
 import com.example.steamtracker.ui.screens.SearchScreen
 import com.example.steamtracker.ui.screens.SettingsScreen
 import com.example.steamtracker.ui.screens.StoreScreen
@@ -97,7 +98,8 @@ enum class TrackerOtherScreens {
     CollectionSearch,
     NewsDetails,
     Settings,
-    Image
+    Image,
+    Preferences
 }
 
 @Composable
@@ -356,6 +358,11 @@ fun SteamTrackerApp(
                                     TrackerOtherScreens.Search.name
                                 )
                             },
+                            TrackerOtherScreens.Preferences.name to {
+                                 navController.navigate(
+                                     TrackerOtherScreens.Preferences.name
+                                 )
+                            },
                             TrackerOtherScreens.Settings.name to {
                                 navController.navigate(
                                     TrackerOtherScreens.Settings.name
@@ -474,6 +481,13 @@ fun SteamTrackerApp(
                     ) {
                         ImageScreen(
                             screenshot = screenshot
+                        )
+                    }
+                    composable(
+                        route = TrackerOtherScreens.Preferences.name
+                    ) {
+                        PreferencesScreen(
+                            preferencesViewModel = preferencesViewModel
                         )
                     }
                 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CollectionsBookmark
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
@@ -77,6 +78,7 @@ fun MenuScreen(
                 TrackerMainScreens.Collections.name to Icons.Filled.CollectionsBookmark,
                 TrackerMainScreens.Notifications.name to Icons.Filled.Notifications,
                 TrackerOtherScreens.Search.name to Icons.Filled.Search,
+                TrackerOtherScreens.Preferences.name to Icons.Filled.Favorite,
                 TrackerOtherScreens.Settings.name to Icons.Filled.Settings
             )
 
