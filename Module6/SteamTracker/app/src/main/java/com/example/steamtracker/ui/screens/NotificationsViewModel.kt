@@ -61,8 +61,8 @@ class NotificationsViewModel(
                 if (newsNotifications.isNotEmpty() || wishlistNotifications.isNotEmpty()) {
                     // Update UI State
                     _notificationsUiState.value = NotificationsUiState.Success(
-                        newsNotifications,
-                        wishlistNotifications
+                        newsNotifications.sortedByDescending { it.timestamp },
+                        wishlistNotifications.sortedByDescending { it.timestamp }
                     )
                 } else {
                     _notificationsUiState.value = NotificationsUiState.NoNotifications
