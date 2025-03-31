@@ -68,6 +68,8 @@ import com.example.steamtracker.ui.screens.CollectionListScreen
 import com.example.steamtracker.ui.screens.CollectionSearchScreen
 import com.example.steamtracker.ui.screens.CollectionsScreen
 import com.example.steamtracker.ui.screens.CollectionsViewModel
+import com.example.steamtracker.ui.screens.ImageScreen
+import com.example.steamtracker.ui.screens.ImageViewModel
 import com.example.steamtracker.ui.screens.MenuScreen
 import com.example.steamtracker.ui.screens.NewsDetailsScreen
 import com.example.steamtracker.ui.screens.NewsScreen
@@ -93,7 +95,8 @@ enum class TrackerOtherScreens {
     Collection,
     CollectionSearch,
     NewsDetails,
-    Settings
+    Settings,
+    Image
 }
 
 @Composable
@@ -107,6 +110,7 @@ fun SteamTrackerApp(
     collectionsViewModel: CollectionsViewModel = viewModel(factory = CollectionsViewModel.Factory),
     notificationsViewModel: NotificationsViewModel = viewModel(factory = NotificationsViewModel.Factory),
     themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModel.Factory),
+    imageViewModel: ImageViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     // Tab index for store screen
@@ -144,6 +148,9 @@ fun SteamTrackerApp(
     // States for collections page
     val collectionsAppDetails by collectionsViewModel.collectionsAppsDetails.collectAsState()
     val currentCollection by collectionsViewModel.currentCollection.collectAsStateWithLifecycle()
+
+    // State for screenshot view
+    val screenshot by imageViewModel.screenshot.collectAsState()
 
     // UI States for observing live data updates
     val featuredUiState by featuredViewModel.featuredUiState.collectAsState()
@@ -387,7 +394,13 @@ fun SteamTrackerApp(
                             appDetailsUiState = appDetailsUiState,
                             getAppDetails = appDetailsViewModel::getAppDetails,
                             newsAppsViewModel = newsAppsViewModel,
-                            collectionsViewModel = collectionsViewModel
+                            collectionsViewModel = collectionsViewModel,
+                            navigateScreenshot = {
+                                navController.navigate(TrackerOtherScreens.Image.name) {
+                                    popUpTo(TrackerOtherScreens.Image.name) { inclusive = true }
+                                }
+                            },
+                            onScreenshotSelect = imageViewModel::setScreenshot
                         )
                     }
                     composable(
@@ -453,11 +466,17 @@ fun SteamTrackerApp(
                             onToggleTheme = themeViewModel::toggleTheme
                         )
                     }
+                    composable(
+                        route = TrackerOtherScreens.Image.name
+                    ) {
+                        ImageScreen(
+                            screenshot = screenshot
+                        )
+                    }
                 }
             }
         }
     }
-
 }
 
 @Composable
