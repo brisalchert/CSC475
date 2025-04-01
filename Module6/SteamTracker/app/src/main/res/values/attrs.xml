@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTheme">
+        <attr name="discount_text" format="color" />
+        <attr name="discount_background" format="color" />
+        <attr name="reviews_positive" format="color" />
+        <attr name="reviews_neutral" format="color" />
+        <attr name="reviews_negative" format="color" />
+        <attr name="genre_container" format="color" />
+        <attr name="genre_text" format="color" />
+        <attr name="tag_container" format="color" />
+        <attr name="tag_text" format="color" />
+        <attr name="collections_container" format="color" />
+        <attr name="collections_text" format="color" />
+    </declare-styleable>
+</resources>

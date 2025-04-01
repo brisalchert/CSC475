@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SteamTracker" parent="android:Theme.Material.NoActionBar" />
+    <style name="Theme.SteamTracker" parent="android:Theme.Material.NoActionBar">
+        <item name="discount_text">@color/discount_text</item>
+        <item name="discount_background">@color/discount_background</item>
+        <item name="reviews_positive">@color/reviews_positive</item>
+        <item name="reviews_neutral">@color/reviews_neutral</item>
+        <item name="reviews_negative">@color/reviews_negative</item>
+        <item name="genre_container">@color/genre_container</item>
+        <item name="genre_text">@color/genre_text</item>
+        <item name="tag_container">@color/tag_container</item>
+        <item name="tag_text">@color/tag_text</item>
+        <item name="collections_container">@color/genre_container</item>
+        <item name="collections_text">@color/genre_text</item>
+    </style>
 </resources>

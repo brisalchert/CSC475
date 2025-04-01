@@ -519,7 +519,8 @@ fun TrackerTopAppBar(
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
