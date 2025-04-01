@@ -264,7 +264,8 @@ fun SteamTrackerApp(
                                 popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
                             }
                         },
-                        onAppSelect = appDetailsViewModel::getAppDetails
+                        onAppSelect = appDetailsViewModel::getAppDetails,
+                        preferencesViewModel = preferencesViewModel
                     )
                 }
                 composable(

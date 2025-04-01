@@ -20,16 +20,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.data.PreferencesRepository
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.FeaturedTab
 import com.example.steamtracker.ui.components.FeaturedUiState
+import com.example.steamtracker.ui.components.PreferencesViewModel
 import com.example.steamtracker.ui.components.RecommendedTab
 import com.example.steamtracker.ui.components.SalesTab
 import com.example.steamtracker.ui.components.SalesUiState
@@ -52,6 +55,7 @@ fun StoreScreen(
     onSearch: (query: String) -> Unit,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
+    preferencesViewModel: PreferencesViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -114,7 +118,10 @@ fun StoreScreen(
                     contentPadding = contentPadding
                 )
                 2 -> RecommendedTab(
+                    salesUiState = salesUiState,
+                    salesAppDetails = salesAppDetails,
                     featuredUiState = featuredUiState,
+                    preferencesViewModel = preferencesViewModel,
                     getFeatured = getFeatured,
                     navigateApp = navigateApp,
                     onAppSelect = onAppSelect,
@@ -145,7 +152,10 @@ fun StoreScreenPreview() {
             navigateSearch = {},
             onSearch = {},
             navigateApp = {},
-            onAppSelect = {}
+            onAppSelect = {},
+            preferencesViewModel = PreferencesViewModel(
+                PreferencesRepository(LocalContext.current)
+            )
         )
     }
 }
