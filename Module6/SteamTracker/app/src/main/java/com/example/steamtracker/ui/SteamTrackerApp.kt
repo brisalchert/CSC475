@@ -191,305 +191,301 @@ fun SteamTrackerApp(
         appInitializer.checkAndClearDatabase()
     }
 
-    MaterialTheme(
-        colorScheme = if (isDarkMode) darkColorScheme() else lightColorScheme()
-    ) {
-        Scaffold(
+    Scaffold(
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures { focusManager.clearFocus() }
+            }
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TrackerTopAppBar(
+                scrollBehavior = scrollBehavior,
+                canNavigateBack = canNavigateBack,
+                navigateUp = { navController.popBackStack() },
+                previousBackStackEntry = navController.previousBackStackEntry,
+                selectedScreen = selectedScreen
+            )
+        },
+        bottomBar = {
+            TrackerBottomAppBar(
+                // Prevent bottom app bar navigation from adding back stack entries. Instead,
+                // replace the start destination with the current tab.
+                destinations = TrackerMainScreens.entries.associate { screen ->
+                    screen.name to {
+                        navController.navigate(screen.name) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
+                },
+                selectedScreen = selectedScreen
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
+        Surface(
             modifier = Modifier
-                .pointerInput(Unit) {
-                    detectTapGestures { focusManager.clearFocus() }
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            NavHost(
+                navController = navController,
+                startDestination = TrackerMainScreens.Store.name,
+                enterTransition = { EnterTransition.None },
+                exitTransition = { ExitTransition.None },
+                popEnterTransition = { EnterTransition.None },
+                popExitTransition = { ExitTransition.None },
+                modifier = Modifier
+            ) {
+                composable(
+                    route = TrackerMainScreens.Store.name
+                ) {
+                    StoreScreen(
+                        tabIndex = tabIndex,
+                        onTabChange = { tabIndex = it },
+                        featuredUiState = featuredUiState,
+                        getFeatured = featuredViewModel::getFeaturedCategories,
+                        salesUiState = salesUiState,
+                        getSales = {
+                            salesViewModel.getSalesGames()
+                            salesViewModel.getSalesAppDetails()
+                        },
+                        salesAppDetails = salesAppDetails,
+                        searchStore = searchViewModel::getAutocompleteResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        autocompleteResults = autocompleteResults.items,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.Search.name) {
+                                popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
+                            }
+                        },
+                        onSearch = searchViewModel::getSearchResults,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
+                    )
                 }
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TrackerTopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    canNavigateBack = canNavigateBack,
-                    navigateUp = { navController.popBackStack() },
-                    previousBackStackEntry = navController.previousBackStackEntry,
-                    selectedScreen = selectedScreen
-                )
-            },
-            bottomBar = {
-                TrackerBottomAppBar(
-                    // Prevent bottom app bar navigation from adding back stack entries. Instead,
-                    // replace the start destination with the current tab.
-                    destinations = TrackerMainScreens.entries.associate { screen ->
-                        screen.name to {
-                            navController.navigate(screen.name) {
+                composable(
+                    route = TrackerMainScreens.News.name
+                ) {
+                    NewsScreen(
+                        newsUiState = newsUiState,
+                        trackedAppsDetails = trackedAppsDetails,
+                        navigateNews = {
+                            navController.navigate(TrackerOtherScreens.NewsDetails.name) {
+                                popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
+                            }
+                        },
+                        onNewsSelected = newsAppsViewModel::setCurrentNews,
+                    )
+                }
+                composable(
+                    route = TrackerMainScreens.Collections.name
+                ) {
+                    CollectionsScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        collectionsUiState = collectionsUiState,
+                        collectionsAppDetails = collectionsAppDetails,
+                        navigateCollection = {
+                            navController.navigate(TrackerOtherScreens.Collection.name) {
+                                popUpTo(TrackerOtherScreens.Collection.name) { inclusive = true }
+                            }
+                        },
+                        onCollectionSelect = collectionsViewModel::setCollection
+                    )
+                }
+                composable(
+                    route = TrackerMainScreens.Notifications.name
+                ) {
+                    NotificationsScreen(
+                        notificationsUiState = notificationsUiState,
+                        trackedAppsDetails = trackedAppsDetails,
+                        navigateNews = {
+                            navController.navigate(TrackerOtherScreens.NewsDetails.name) {
+                                popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
+                            }
+                        },
+                        onNewsSelected = newsAppsViewModel::setCurrentNews,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails,
+                        onNewsRemoved = notificationsViewModel::deleteNewsNotification,
+                        onWishlistRemoved = notificationsViewModel::deleteWishlistNotification
+                    )
+                }
+                composable(
+                    route = TrackerMainScreens.Menu.name
+                ) {
+                    val navMap = mapOf(
+                        TrackerMainScreens.Store.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Store.name
+                            ) {
                                 popUpTo(0) { inclusive = true }
                             }
+                        },
+                        TrackerMainScreens.News.name to {
+                            navController.navigate(
+                                TrackerMainScreens.News.name
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
+                        TrackerMainScreens.Collections.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Collections.name
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
+                        TrackerMainScreens.Notifications.name to {
+                            navController.navigate(
+                                TrackerMainScreens.Notifications.name
+                            ) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
+                        TrackerOtherScreens.Search.name to {
+                            navController.navigate(
+                                TrackerOtherScreens.Search.name
+                            )
+                        },
+                        TrackerOtherScreens.Preferences.name to {
+                             navController.navigate(
+                                 TrackerOtherScreens.Preferences.name
+                             )
+                        },
+                        TrackerOtherScreens.Settings.name to {
+                            navController.navigate(
+                                TrackerOtherScreens.Settings.name
+                            )
                         }
-                    },
-                    selectedScreen = selectedScreen
-                )
-            },
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { padding ->
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                NavHost(
-                    navController = navController,
-                    startDestination = TrackerMainScreens.Store.name,
-                    enterTransition = { EnterTransition.None },
-                    exitTransition = { ExitTransition.None },
-                    popEnterTransition = { EnterTransition.None },
-                    popExitTransition = { ExitTransition.None },
-                    modifier = Modifier
-                ) {
-                    composable(
-                        route = TrackerMainScreens.Store.name
-                    ) {
-                        StoreScreen(
-                            tabIndex = tabIndex,
-                            onTabChange = { tabIndex = it },
-                            featuredUiState = featuredUiState,
-                            getFeatured = featuredViewModel::getFeaturedCategories,
-                            salesUiState = salesUiState,
-                            getSales = {
-                                salesViewModel.getSalesGames()
-                                salesViewModel.getSalesAppDetails()
-                            },
-                            salesAppDetails = salesAppDetails,
-                            searchStore = searchViewModel::getAutocompleteResults,
-                            clearSearch = searchViewModel::clearSearchResults,
-                            autocompleteResults = autocompleteResults.items,
-                            navigateSearch = {
-                                navController.navigate(TrackerOtherScreens.Search.name) {
-                                    popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
-                                }
-                            },
-                            onSearch = searchViewModel::getSearchResults,
-                            navigateApp = {
-                                navController.navigate(TrackerOtherScreens.App.name) {
-                                    popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
-                                }
-                            },
-                            onAppSelect = appDetailsViewModel::getAppDetails
-                        )
-                    }
-                    composable(
-                        route = TrackerMainScreens.News.name
-                    ) {
-                        NewsScreen(
-                            newsUiState = newsUiState,
-                            trackedAppsDetails = trackedAppsDetails,
-                            navigateNews = {
-                                navController.navigate(TrackerOtherScreens.NewsDetails.name) {
-                                    popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
-                                }
-                            },
-                            onNewsSelected = newsAppsViewModel::setCurrentNews,
-                        )
-                    }
-                    composable(
-                        route = TrackerMainScreens.Collections.name
-                    ) {
-                        CollectionsScreen(
-                            collectionsViewModel = collectionsViewModel,
-                            collectionsUiState = collectionsUiState,
-                            collectionsAppDetails = collectionsAppDetails,
-                            navigateCollection = {
-                                navController.navigate(TrackerOtherScreens.Collection.name) {
-                                    popUpTo(TrackerOtherScreens.Collection.name) { inclusive = true }
-                                }
-                            },
-                            onCollectionSelect = collectionsViewModel::setCollection
-                        )
-                    }
-                    composable(
-                        route = TrackerMainScreens.Notifications.name
-                    ) {
-                        NotificationsScreen(
-                            notificationsUiState = notificationsUiState,
-                            trackedAppsDetails = trackedAppsDetails,
-                            navigateNews = {
-                                navController.navigate(TrackerOtherScreens.NewsDetails.name) {
-                                    popUpTo(TrackerOtherScreens.NewsDetails.name) { inclusive = true }
-                                }
-                            },
-                            onNewsSelected = newsAppsViewModel::setCurrentNews,
-                            navigateApp = {
-                                navController.navigate(TrackerOtherScreens.App.name) {
-                                    popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
-                                }
-                            },
-                            onAppSelect = appDetailsViewModel::getAppDetails,
-                            onNewsRemoved = notificationsViewModel::deleteNewsNotification,
-                            onWishlistRemoved = notificationsViewModel::deleteWishlistNotification
-                        )
-                    }
-                    composable(
-                        route = TrackerMainScreens.Menu.name
-                    ) {
-                        val navMap = mapOf(
-                            TrackerMainScreens.Store.name to {
-                                navController.navigate(
-                                    TrackerMainScreens.Store.name
-                                ) {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            },
-                            TrackerMainScreens.News.name to {
-                                navController.navigate(
-                                    TrackerMainScreens.News.name
-                                ) {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            },
-                            TrackerMainScreens.Collections.name to {
-                                navController.navigate(
-                                    TrackerMainScreens.Collections.name
-                                ) {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            },
-                            TrackerMainScreens.Notifications.name to {
-                                navController.navigate(
-                                    TrackerMainScreens.Notifications.name
-                                ) {
-                                    popUpTo(0) { inclusive = true }
-                                }
-                            },
-                            TrackerOtherScreens.Search.name to {
-                                navController.navigate(
-                                    TrackerOtherScreens.Search.name
-                                )
-                            },
-                            TrackerOtherScreens.Preferences.name to {
-                                 navController.navigate(
-                                     TrackerOtherScreens.Preferences.name
-                                 )
-                            },
-                            TrackerOtherScreens.Settings.name to {
-                                navController.navigate(
-                                    TrackerOtherScreens.Settings.name
-                                )
-                            }
-                        )
+                    )
 
-                        MenuScreen(navigation = navMap)
-                    }
-                    composable(
-                        route = TrackerOtherScreens.Search.name
-                    ) {
-                        SearchScreen(
-                            searchUiState = searchUiState,
-                            getAutocomplete = searchViewModel::getAutocompleteResults,
-                            clearSearch = searchViewModel::clearSearchResults,
-                            autocompleteResults = autocompleteResults.items,
-                            searchResults = searchResults.items,
-                            sortResults = searchViewModel::sortResults,
-                            navigateSearch = {
-                                navController.navigate(TrackerOtherScreens.Search.name) {
-                                    popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
-                                }
-                            },
-                            onSearch = searchViewModel::getSearchResults,
-                            navigateApp = {
-                                navController.navigate(TrackerOtherScreens.App.name) {
-                                    popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
-                                }
-                            },
-                            onAppSelect = appDetailsViewModel::getAppDetails
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.App.name
-                    ) {
-                        AppDetailsScreen(
-                            appDetailsUiState = appDetailsUiState,
-                            getAppDetails = appDetailsViewModel::getAppDetails,
-                            newsAppsViewModel = newsAppsViewModel,
-                            collectionsViewModel = collectionsViewModel,
-                            preferencesViewModel = preferencesViewModel,
-                            navigateScreenshot = {
-                                navController.navigate(TrackerOtherScreens.Image.name) {
-                                    popUpTo(TrackerOtherScreens.Image.name) { inclusive = true }
-                                }
-                            },
-                            onScreenshotSelect = imageViewModel::setScreenshot
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.Collection.name
-                    ) {
-                        CollectionListScreen(
-                            collectionsViewModel = collectionsViewModel,
-                            collection = currentCollection,
-                            collectionAppDetails = collectionsAppDetails,
-                            navigateApp = {
-                                navController.navigate(TrackerOtherScreens.App.name) {
-                                    popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
-                                }
-                            },
-                            onAppSelect = appDetailsViewModel::getAppDetails,
-                            navigateAddApp = {
-                                navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
-                                    popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
-                                }
+                    MenuScreen(navigation = navMap)
+                }
+                composable(
+                    route = TrackerOtherScreens.Search.name
+                ) {
+                    SearchScreen(
+                        searchUiState = searchUiState,
+                        getAutocomplete = searchViewModel::getAutocompleteResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        autocompleteResults = autocompleteResults.items,
+                        searchResults = searchResults.items,
+                        sortResults = searchViewModel::sortResults,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.Search.name) {
+                                popUpTo(TrackerOtherScreens.Search.name) { inclusive = true }
                             }
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.CollectionSearch.name
-                    ) {
-                        CollectionSearchScreen(
-                            collectionsViewModel = collectionsViewModel,
-                            currentCollection = currentCollection,
-                            onAddApp = collectionsViewModel::addCollectionApp,
-                            onRemoveApp = collectionsViewModel::removeCollectionApp,
-                            searchUiState = searchUiState,
-                            getAutocomplete = searchViewModel::getAutocompleteResults,
-                            clearSearch = searchViewModel::clearSearchResults,
-                            autocompleteResults = autocompleteResults.items,
-                            searchResults = searchResults.items,
-                            navigateSearch = {
-                                navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
-                                    popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
-                                }
-                            },
-                            onSearch = searchViewModel::getSearchResults,
-                            navigateApp = {
-                                navController.navigate(TrackerOtherScreens.App.name) {
-                                    popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
-                                }
-                            },
-                            onAppSelect = appDetailsViewModel::getAppDetails
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.NewsDetails.name
-                    ) {
-                        NewsDetailsScreen(
-                            news = currentNews,
-                            trackedAppsDetails = trackedAppsDetails
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.Settings.name
-                    ) {
-                        SettingsScreen(
-                            isDarkMode = isDarkMode,
-                            onToggleTheme = themeViewModel::toggleTheme
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.Image.name
-                    ) {
-                        ImageScreen(
-                            screenshot = screenshot
-                        )
-                    }
-                    composable(
-                        route = TrackerOtherScreens.Preferences.name
-                    ) {
-                        PreferencesScreen(
-                            preferencesViewModel = preferencesViewModel
-                        )
-                    }
+                        },
+                        onSearch = searchViewModel::getSearchResults,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.App.name
+                ) {
+                    AppDetailsScreen(
+                        appDetailsUiState = appDetailsUiState,
+                        getAppDetails = appDetailsViewModel::getAppDetails,
+                        newsAppsViewModel = newsAppsViewModel,
+                        collectionsViewModel = collectionsViewModel,
+                        preferencesViewModel = preferencesViewModel,
+                        navigateScreenshot = {
+                            navController.navigate(TrackerOtherScreens.Image.name) {
+                                popUpTo(TrackerOtherScreens.Image.name) { inclusive = true }
+                            }
+                        },
+                        onScreenshotSelect = imageViewModel::setScreenshot
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.Collection.name
+                ) {
+                    CollectionListScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        collection = currentCollection,
+                        collectionAppDetails = collectionsAppDetails,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails,
+                        navigateAddApp = {
+                            navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
+                                popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.CollectionSearch.name
+                ) {
+                    CollectionSearchScreen(
+                        collectionsViewModel = collectionsViewModel,
+                        currentCollection = currentCollection,
+                        onAddApp = collectionsViewModel::addCollectionApp,
+                        onRemoveApp = collectionsViewModel::removeCollectionApp,
+                        searchUiState = searchUiState,
+                        getAutocomplete = searchViewModel::getAutocompleteResults,
+                        clearSearch = searchViewModel::clearSearchResults,
+                        autocompleteResults = autocompleteResults.items,
+                        searchResults = searchResults.items,
+                        navigateSearch = {
+                            navController.navigate(TrackerOtherScreens.CollectionSearch.name) {
+                                popUpTo(TrackerOtherScreens.CollectionSearch.name) { inclusive = true }
+                            }
+                        },
+                        onSearch = searchViewModel::getSearchResults,
+                        navigateApp = {
+                            navController.navigate(TrackerOtherScreens.App.name) {
+                                popUpTo(TrackerOtherScreens.App.name) { inclusive = true }
+                            }
+                        },
+                        onAppSelect = appDetailsViewModel::getAppDetails
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.NewsDetails.name
+                ) {
+                    NewsDetailsScreen(
+                        news = currentNews,
+                        trackedAppsDetails = trackedAppsDetails
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.Settings.name
+                ) {
+                    SettingsScreen(
+                        isDarkMode = isDarkMode,
+                        onToggleTheme = themeViewModel::toggleTheme
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.Image.name
+                ) {
+                    ImageScreen(
+                        screenshot = screenshot
+                    )
+                }
+                composable(
+                    route = TrackerOtherScreens.Preferences.name
+                ) {
+                    PreferencesScreen(
+                        preferencesViewModel = preferencesViewModel
+                    )
                 }
             }
         }

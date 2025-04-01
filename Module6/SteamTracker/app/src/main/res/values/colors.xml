@@ -7,15 +7,15 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="discount_text">#FF60FF6F</color>
-    <color name="discount_background">#FF12B922</color>
+    <color name="discount_text">#60FF6F</color>
+    <color name="discount_background">#12B922</color>
     <color name="reviews_positive">#8bff95</color>
     <color name="reviews_neutral">#fffd8b</color>
     <color name="reviews_negative">#ff8b8b</color>
     <color name="genre_container">#399bc3</color>
     <color name="genre_text">#48cbff</color>
-    <color name="tag_text">#ffddfd</color>
     <color name="tag_container">#ffa1f9</color>
+    <color name="tag_text">#ffddfd</color>
     <color name="collections_container">#00be93</color>
     <color name="collections_text">#b2ffee</color>
 </resources>
