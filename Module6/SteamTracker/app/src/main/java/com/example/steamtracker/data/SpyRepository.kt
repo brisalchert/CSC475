@@ -24,7 +24,7 @@ class NetworkSpyRepository(
     private val spyDao: SpyDao
 ): SpyRepository {
     override val topSales: Flow<List<SteamSpyAppWithTags>> =
-        spyDao.getAllGames()
+        spyDao.getTopSales()
 
     override suspend fun refreshTopSales() {
         // Get the timestamp of the current sales data

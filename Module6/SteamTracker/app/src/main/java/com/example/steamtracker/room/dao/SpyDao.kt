@@ -40,6 +40,11 @@ interface SpyDao {
     @Query("SELECT * FROM steam_spy_apps")
     fun getAllGames(): Flow<List<SteamSpyAppWithTags>>
 
+    @Transaction
+    @Query("SELECT * FROM steam_spy_apps WHERE discount != 0")
+    fun getTopSales(): Flow<List<SteamSpyAppWithTags>>
+
+
     @Query("SELECT MAX(lastUpdated) FROM steam_spy_apps")
     suspend fun getLastUpdatedTimestamp(): Long?
 }
