@@ -49,7 +49,7 @@ import com.example.steamtracker.room.entities.WishlistNotificationEntity
         WishlistNotificationEntity::class,
         AppDetailsNotificationEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
