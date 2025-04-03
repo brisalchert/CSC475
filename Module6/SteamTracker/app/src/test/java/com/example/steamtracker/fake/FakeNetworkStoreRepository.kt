@@ -18,46 +18,30 @@ import com.example.steamtracker.utils.toAppDetailsEntity
 import com.example.steamtracker.utils.toAppInfoEntityList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlin.collections.component1
 import kotlin.collections.component2
 
 class FakeNetworkStoreRepository(
-    private val storeDao: StoreDao,
-    private val appDetailsDao: AppDetailsDao
 ): StoreRepository {
     override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        storeDao.getAllFeaturedCategories()
+        flow {
+            emit(
+                mapRequestToEntities(FakeFeaturedCategoriesRequest.response).map {
+                    FeaturedCategoryWithDetails(
+                        category = it,
+                        appItems = mapAppInfoToEntities(FakeFeaturedCategoriesRequest.response),
+                        spotlightItems = mapSpotlightItemsToEntities(FakeFeaturedCategoriesRequest.response)
+                    )
+                }
+            )
+        }
 
     /**
      * Refresh featured categories with API and update Room Database
      */
     override suspend fun refreshFeaturedCategories() {
-        // Get the timestamp of the current categories data
-        val lastUpdated = storeDao.getLastUpdatedTimestamp()
-
-        // Check if the data is outdated (not from today)
-        if (isDataOutdated(lastUpdated)) {
-            // Clear old categories data
-            storeDao.clearAllFeaturedCategories()
-
-            // Get data from the API
-            val response = FakeFeaturedCategoriesRequest.response
-
-            // Convert API response to Room database entities
-            val categoryEntities = mapRequestToEntities(response).map {
-                it.copy(lastUpdated = System.currentTimeMillis()) // Update timestamp
-            }
-            val appEntities = mapAppInfoToEntities(response)
-            val spotlightEntities = mapSpotlightItemsToEntities(response)
-
-            // Insert into Room Database using transactions
-            storeDao.insertFeaturedCategoryWithDetails(
-                categoryEntities,
-                appEntities,
-                spotlightEntities
-            )
-        }
     }
 
     /**
@@ -138,23 +122,7 @@ class FakeNetworkStoreRepository(
      * provided App ID, or null if no app is found
      */
     override suspend fun getAppDetails(appId: Int): AppDetails? {
-        // Check the database first
-        val databaseResponse = appDetailsDao.getAppDetails(appId)
-
-        if (databaseResponse != null && !isDataOutdated(databaseResponse.lastUpdated)) {
-            return databaseResponse.toAppDetails()
-        }
-
-        val apiResponse = FakeAppDetailsRequest.response
-
-        // Add response to the database
-        val appDetailsEntity = apiResponse["$appId"]?.appDetails?.toAppDetailsEntity()
-
-        if (appDetailsEntity != null) {
-            appDetailsDao.insertAppDetails(appDetailsEntity)
-        }
-
-        return apiResponse["$appId"]?.appDetails
+        return FakeAppDetailsRequest.response["gameId"]!!.appDetails
     }
 
     /**
@@ -163,16 +131,7 @@ class FakeNetworkStoreRepository(
      * API call, passing the database
      */
     override suspend fun getAppDetailsFresh(appId: Int): AppDetails? {
-        val apiResponse = FakeAppDetailsRequest.response
-
-        // Add response to the database
-        val appDetailsEntity = apiResponse["$appId"]?.appDetails?.toAppDetailsEntity()
-
-        if (appDetailsEntity != null) {
-            appDetailsDao.insertAppDetails(appDetailsEntity)
-        }
-
-        return apiResponse["$appId"]?.appDetails
+        return FakeAppDetailsRequest.response["gameId"]!!.appDetails
     }
 
     /**
@@ -186,6 +145,5 @@ class FakeNetworkStoreRepository(
      * Clears all existing entries for featured categories
      */
     override suspend fun clearFeaturedCategories() {
-        storeDao.clearAllFeaturedCategories()
     }
 }
