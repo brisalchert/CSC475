@@ -9,6 +9,9 @@ import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
+import com.example.steamtracker.utils.toAppNewsEntity
+import com.example.steamtracker.utils.toAppNewsRequestEntity
+import com.example.steamtracker.utils.toNewsItemEntities
 import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -61,9 +64,9 @@ class NetworkSteamworksRepository(
             }
 
             // Convert API response to Room database entities
-            val appNewsRequestEntities = mapRequestsToEntities(filteredResponseList)
-            val appNewsEntities = mapAppNewsToEntities(filteredResponseList)
-            val newsItemEntities = mapNewsItemsToEntities(filteredResponseList).flatten()
+            val appNewsRequestEntities = filteredResponseList.map { it.toAppNewsRequestEntity() }
+            val appNewsEntities = filteredResponseList.map { it.toAppNewsEntity() }
+            val newsItemEntities = filteredResponseList.map { it.toNewsItemEntities() }.flatten()
 
             // Insert into Room Database using transactions
             steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
@@ -91,43 +94,5 @@ class NetworkSteamworksRepository(
 
     override suspend fun getNewsByGid(gid: String): NewsItemEntity {
         return steamworksDao.getNewsByGid(gid)
-    }
-
-    /**
-     * Maps the AppNewsRequest objects of a list of AppNewsRequests to a list of database entities
-     */
-    private fun mapRequestsToEntities(requests: List<AppNewsRequest>): List<AppNewsRequestEntity> {
-        return requests.map { request ->
-            AppNewsRequestEntity(
-                appid = request.appnews.appid,
-                lastUpdated = System.currentTimeMillis()
-            )
-        }
-    }
-
-    /**
-     * Maps the AppNews objects of a list of AppNewsRequests to a list of database entities
-     */
-    private fun mapAppNewsToEntities(requests: List<AppNewsRequest>): List<AppNewsEntity> {
-        return requests.map { request ->
-            AppNewsEntity(
-                appid = request.appnews.appid
-            )
-        }
-    }
-
-    /**
-     * Maps the NewsItem lists of a list of AppNewsRequests to a list of database entities
-     */
-    private fun mapNewsItemsToEntities(requests: List<AppNewsRequest>): List<List<NewsItemEntity>> {
-        val newsLists = mutableListOf<List<NewsItemEntity>>()
-
-        requests.forEach { request ->
-            newsLists.add(
-                request.appnews.newsitems.map { it.toNewsItemEntity() }
-            )
-        }
-
-        return newsLists
     }
 }

@@ -12,6 +12,8 @@ import com.example.steamtracker.model.NewsNotification
 import com.example.steamtracker.model.WishlistNotification
 import com.example.steamtracker.room.relations.NewsNotificationWithDetails
 import com.example.steamtracker.room.relations.WishlistNotificationWithDetails
+import com.example.steamtracker.utils.mapToNewsNotification
+import com.example.steamtracker.utils.mapToWishlistNotification
 import com.example.steamtracker.utils.toAppDetails
 import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,8 +57,8 @@ class NotificationsViewModel(
 
             notificationsFlow.collect { (newsNotificationsEntities, wishlistNotificationsEntities) ->
                 // Convert entities to model objects
-                val newsNotifications = mapEntitiesToNewsNotifications(newsNotificationsEntities)
-                val wishlistNotifications = mapEntitiesToWishlistNotifications(wishlistNotificationsEntities)
+                val newsNotifications = newsNotificationsEntities.map { it.mapToNewsNotification() }
+                val wishlistNotifications = wishlistNotificationsEntities.map { it.mapToWishlistNotification() }
 
                 if (newsNotifications.isNotEmpty() || wishlistNotifications.isNotEmpty()) {
                     // Update UI State
@@ -80,24 +82,6 @@ class NotificationsViewModel(
     fun deleteWishlistNotification(notification: WishlistNotification) {
         viewModelScope.launch {
             notificationsRepository.deleteWishlistNotification(notification)
-        }
-    }
-
-    private fun mapEntitiesToNewsNotifications(entities: List<NewsNotificationWithDetails>): List<NewsNotification> {
-        return entities.map { entity ->
-            NewsNotification(
-                timestamp = entity.notification.timestamp,
-                newPosts = entity.newPosts.map { it.toNewsItem() }
-            )
-        }
-    }
-
-    private fun mapEntitiesToWishlistNotifications(entities: List<WishlistNotificationWithDetails>): List<WishlistNotification> {
-        return entities.map { entity ->
-            WishlistNotification(
-                timestamp = entity.notification.timestamp,
-                newSales = entity.newSales.map { it.toAppDetails() }
-            )
         }
     }
 

@@ -15,6 +15,7 @@ import com.example.steamtracker.model.SpotlightCategory
 import com.example.steamtracker.model.SpotlightItem
 import com.example.steamtracker.model.StaticCategory
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
+import com.example.steamtracker.utils.mapToFeaturedCategoriesRequest
 import com.example.steamtracker.utils.toAppInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +56,7 @@ class FeaturedViewModel(
         viewModelScope.launch {
             storeRepository.allFeaturedCategories.collect { cachedData ->
                 if (cachedData.isNotEmpty()) {
-                    _featuredUiState.value = FeaturedUiState.Success(mapEntitiesToRequest(cachedData))
+                    _featuredUiState.value = FeaturedUiState.Success(mapToFeaturedCategoriesRequest(cachedData))
                 }
 
                 // Check if the data is outdated
@@ -75,56 +76,6 @@ class FeaturedViewModel(
                 }
             }
         }
-    }
-
-    /**
-     * Maps database entities from the Room Database to FeaturedCategoriesRequest objects
-     */
-    private fun mapEntitiesToRequest(entities: List<FeaturedCategoryWithDetails>): FeaturedCategoriesRequest {
-        val spotlightCategories = mutableMapOf<String, Any>()
-
-        val specials = entities.find { it.category.type == "regular" && it.category.name == "Specials" }?.let {
-            RegularCategory(it.category.id, it.category.name, it.appItems?.map { it.toAppInfo() })
-        }
-
-        val comingSoon = entities.find { it.category.type == "regular" && it.category.name == "Coming Soon" }?.let {
-            RegularCategory(it.category.id, it.category.name, it.appItems?.map { it.toAppInfo() })
-        }
-
-        val topSellers = entities.find { it.category.type == "regular" && it.category.name == "Top Sellers" }?.let {
-            RegularCategory(it.category.id, it.category.name, it.appItems?.map { it.toAppInfo() })
-        }
-
-        val newReleases = entities.find { it.category.type == "regular" && it.category.name == "New Releases" }?.let {
-            RegularCategory(it.category.id, it.category.name, it.appItems?.map { it.toAppInfo() })
-        }
-
-        val genres = entities.find { it.category.type == "static" && it.category.name == "Genres" }?.let {
-            StaticCategory(it.category.id, it.category.name)
-        }
-
-        val trailerslideshow = entities.find { it.category.type == "static" && it.category.name == "Trailer Slideshow" }?.let {
-            StaticCategory(it.category.id, it.category.name)
-        }
-
-        entities.filter { it.category.type == "spotlight" }.forEach {
-            spotlightCategories[it.category.id] = SpotlightCategory(
-                it.category.id, it.category.name, it.spotlightItems?.map { item ->
-                    SpotlightItem(item.name, item.headerImage, item.body, item.url)
-                }
-            )
-        }
-
-        return FeaturedCategoriesRequest(
-            spotlightCategories = spotlightCategories,
-            specials = specials,
-            comingSoon = comingSoon,
-            topSellers = topSellers,
-            newReleases = newReleases,
-            genres = genres,
-            trailerslideshow = trailerslideshow,
-            status = 1
-        )
     }
 
     /**

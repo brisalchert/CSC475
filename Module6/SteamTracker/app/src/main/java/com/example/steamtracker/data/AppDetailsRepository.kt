@@ -33,7 +33,7 @@ class NetworkAppDetailsRepository(
         val entity = appDetailsDao.getAppDetails(appId)
 
         if (entity != null) {
-            return mapEntityToModel(entity)
+            return entity.toAppDetails()
         }
 
         return null
@@ -41,15 +41,5 @@ class NetworkAppDetailsRepository(
 
     override suspend fun deleteAppDetails(appId: Int) {
         appDetailsDao.deleteAppDetails(appId)
-    }
-
-    // Convert from AppDetailsEntity to AppDetails
-    private fun mapEntityToModel(entity: AppDetailsEntity): AppDetails {
-        return entity.toAppDetails()
-    }
-
-    // Convert from AppDetailsEntity to AppDetails list
-    private fun mapEntitiesToModels(entities: List<AppDetailsEntity>): List<AppDetails> {
-        return entities.map { mapEntityToModel(it) }
     }
 }

@@ -18,6 +18,7 @@ import com.example.steamtracker.model.AppNews
 import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.room.relations.AppNewsWithDetails
+import com.example.steamtracker.utils.toAppNewsRequest
 import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -85,8 +86,8 @@ class NewsViewModel(
                         // Only proceed if newsListEntities is not empty
                         if (newsListEntities.isNotEmpty()) {
                             _newsUiState.value = NewsUiState.Success(
-                                mapEntitiesToRequests(newsListEntities).map {
-                                    it.appnews.newsitems
+                                newsListEntities.map {
+                                    it.toAppNewsRequest().appnews.newsitems
                                 }
                             )
                         } else {
@@ -127,30 +128,6 @@ class NewsViewModel(
                     ExistingPeriodicWorkPolicy.KEEP,
                     newsWorkRequest
                 )
-        }
-    }
-
-    /**
-     * Maps database entities from the Room Database to AppNewsRequest objects
-     */
-    private fun mapEntitiesToRequests(entities: List<AppNewsWithDetails>): List<AppNewsRequest> {
-        val appNews = entities.mapNotNull { entity ->
-            val newsItems = entity.appNewsWithItems.newsitems.map { it.toNewsItem() }
-
-            if (newsItems.isEmpty()) {
-                return@mapNotNull null
-            }
-
-            AppNews(
-                appid = newsItems.first().appid,
-                newsitems = newsItems
-            )
-        }
-
-        return appNews.map { news ->
-            AppNewsRequest(
-                appnews = news
-            )
         }
     }
 

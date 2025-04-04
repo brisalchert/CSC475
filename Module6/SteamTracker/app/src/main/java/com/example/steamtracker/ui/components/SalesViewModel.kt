@@ -60,7 +60,11 @@ class SalesViewModel(
         viewModelScope.launch {
             spyRepository.topSales.collect { cachedData ->
                 if (cachedData.isNotEmpty()) {
-                    _salesUiState.value = SalesUiState.Success(mapEntitiesToRequests(cachedData))
+                    _salesUiState.value = SalesUiState.Success(
+                        cachedData.map {
+                            it.app.toSteamSpyAppRequest(it.tags)
+                        }
+                    )
                 }
 
                 // Check if the data is outdated
@@ -99,15 +103,6 @@ class SalesViewModel(
                 Log.d("Debug", "${e.message}")
                 _salesUiState.value = SalesUiState.Error
             }
-        }
-    }
-
-    /**
-     * Maps database entities from the Room Database to SteamSpyAppRequest objects
-     */
-    private fun mapEntitiesToRequests(entities: List<SteamSpyAppWithTags>): List<SteamSpyAppRequest> {
-        return entities.map {
-            it.app.toSteamSpyAppRequest(it.tags)
         }
     }
 

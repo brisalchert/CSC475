@@ -19,6 +19,7 @@ import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.room.relations.CollectionWithApps
+import com.example.steamtracker.utils.mapCollectionEntitiesToCollections
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -107,21 +108,21 @@ class CollectionsViewModel(
 
     fun isInCollection(collectionName: String, appId: Int): Flow<Boolean> {
         return allCollections.map { collections ->
-            val wishlist = mapEntitiesToCollections(collections)[collectionName]
+            val wishlist = mapCollectionEntitiesToCollections(collections)[collectionName]
             wishlist?.any { it.appId == appId } == true
         }
     }
 
     fun getCollectionContents(collectionName: String): Flow<List<CollectionApp>> {
         return allCollections.map { collections ->
-            mapEntitiesToCollections(collections)[collectionName] ?: emptyList()
+            mapCollectionEntitiesToCollections(collections)[collectionName] ?: emptyList()
         }
     }
 
     fun getAllCollections() {
         viewModelScope.launch {
             collectionsRepository.allCollections.collect { collections ->
-                val collections = mapEntitiesToCollections(collections)
+                val collections = mapCollectionEntitiesToCollections(collections)
 
                 // Create Wish list if it does not exist
                 if (!collections.contains("Wishlist")) {
@@ -180,20 +181,6 @@ class CollectionsViewModel(
                     wishlistWorkRequest
                 )
         }
-    }
-
-    private fun mapEntitiesToCollections(entities: List<CollectionWithApps>): Map<String, List<CollectionApp>> {
-        val collections = mutableMapOf<String, List<CollectionApp>>()
-
-        entities.forEach { entity ->
-            val collectionApps = entity.collectionAppsDetails.map {
-                CollectionApp(it.collectionName, it.appid, it.index)
-            }
-
-            collections.put(entity.collection.name, collectionApps)
-        }
-
-        return collections
     }
 
     companion object {
