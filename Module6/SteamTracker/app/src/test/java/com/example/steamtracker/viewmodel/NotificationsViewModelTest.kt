@@ -1,4 +1,4 @@
-package com.example.steamtracker
+package com.example.steamtracker.viewmodel
 
 import com.example.steamtracker.fake.FakeNetworkNotificationsRepository
 import com.example.steamtracker.fake.FakeNewsNotification

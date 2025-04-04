@@ -1,4 +1,4 @@
-package com.example.steamtracker
+package com.example.steamtracker.viewmodel
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory

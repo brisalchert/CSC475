@@ -1,4 +1,4 @@
-package com.example.steamtracker
+package com.example.steamtracker.viewmodel
 
 import com.example.steamtracker.fake.FakeAppDetailsRequest
 import com.example.steamtracker.fake.FakeNetworkAppDetailsRepository

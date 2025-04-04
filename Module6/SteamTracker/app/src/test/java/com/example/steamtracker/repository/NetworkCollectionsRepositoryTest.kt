@@ -1,4 +1,4 @@
-package com.example.steamtracker
+package com.example.steamtracker.repository
 
 import com.example.steamtracker.data.NetworkCollectionsRepository
 import com.example.steamtracker.fake.FakeCollectionApp

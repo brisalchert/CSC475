@@ -1,4 +1,4 @@
-package com.example.steamtracker
+package com.example.steamtracker.viewmodel
 
 import android.app.Application
 import com.example.steamtracker.fake.FakeCollectionApp
@@ -16,8 +16,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.spy
 
 class CollectionsViewModelTest {
     @get:Rule
