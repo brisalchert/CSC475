@@ -41,12 +41,26 @@ class AppDetailsDaoTest {
     @Throws(Exception::class)
     fun writeAppDetailsAndReadInList() =
         runTest {
-            val fakeAppDetailsEntity = FakeAppDetailsRequest.response["0"]!!.appDetails?.toAppDetailsEntity()
+            val fakeAppDetailsEntity = FakeAppDetailsRequest.response["0"]!!.appDetails?.toAppDetailsEntity()!!
 
-            appDetailsDao.insertAppDetails(fakeAppDetailsEntity!!)
+            appDetailsDao.insertAppDetails(fakeAppDetailsEntity)
 
             val allAppDetails = appDetailsDao.getAllAppDetails().first()
 
-            assertThat(allAppDetails.get(0), equalTo(fakeAppDetailsEntity))
+            assertThat(allAppDetails[0], equalTo(fakeAppDetailsEntity))
+        }
+
+    @Test
+    @Throws(Exception::class)
+    fun writeAppDetailsAndReadById() =
+        runTest {
+            val fakeAppDetailsEntity = FakeAppDetailsRequest.response["0"]!!.appDetails?.toAppDetailsEntity()!!
+            val appId = FakeAppDetailsRequest.response["0"]!!.appDetails?.steamAppId!!
+
+            appDetailsDao.insertAppDetails(fakeAppDetailsEntity)
+
+            val appDetailsById = appDetailsDao.getAppDetails(appId)
+
+            assertThat(appDetailsById, equalTo(fakeAppDetailsEntity))
         }
 }
