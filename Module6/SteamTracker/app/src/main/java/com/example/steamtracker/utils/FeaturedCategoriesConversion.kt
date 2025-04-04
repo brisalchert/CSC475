@@ -48,18 +48,19 @@ fun FeaturedCategoriesRequest.mapToFeaturedCategoryEntities(): List<FeaturedCate
 
 fun FeaturedCategoriesRequest.mapToAppInfoEntities(): List<AppInfoEntity> {
     val appInfoEntities = mutableListOf<AppInfoEntity>()
-        this.specials?.let {
-            appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
-        }
-        this.comingSoon?.let {
-            appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
-        }
-        this.topSellers?.let {
-            appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
-        }
-        this.newReleases?.let {
-            appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
-        }
+
+    this.specials?.let {
+        appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
+    }
+    this.comingSoon?.let {
+        appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
+    }
+    this.topSellers?.let {
+        appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
+    }
+    this.newReleases?.let {
+        appInfoEntities.addAll(it.items?.toAppInfoEntityList(it.id) ?: emptyList())
+    }
 
     return appInfoEntities
 }

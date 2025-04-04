@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeout
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,11 +45,14 @@ class SearchViewModelTest {
         runTest {
             searchViewModel.getSearchResults("")
 
-            advanceUntilIdle() // Wait for UI update
+            val expectedState = SearchUiState.Success(FakeStoreSearchRequest.response.items)
+            val actualState = withTimeout(5000) {
+                searchViewModel.searchUiState.first { it == expectedState }
+            }
 
             assertEquals(
-                SearchUiState.Success(FakeStoreSearchRequest.response.items),
-                searchViewModel.searchUiState.first()
+                expectedState,
+                actualState
             )
 
             assertEquals(
