@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,12 +22,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppInfo
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
 
 @Composable
@@ -57,61 +60,80 @@ fun FeaturedApp(
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = "Image for ${appInfo.name}",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = modifier.fillMaxWidth()
             )
 
-            Text(
-                text = appInfo.name,
-                fontSize = 20.sp,
-                modifier = modifier.padding(horizontal = 8.dp)
-            )
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    text = appInfo.name,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
 
-            if (appInfo.finalPrice != appInfo.originalPrice) {
-                Row(
-                    modifier = modifier.padding(start = 8.dp, bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = formatCurrency(appInfo.originalPrice.div(100.0)),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.LineThrough,
-                        color = MaterialTheme.colorScheme.outline
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Text(
-                        text = formatCurrency(appInfo.finalPrice.div(100.0)),
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Card(
-                        modifier = modifier.wrapContentSize(),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = colorResource(R.color.discount_background)
-                        )
+                if (appInfo.finalPrice != appInfo.originalPrice) {
+                    Row(
+                        modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "-${appInfo.discountPercent}%",
-                            fontSize = 18.sp,
-                            color = colorResource(R.color.discount_text),
-                            modifier = modifier.padding(4.dp)
+                            text = formatCurrency(appInfo.originalPrice.div(100.0)),
+                            fontSize = 16.sp,
+                            textDecoration = TextDecoration.LineThrough,
+                            color = MaterialTheme.colorScheme.outline
                         )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = formatCurrency(appInfo.finalPrice.div(100.0)),
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Card(
+                            modifier = modifier.wrapContentSize(),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = colorResource(R.color.discount_background)
+                            )
+                        ) {
+                            Text(
+                                text = "-${appInfo.discountPercent}%",
+                                fontSize = 18.sp,
+                                color = colorResource(R.color.discount_text),
+                                modifier = modifier.padding(4.dp)
+                            )
+                        }
                     }
+                } else {
+                    Text(
+                        text = formatCurrency(appInfo.finalPrice.div(100.0)),
+                        fontSize = 16.sp,
+                        modifier = modifier.padding(start = 8.dp, bottom = 12.dp)
+                    )
                 }
-            } else {
-                Text(
-                    text = formatCurrency(appInfo.finalPrice.div(100.0)),
-                    fontSize = 16.sp,
-                    modifier = modifier.padding(start = 8.dp, bottom = 12.dp)
-                )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FeaturedAppPreview() {
+    SteamTrackerTheme {
+        FeaturedApp(
+            appInfo = AppInfo(
+                finalPrice = 2999,
+                originalPrice = 4999
+            ),
+            navigateApp = {},
+            onAppSelect = {}
+        )
     }
 }

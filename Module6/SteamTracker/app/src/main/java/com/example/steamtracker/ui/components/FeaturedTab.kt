@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun FeaturedTab(
@@ -46,6 +48,21 @@ fun FeaturedTab(
         is FeaturedUiState.Error -> StoreErrorScreen(
             retryAction = getFeatured,
             modifier = modifier.fillMaxSize()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FeaturedTabPreview() {
+    SteamTrackerTheme {
+        FeaturedTab(
+            featuredUiState = FeaturedUiState.Success(
+                featuredCategories = FeaturedCategoriesRequest()
+            ),
+            getFeatured = {},
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }

@@ -19,14 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.ui.preview.FakePreferencesRepository
 import com.example.steamtracker.ui.screens.LoadingScreen
 import com.example.steamtracker.ui.screens.StoreErrorScreen
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun RecommendedTab(
@@ -65,6 +68,28 @@ fun RecommendedTab(
         is FeaturedUiState.Error -> StoreErrorScreen(
             retryAction = getFeatured,
             modifier = modifier.fillMaxSize()
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RecommendedTabPreview() {
+    SteamTrackerTheme {
+        RecommendedTab(
+            salesUiState = SalesUiState.Success(
+                salesGames = listOf(SteamSpyAppRequest())
+            ),
+            salesAppDetails = listOf(AppDetails()),
+            featuredUiState = FeaturedUiState.Success(
+                featuredCategories = FeaturedCategoriesRequest()
+            ),
+            preferencesViewModel = PreferencesViewModel(
+                preferencesRepository = FakePreferencesRepository()
+            ),
+            getFeatured = {},
+            navigateApp = {},
+            onAppSelect = {}
         )
     }
 }

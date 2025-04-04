@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -20,6 +21,7 @@ import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.NewsItem
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatUnixTimestampSeconds
 
 @Composable
@@ -53,7 +55,7 @@ fun NewsCard(
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = "Image for ${appDetails?.name}",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = modifier.fillMaxWidth()
             )
 
@@ -79,5 +81,18 @@ fun NewsCard(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsCardPreview() {
+    SteamTrackerTheme {
+        NewsCard(
+            newsItem = NewsItem(),
+            appDetails = AppDetails(),
+            navigateNews = {},
+            onNewsSelected = {}
+        )
     }
 }

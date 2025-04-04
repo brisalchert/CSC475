@@ -37,6 +37,8 @@ import com.example.steamtracker.R
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.model.Platforms
 import com.example.steamtracker.model.SearchAppInfo
+import com.example.steamtracker.ui.preview.FakeCollectionsRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
 import com.example.steamtracker.ui.screens.CollectionsViewModel
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
@@ -151,21 +153,16 @@ fun CollectionSearchResult(
 @Composable
 fun CollectionSearchResultPreview() {
     SteamTrackerTheme {
-        SearchResult(
-            app = SearchAppInfo(
-                type = "App",
-                name = "Game",
-                id = 0,
-                price = null,
-                tinyImage = "url",
-                metascore = "90",
-                platforms = Platforms(
-                    true,
-                    false,
-                    false
-                ),
-                streamingvideo = false,
+        CollectionSearchResult(
+            collectionsViewModel = CollectionsViewModel(
+                storeRepository = FakeStoreRepository(),
+                collectionsRepository = FakeCollectionsRepository(),
+                workManager = null
             ),
+            currentCollection = Pair("collection", listOf()),
+            onAddApp = { string, int -> },
+            onRemoveApp = { string, int -> },
+            app = SearchAppInfo(),
             navigateApp = {},
             onAppSelect = {}
         )

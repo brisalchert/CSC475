@@ -51,7 +51,7 @@ fun SalesTab(
 fun SalesTabPreview() {
     SteamTrackerTheme {
         SalesTab(
-            salesUiState = SalesUiState.Success(listOf()),
+            salesUiState = SalesUiState.Success(listOf(SteamSpyAppRequest())),
             getSales = {},
             salesAppDetails = listOf(),
             navigateApp = {},

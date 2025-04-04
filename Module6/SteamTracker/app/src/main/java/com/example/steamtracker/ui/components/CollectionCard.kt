@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -31,6 +32,7 @@ import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun CollectionCard(
@@ -114,6 +116,20 @@ fun CollectionCard(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun CollectionCardPreview() {
+    SteamTrackerTheme {
+        CollectionCard(
+            onRemoveClick = {},
+            collection = Pair("name", listOf()),
+            collectionsAppDetails = listOf(),
+            navigateCollection = {},
+            onCollectionSelect = {}
+        )
+    }
+}
+
 @Composable
 fun CollectionRemoveAlert(
     collectionName: String,
@@ -169,5 +185,17 @@ fun CollectionRemoveAlert(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionRemoveAlertPreview() {
+    SteamTrackerTheme {
+        CollectionRemoveAlert(
+            collectionName = "name",
+            onDismiss = {},
+            onSubmit = {}
+        )
     }
 }

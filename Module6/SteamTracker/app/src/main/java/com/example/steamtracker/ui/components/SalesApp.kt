@@ -21,13 +21,16 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
 
 @Composable
@@ -59,7 +62,7 @@ fun SalesApp(
                 error = painterResource(R.drawable.ic_broken_image),
                 placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = "Image for ${appDetails?.name}",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = modifier.fillMaxWidth()
             )
 
@@ -69,11 +72,11 @@ fun SalesApp(
                 Text(
                     text = appInfo.name ?: "Name Missing",
                     fontSize = 20.sp,
-                    modifier = modifier.padding(start = 12.dp, top = 12.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
                 Row(
-                    modifier = modifier.padding(start = 12.dp, bottom = 4.dp),
+                    modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (appInfo.price != null) {
@@ -114,5 +117,18 @@ fun SalesApp(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SalesAppPreview() {
+    SteamTrackerTheme {
+        SalesApp(
+            appInfo = SteamSpyAppRequest(),
+            appDetails = AppDetails(),
+            navigateApp = {},
+            onAppSelect = {}
+        )
     }
 }

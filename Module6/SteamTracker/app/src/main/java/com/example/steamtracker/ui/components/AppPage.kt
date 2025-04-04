@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -43,7 +44,12 @@ import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.model.SteamSpyAppRequest
+import com.example.steamtracker.ui.preview.FakeCollectionsRepository
+import com.example.steamtracker.ui.preview.FakePreferencesRepository
+import com.example.steamtracker.ui.preview.FakeSteamworksRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
 import com.example.steamtracker.ui.screens.CollectionsViewModel
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatCurrency
 import java.util.Locale
 
@@ -157,6 +163,31 @@ fun AppPage(
                 ShortInfo(appDetails, modifier)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppPagePreview() {
+    SteamTrackerTheme {
+        AppPage(
+            appDetails = AppDetails(),
+            appSpyInfo = SteamSpyAppRequest(),
+            newsAppsViewModel = NewsAppsViewModel(
+                steamworksRepository = FakeSteamworksRepository(),
+                storeRepository = FakeStoreRepository()
+            ),
+            collectionsViewModel = CollectionsViewModel(
+                storeRepository = FakeStoreRepository(),
+                collectionsRepository = FakeCollectionsRepository(),
+                workManager = null
+            ),
+            preferencesViewModel = PreferencesViewModel(
+                preferencesRepository = FakePreferencesRepository()
+            ),
+            navigateScreenshot = {},
+            onScreenshotSelect = {}
+        )
     }
 }
 

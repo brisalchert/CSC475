@@ -19,10 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.ui.preview.FakeSteamworksRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun NewsListBox(
@@ -82,5 +86,19 @@ fun NewsListBox(
                 color = colorResource(R.color.collections_text)
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewsListBoxPreview() {
+    SteamTrackerTheme {
+        NewsListBox(
+            appDetails = AppDetails(),
+            newsAppsViewModel = NewsAppsViewModel(
+                steamworksRepository = FakeSteamworksRepository(),
+                storeRepository = FakeStoreRepository()
+            )
+        )
     }
 }
