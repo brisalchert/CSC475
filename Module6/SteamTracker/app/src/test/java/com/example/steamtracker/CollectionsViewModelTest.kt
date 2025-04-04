@@ -55,4 +55,27 @@ class CollectionsViewModelTest {
                 collectionsViewModel.allCollections.first()
             )
         }
+
+    @Test
+    fun collectionsViewModel_isInCollection_verifyInCollection() =
+        runTest {
+            assertEquals(
+                true,
+                collectionsViewModel.isInCollection(
+                    collectionName = FakeCollectionApp.response.collectionName,
+                    appId = FakeCollectionApp.response.appId
+                ).first()
+            )
+        }
+
+    @Test
+    fun collectionsViewModel_getCollectionContents_verifyCollectionContents() =
+        runTest {
+            assertEquals(
+                listOf(FakeCollectionApp.response),
+                collectionsViewModel.getCollectionContents(
+                    collectionName = FakeCollectionApp.response.collectionName
+                ).first()
+            )
+        }
 }
