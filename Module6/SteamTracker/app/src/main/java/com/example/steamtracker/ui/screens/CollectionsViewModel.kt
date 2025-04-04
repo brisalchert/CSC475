@@ -1,9 +1,9 @@
 package com.example.steamtracker.ui.screens
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -42,8 +42,8 @@ sealed interface CollectionsUiState {
 class CollectionsViewModel(
     private val storeRepository: StoreRepository,
     private val collectionsRepository: CollectionsRepository,
-    private val application: Application
-): AndroidViewModel(application) {
+    private val workManager: WorkManager?
+): ViewModel() {
     /** Observe state of flow object from repository */
     val allCollections: StateFlow<List<CollectionWithApps>> =
         collectionsRepository.allCollections
@@ -69,24 +69,7 @@ class CollectionsViewModel(
         getAllCollections()
 
         // Set up notifications periodic background work
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val wishlistWorkRequest =
-            PeriodicWorkRequestBuilder<WishlistNotificationWorker>(12, TimeUnit.HOURS)
-                .setInitialDelay(10, TimeUnit.SECONDS)
-                .setConstraints(constraints)
-                .build()
-
-        WorkManager
-            .getInstance(application)
-            .enqueueUniquePeriodicWork(
-                "WishlistNotificationsWork",
-                ExistingPeriodicWorkPolicy.KEEP,
-                wishlistWorkRequest
-            )
+        initWorkManager()
     }
 
     /**
@@ -177,6 +160,28 @@ class CollectionsViewModel(
         }
     }
 
+    private fun initWorkManager() {
+        workManager?.let {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiresBatteryNotLow(true)
+                .build()
+
+            val wishlistWorkRequest =
+                PeriodicWorkRequestBuilder<WishlistNotificationWorker>(12, TimeUnit.HOURS)
+                    .setInitialDelay(10, TimeUnit.SECONDS)
+                    .setConstraints(constraints)
+                    .build()
+
+            workManager
+                .enqueueUniquePeriodicWork(
+                    "WishlistNotificationsWork",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    wishlistWorkRequest
+                )
+        }
+    }
+
     private fun mapEntitiesToCollections(entities: List<CollectionWithApps>): Map<String, List<CollectionApp>> {
         val collections = mutableMapOf<String, List<CollectionApp>>()
 
@@ -194,14 +199,13 @@ class CollectionsViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application =
-                    (this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as SteamTrackerApplication)
+                val application = (this[APPLICATION_KEY] as SteamTrackerApplication)
                 val storeRepository = application.container.storeRepository
                 val collectionsRepository = application.container.collectionsRepository
                 CollectionsViewModel(
                     storeRepository = storeRepository,
                     collectionsRepository = collectionsRepository,
-                    application = application
+                    workManager = application.container.workManager
                 )
             }
         }

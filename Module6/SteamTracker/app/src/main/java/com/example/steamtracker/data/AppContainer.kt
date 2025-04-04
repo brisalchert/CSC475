@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.example.steamtracker.model.FeaturedCategoriesDeserializer
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.RequiredAgeDeserializer
@@ -29,6 +30,7 @@ interface AppContainer {
     val notificationsRepository: NotificationsRepository
     val preferencesRepository: NetworkPreferencesRepository
     val appDatabase: AppDatabase
+    val workManager: WorkManager
 }
 
 /**
@@ -44,6 +46,11 @@ class DefaultAppContainer(private val application: Application): AppContainer {
             "steam_tracker_database"
         ).fallbackToDestructiveMigration()
             .build()
+    }
+
+    // Initialize the WorkManager instance
+    override val workManager: WorkManager by lazy {
+        WorkManager.getInstance(application)
     }
 
     private val steamStoreBaseUrl = "https://store.steampowered.com/api/"

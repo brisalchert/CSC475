@@ -1,8 +1,7 @@
 package com.example.steamtracker.ui.screens
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
@@ -43,8 +42,8 @@ sealed interface NewsUiState {
 
 class NewsViewModel(
     private val steamworksRepository: SteamworksRepository,
-    private val application: Application
-): AndroidViewModel(application) {
+    private val workManager: WorkManager?
+): ViewModel() {
     /** Observe state of flow object from repository */
     val newsApps: StateFlow<List<Int>> =
         steamworksRepository.newsApps
@@ -62,24 +61,7 @@ class NewsViewModel(
         observeTrackedApps()
 
         // Set up notifications periodic background work
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        val newsWorkRequest =
-            PeriodicWorkRequestBuilder<NewsNotificationWorker>(1, TimeUnit.HOURS)
-                .setInitialDelay(10, TimeUnit.SECONDS)
-                .setConstraints(constraints)
-                .build()
-
-        WorkManager
-            .getInstance(application)
-            .enqueueUniquePeriodicWork(
-                "NewsNotificationsWork",
-                ExistingPeriodicWorkPolicy.KEEP,
-                newsWorkRequest
-            )
+        initWorkManager()
     }
 
     /**
@@ -129,6 +111,28 @@ class NewsViewModel(
         return steamworksRepository.getAllAppNews()
     }
 
+    private fun initWorkManager() {
+        workManager?.let {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiresBatteryNotLow(true)
+                .build()
+
+            val newsWorkRequest =
+                PeriodicWorkRequestBuilder<NewsNotificationWorker>(1, TimeUnit.HOURS)
+                    .setInitialDelay(10, TimeUnit.SECONDS)
+                    .setConstraints(constraints)
+                    .build()
+
+            workManager
+                .enqueueUniquePeriodicWork(
+                    "NewsNotificationsWork",
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    newsWorkRequest
+                )
+        }
+    }
+
     /**
      * Maps database entities from the Room Database to AppNewsRequest objects
      */
@@ -165,7 +169,7 @@ class NewsViewModel(
                 val steamworksRepository = application.container.steamworksRepository
                 NewsViewModel(
                     steamworksRepository = steamworksRepository,
-                    application = application
+                    workManager = application.container.workManager
                 )
             }
         }

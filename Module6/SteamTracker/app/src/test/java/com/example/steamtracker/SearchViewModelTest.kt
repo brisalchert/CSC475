@@ -6,7 +6,9 @@ import com.example.steamtracker.rules.TestDispatcherRule
 import com.example.steamtracker.ui.components.SearchUiState
 import com.example.steamtracker.ui.components.SearchViewModel
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -36,10 +38,13 @@ class SearchViewModelTest {
             )
         }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun searchViewModel_getSearchResults_verifySearchUiStateSuccess() =
         runTest {
             searchViewModel.getSearchResults("")
+
+            advanceUntilIdle() // Wait for UI update
 
             assertEquals(
                 SearchUiState.Success(FakeStoreSearchRequest.response.items),
