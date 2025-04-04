@@ -4,6 +4,7 @@ import com.example.steamtracker.fake.FakeAppDetailsRequest
 import com.example.steamtracker.rules.TestDispatcherRule
 import com.example.steamtracker.ui.screens.ImageViewModel
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -27,7 +28,7 @@ class ImageViewModelTest {
 
             assertEquals(
                 fakeScreenshot,
-                imageViewModel.screenshot.value
+                imageViewModel.screenshot.first()
             )
         }
 }
