@@ -6,6 +6,8 @@ object FakeSteamSpyAppRequest {
     val response = HashMap<String, SteamSpyAppRequest>()
 
     init {
-        response["gameId"] = SteamSpyAppRequest()
+        response["gameId"] = SteamSpyAppRequest(
+            tags = emptyMap()
+        )
     }
 }
