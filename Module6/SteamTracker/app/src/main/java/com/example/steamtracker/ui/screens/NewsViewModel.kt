@@ -1,6 +1,5 @@
 package com.example.steamtracker.ui.screens
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -96,10 +95,8 @@ class NewsViewModel(
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
                     } catch(e: IOException) {
-                        Log.d("Debug", "${e.message}")
                         _newsUiState.value = NewsUiState.Error
                     } catch(e: HttpException) {
-                        Log.d("Debug", "${e.message}")
                         _newsUiState.value = NewsUiState.Error
                     }
                 }
@@ -141,11 +138,9 @@ class NewsViewModel(
             val newsItems = entity.appNewsWithItems.newsitems.map { it.toNewsItem() }
 
             if (newsItems.isEmpty()) {
-                Log.d("Debug", "Skipping appid ${entity.request.appid} because it has no news items.")
                 return@mapNotNull null
             }
 
-            Log.d("Debug", "Fetched ${newsItems.size} news items for appid ${entity.request.appid}")
             AppNews(
                 appid = newsItems.first().appid,
                 newsitems = newsItems
