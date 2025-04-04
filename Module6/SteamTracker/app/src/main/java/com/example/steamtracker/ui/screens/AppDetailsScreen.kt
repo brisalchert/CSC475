@@ -16,10 +16,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
+import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.Screenshot
+import com.example.steamtracker.model.SteamSpyAppRequest
 import com.example.steamtracker.ui.components.AppPage
 import com.example.steamtracker.ui.components.NewsAppsViewModel
 import com.example.steamtracker.ui.components.PreferencesViewModel
+import com.example.steamtracker.ui.preview.FakeCollectionsRepository
+import com.example.steamtracker.ui.preview.FakePreferencesRepository
+import com.example.steamtracker.ui.preview.FakeSteamworksRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
@@ -57,6 +63,35 @@ fun AppDetailsScreen(
         }
         is AppDetailsUiState.Error -> AppDetailsErrorScreen(
             retryAction = { getAppDetails(appDetailsUiState.appId) }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AppDetailsScreenPreview() {
+    SteamTrackerTheme { 
+        AppDetailsScreen(
+            appDetailsUiState = AppDetailsUiState.Success(
+                appDetails = AppDetails(),
+                appSpyInfo = SteamSpyAppRequest(),
+                appId = 0
+            ),
+            getAppDetails = {},
+            newsAppsViewModel = NewsAppsViewModel(
+                steamworksRepository = FakeSteamworksRepository(),
+                storeRepository = FakeStoreRepository()
+            ),
+            collectionsViewModel = CollectionsViewModel(
+                storeRepository = FakeStoreRepository(),
+                collectionsRepository = FakeCollectionsRepository(),
+                workManager = null
+            ),
+            preferencesViewModel = PreferencesViewModel(
+                preferencesRepository = FakePreferencesRepository()
+            ),
+            navigateScreenshot = {},
+            onScreenshotSelect = {}
         )
     }
 }

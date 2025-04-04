@@ -28,12 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.ui.components.AppRemoveAlert
 import com.example.steamtracker.ui.components.CollectionAppCard
+import com.example.steamtracker.ui.preview.FakeCollectionsRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun CollectionListScreen(
@@ -151,5 +155,24 @@ fun CollectionListScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionListScreenPreview() {
+    SteamTrackerTheme {
+        CollectionListScreen(
+            collectionsViewModel = CollectionsViewModel(
+                storeRepository = FakeStoreRepository(),
+                collectionsRepository = FakeCollectionsRepository(),
+                workManager = null
+            ),
+            collection = Pair("collection", listOf()),
+            collectionAppDetails = listOf(AppDetails()),
+            navigateApp = {},
+            onAppSelect = {},
+            navigateAddApp = {}
+        )
     }
 }

@@ -19,10 +19,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.model.CollectionApp
@@ -30,6 +32,9 @@ import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.components.CollectionSearchResult
 import com.example.steamtracker.ui.components.SearchUiState
 import com.example.steamtracker.ui.components.StoreSearchBar
+import com.example.steamtracker.ui.preview.FakeCollectionsRepository
+import com.example.steamtracker.ui.preview.FakeStoreRepository
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun CollectionSearchScreen(
@@ -123,6 +128,34 @@ fun CollectionSearchScreen(
                 modifier = modifier.background(MaterialTheme.colorScheme.surfaceDim)
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionsSearchScreenPreview() {
+    SteamTrackerTheme {
+        CollectionSearchScreen(
+            collectionsViewModel = CollectionsViewModel(
+                storeRepository = FakeStoreRepository(),
+                collectionsRepository = FakeCollectionsRepository(),
+                workManager = null
+            ),
+            currentCollection = Pair("collection", listOf()),
+            onAddApp = { string, int -> },
+            onRemoveApp = { string, int -> },
+            searchUiState = SearchUiState.Success(
+                searchResults = listOf(SearchAppInfo())
+            ),
+            getAutocomplete = {},
+            clearSearch = {},
+            autocompleteResults = listOf(SearchAppInfo()),
+            searchResults = listOf(SearchAppInfo()),
+            navigateSearch = {},
+            onSearch = {},
+            navigateApp = {},
+            onAppSelect = {}
+        )
     }
 }
 

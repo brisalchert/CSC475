@@ -45,6 +45,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -80,6 +81,7 @@ import com.example.steamtracker.ui.screens.SearchScreen
 import com.example.steamtracker.ui.screens.SettingsScreen
 import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.screens.ThemeViewModel
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 enum class TrackerMainScreens {
     Store,
@@ -531,6 +533,20 @@ fun TrackerTopAppBar(
     )
 }
 
+@Preview(showBackground = true)
+@Composable
+fun TrackerTopAppBarPreview() {
+    SteamTrackerTheme {
+        TrackerTopAppBar(
+            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+            canNavigateBack = true,
+            navigateUp = {},
+            previousBackStackEntry = null,
+            selectedScreen = remember { mutableStateOf(TrackerMainScreens.Store.name) }
+        )
+    }
+}
+
 @Composable
 fun TrackerBottomAppBar(
     destinations: Map<String, () -> Unit>,
@@ -571,5 +587,18 @@ fun TrackerBottomAppBar(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TrackerBottomAppBarPreview() {
+    SteamTrackerTheme {
+        TrackerBottomAppBar(
+            destinations = TrackerMainScreens.entries.associate { screen ->
+                screen.name to {}
+            },
+            selectedScreen = remember { mutableStateOf(TrackerMainScreens.Store.name) }
+        )
     }
 }

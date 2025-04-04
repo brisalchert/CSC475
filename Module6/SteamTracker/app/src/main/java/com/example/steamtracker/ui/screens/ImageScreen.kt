@@ -11,11 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.Screenshot
+import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun ImageScreen(
@@ -42,5 +44,15 @@ fun ImageScreen(
                 contentDescription = "Fullscreen screenshot"
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ImageScreenPreview() {
+    SteamTrackerTheme {
+        ImageScreen(
+            screenshot = Screenshot()
+        )
     }
 }
