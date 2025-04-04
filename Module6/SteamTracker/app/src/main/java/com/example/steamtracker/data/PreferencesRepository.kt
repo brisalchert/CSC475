@@ -12,32 +12,41 @@ object PreferencesKeys {
     val FAVORITE_TAGS = stringSetPreferencesKey("favorite_tags")
 }
 
-class PreferencesRepository(
-    private val dataStore: DataStore<Preferences>
-) {
+interface PreferencesRepository {
+    val dataStore: DataStore<Preferences>
+
+    suspend fun saveFavoriteGenres(genres: Set<String>)
+    suspend fun saveFavoriteTags(tags: Set<String>)
+    fun getFavoriteGenres(): Flow<Set<String>>
+    fun getFavoriteTags(): Flow<Set<String>>
+}
+
+class NetworkPreferencesRepository(
+    override val dataStore: DataStore<Preferences>
+): PreferencesRepository {
     /**
      * Functions for accessing and manipulating the DataStore
      */
 
-    suspend fun saveFavoriteGenres(genres: Set<String>) {
+    override suspend fun saveFavoriteGenres(genres: Set<String>) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.FAVORITE_GENRES] = genres
         }
     }
 
-    suspend fun saveFavoriteTags(tags: Set<String>) {
+    override suspend fun saveFavoriteTags(tags: Set<String>) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.FAVORITE_TAGS] = tags
         }
     }
 
-    fun getFavoriteGenres(): Flow<Set<String>> {
+    override fun getFavoriteGenres(): Flow<Set<String>> {
         return dataStore.data.map { preferences ->
             preferences[PreferencesKeys.FAVORITE_GENRES] ?: emptySet()
         }
     }
 
-    fun getFavoriteTags(): Flow<Set<String>> {
+    override fun getFavoriteTags(): Flow<Set<String>> {
         return dataStore.data.map { preferences ->
             preferences[PreferencesKeys.FAVORITE_TAGS] ?: emptySet()
         }

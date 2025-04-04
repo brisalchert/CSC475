@@ -3,7 +3,7 @@ package com.example.steamtracker
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import com.example.steamtracker.data.PreferencesRepository
+import com.example.steamtracker.data.NetworkPreferencesRepository
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -13,9 +13,9 @@ import org.junit.Test
 import org.mockito.MockitoAnnotations
 import java.io.File
 
-class PreferencesRepositoryTest {
+class NetworkPreferencesRepositoryTest {
     private lateinit var dataStore: DataStore<Preferences>
-    private lateinit var repository: PreferencesRepository
+    private lateinit var repository: NetworkPreferencesRepository
 
     @Before
     fun setup() {
@@ -25,7 +25,7 @@ class PreferencesRepositoryTest {
                 File.createTempFile("test_preferences", ".preferences_pb")
             }
         )
-        repository = PreferencesRepository(
+        repository = NetworkPreferencesRepository(
             dataStore
         )
     }

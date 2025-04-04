@@ -4,37 +4,29 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.example.steamtracker.data.PreferencesKeys
+import com.example.steamtracker.data.PreferencesRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class FakeNetworkPreferencesRepository(
-    private val testDataStore: DataStore<Preferences>
-) {
+    override val dataStore: DataStore<Preferences>
+): PreferencesRepository {
     /**
      * Functions for accessing and manipulating the DataStore
      */
 
-    suspend fun saveFavoriteGenres(genres: Set<String>) {
-        testDataStore.edit { preferences ->
-            preferences[PreferencesKeys.FAVORITE_GENRES] = genres
-        }
+    override suspend fun saveFavoriteGenres(genres: Set<String>) {
     }
 
-    suspend fun saveFavoriteTags(tags: Set<String>) {
-        testDataStore.edit { preferences ->
-            preferences[PreferencesKeys.FAVORITE_TAGS] = tags
-        }
+    override suspend fun saveFavoriteTags(tags: Set<String>) {
     }
 
-    fun getFavoriteGenres(): Flow<Set<String>> {
-        return testDataStore.data.map { preferences ->
-            preferences[PreferencesKeys.FAVORITE_GENRES] ?: emptySet()
-        }
+    override fun getFavoriteGenres(): Flow<Set<String>> {
+        return flowOf(setOf("Action", "Adventure"))
     }
 
-    fun getFavoriteTags(): Flow<Set<String>> {
-        return testDataStore.data.map { preferences ->
-            preferences[PreferencesKeys.FAVORITE_TAGS] ?: emptySet()
-        }
+    override fun getFavoriteTags(): Flow<Set<String>> {
+        return flowOf(setOf("Multiplayer", "Dark Fantasy", "Souls-like"))
     }
 }

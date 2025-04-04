@@ -27,7 +27,7 @@ interface AppContainer {
     val appDetailsRepository: AppDetailsRepository
     val collectionsRepository: CollectionsRepository
     val notificationsRepository: NotificationsRepository
-    val preferencesRepository: PreferencesRepository
+    val preferencesRepository: NetworkPreferencesRepository
     val appDatabase: AppDatabase
 }
 
@@ -149,8 +149,8 @@ class DefaultAppContainer(private val application: Application): AppContainer {
     /**
      * Initialize preferences repository
      */
-    override val preferencesRepository: PreferencesRepository by lazy {
-        PreferencesRepository(
+    override val preferencesRepository: NetworkPreferencesRepository by lazy {
+        NetworkPreferencesRepository(
             application.applicationContext.dataStore
         )
     }
