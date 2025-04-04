@@ -1,6 +1,8 @@
 package com.example.steamtracker.data
 
 import android.app.Application
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.steamtracker.model.FeaturedCategoriesDeserializer
 import com.example.steamtracker.model.FeaturedCategoriesRequest
@@ -14,6 +16,9 @@ import com.example.steamtracker.room.AppDatabase
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+
+private const val PREFERENCES_NAME = "preferences"
+val Context.dataStore by preferencesDataStore(name = PREFERENCES_NAME)
 
 interface AppContainer {
     val storeRepository: StoreRepository
@@ -146,7 +151,7 @@ class DefaultAppContainer(private val application: Application): AppContainer {
      */
     override val preferencesRepository: PreferencesRepository by lazy {
         PreferencesRepository(
-            application.applicationContext
+            application.applicationContext.dataStore
         )
     }
 }

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.steamtracker.R
 import com.example.steamtracker.data.PreferencesRepository
+import com.example.steamtracker.data.dataStore
 import com.example.steamtracker.ui.components.PreferencesViewModel
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
@@ -196,7 +197,7 @@ fun PreferencesScreenPreview() {
     SteamTrackerTheme {
         PreferencesScreen(
             preferencesViewModel = PreferencesViewModel(
-                PreferencesRepository(LocalContext.current)
+                PreferencesRepository(LocalContext.current.dataStore)
             )
         )
     }
@@ -243,7 +244,7 @@ fun PreferencesGenrePreview() {
     SteamTrackerTheme {
         PreferencesGenre(
             preferencesViewModel = PreferencesViewModel(
-                PreferencesRepository(LocalContext.current)
+                PreferencesRepository(LocalContext.current.dataStore)
             ),
             genre = "Genre"
         )
@@ -291,7 +292,7 @@ fun PreferencesTagPreview() {
     SteamTrackerTheme {
         PreferencesTag(
             preferencesViewModel = PreferencesViewModel(
-                PreferencesRepository(LocalContext.current)
+                PreferencesRepository(LocalContext.current.dataStore)
             ),
             tag = "Tag"
         )

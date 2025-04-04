@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
 import com.example.steamtracker.data.PreferencesRepository
+import com.example.steamtracker.data.dataStore
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.SearchAppInfo
@@ -154,7 +155,7 @@ fun StoreScreenPreview() {
             navigateApp = {},
             onAppSelect = {},
             preferencesViewModel = PreferencesViewModel(
-                PreferencesRepository(LocalContext.current)
+                PreferencesRepository(LocalContext.current.dataStore)
             )
         )
     }

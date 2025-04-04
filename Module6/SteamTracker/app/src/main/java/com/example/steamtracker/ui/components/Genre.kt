@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.steamtracker.R
 import com.example.steamtracker.data.PreferencesRepository
+import com.example.steamtracker.data.dataStore
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
@@ -88,6 +89,6 @@ fun Genre(
 @Composable
 fun GenrePreview() {
     SteamTrackerTheme {
-        Genre("Genre", PreferencesViewModel(PreferencesRepository(LocalContext.current)))
+        Genre("Genre", PreferencesViewModel(PreferencesRepository(LocalContext.current.dataStore)))
     }
 }
