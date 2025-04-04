@@ -10,16 +10,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.steamtracker.R
+import com.example.steamtracker.data.NotificationsRepository
 import com.example.steamtracker.data.SteamworksRepository
+import com.example.steamtracker.model.NewsItem
+import com.example.steamtracker.model.NewsNotification
+import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
-import com.example.steamtracker.R
-import com.example.steamtracker.data.NotificationsRepository
-import com.example.steamtracker.model.NewsItem
-import com.example.steamtracker.model.NewsNotification
-import com.example.steamtracker.utils.toNewsItem
 
 class NewsNotificationWorker(
     appContext: Context,

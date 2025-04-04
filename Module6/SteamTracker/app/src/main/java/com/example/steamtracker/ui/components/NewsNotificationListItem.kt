@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.model.NewsNotification
-import com.example.steamtracker.model.WishlistNotification
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.formatUnixTimestampSeconds
 

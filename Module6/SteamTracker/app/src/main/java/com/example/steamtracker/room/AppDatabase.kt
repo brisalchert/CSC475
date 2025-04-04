@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.steamtracker.model.WishlistNotification
 import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.CollectionsDao
 import com.example.steamtracker.room.dao.NewsAppsDao

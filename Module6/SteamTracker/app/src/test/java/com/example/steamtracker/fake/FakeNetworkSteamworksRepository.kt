@@ -1,21 +1,14 @@
 package com.example.steamtracker.fake
 
 import com.example.steamtracker.data.SteamworksRepository
-import com.example.steamtracker.model.AppNewsRequest
-import com.example.steamtracker.room.dao.NewsAppsDao
-import com.example.steamtracker.room.dao.SteamworksDao
 import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
-import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.room.relations.AppNewsWithItems
 import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import java.time.Instant
-import kotlin.collections.forEach
 
 class FakeNetworkSteamworksRepository(
 ): SteamworksRepository {

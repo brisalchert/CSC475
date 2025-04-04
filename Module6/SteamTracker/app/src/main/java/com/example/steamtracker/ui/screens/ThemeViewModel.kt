@@ -3,15 +3,15 @@ package com.example.steamtracker.ui.screens
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import androidx.core.content.edit
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class ThemeViewModel(
     private val application: Application

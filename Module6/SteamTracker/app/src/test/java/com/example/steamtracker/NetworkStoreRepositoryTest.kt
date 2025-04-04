@@ -1,30 +1,20 @@
 package com.example.steamtracker
 
-import com.example.steamtracker.data.NetworkSteamworksRepository
 import com.example.steamtracker.data.NetworkStoreRepository
 import com.example.steamtracker.fake.FakeAppDetailsRequest
-import com.example.steamtracker.fake.FakeAppNewsRequest
 import com.example.steamtracker.fake.FakeFeaturedCategoriesRequest
-import com.example.steamtracker.fake.FakeSteamworksApiService
 import com.example.steamtracker.fake.FakeStoreApiService
 import com.example.steamtracker.fake.FakeStoreSearchRequest
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.SpotlightCategory
 import com.example.steamtracker.room.dao.AppDetailsDao
-import com.example.steamtracker.room.dao.NewsAppsDao
-import com.example.steamtracker.room.dao.SteamworksDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppInfoEntity
-import com.example.steamtracker.room.entities.AppNewsEntity
-import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
-import com.example.steamtracker.room.relations.AppNewsWithDetails
-import com.example.steamtracker.room.relations.AppNewsWithItems
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.toAppInfoEntityList
-import com.example.steamtracker.utils.toNewsItemEntity
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -34,8 +24,6 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 class NetworkStoreRepositoryTest {
     private lateinit var repository: NetworkStoreRepository

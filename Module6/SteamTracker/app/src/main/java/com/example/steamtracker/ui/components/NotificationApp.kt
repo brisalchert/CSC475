@@ -27,7 +27,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.AppDetails
-import com.example.steamtracker.model.AppInfo
 import com.example.steamtracker.utils.formatCurrency
 
 @Composable
