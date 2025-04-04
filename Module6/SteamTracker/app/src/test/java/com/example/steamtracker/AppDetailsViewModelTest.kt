@@ -33,7 +33,7 @@ class AppDetailsViewModelTest {
 
             assertEquals(
                 AppDetailsUiState.Success(
-                    appDetails = FakeAppDetailsRequest.response["gameId"]!!.appDetails,
+                    appDetails = FakeAppDetailsRequest.response["$appId"]!!.appDetails,
                     appSpyInfo = FakeSteamSpyAppRequest.response["gameId"]!!,
                     appId = appId
                 ),

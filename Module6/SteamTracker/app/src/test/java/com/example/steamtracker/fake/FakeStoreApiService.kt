@@ -5,7 +5,7 @@ import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
 
-interface FakeStoreApiService: StoreApiService {
+class FakeStoreApiService: StoreApiService {
     override suspend fun getAppDetails(gameId: Int): Map<String, AppDetailsRequest> {
         return FakeAppDetailsRequest.response
     }

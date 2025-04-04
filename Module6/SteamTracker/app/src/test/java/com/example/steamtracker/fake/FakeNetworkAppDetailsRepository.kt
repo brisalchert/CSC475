@@ -11,14 +11,14 @@ class FakeNetworkAppDetailsRepository(
 ) : AppDetailsRepository {
     override val allAppDetails: Flow<List<AppDetailsEntity>> =
         flow {
-            emit(listOf(FakeAppDetailsRequest.response["gameId"]!!.appDetails!!.toAppDetailsEntity()))
+            emit(listOf(FakeAppDetailsRequest.response["0"]!!.appDetails!!.toAppDetailsEntity()))
         }
 
     override suspend fun insertAppDetails(appDetails: AppDetails) {
     }
 
     override suspend fun getAppDetails(appId: Int): AppDetails? {
-        return FakeAppDetailsRequest.response["gameId"]?.appDetails
+        return FakeAppDetailsRequest.response["0"]?.appDetails
     }
 
     override suspend fun deleteAppDetails(appId: Int) {

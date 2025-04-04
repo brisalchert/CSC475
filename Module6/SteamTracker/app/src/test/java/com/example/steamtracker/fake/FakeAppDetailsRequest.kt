@@ -7,7 +7,7 @@ object FakeAppDetailsRequest {
     val response = HashMap<String, AppDetailsRequest>()
 
     init {
-        response["gameId"] = AppDetailsRequest(
+        response["0"] = AppDetailsRequest(
             success = true,
             appDetails = AppDetails()
         )

@@ -1,52 +1,121 @@
-package com.example.steamtracker.fake
+package com.example.steamtracker
 
-import com.example.steamtracker.data.StoreRepository
-import com.example.steamtracker.model.AppDetails
+import com.example.steamtracker.data.NetworkSteamworksRepository
+import com.example.steamtracker.data.NetworkStoreRepository
+import com.example.steamtracker.fake.FakeAppDetailsRequest
+import com.example.steamtracker.fake.FakeAppNewsRequest
+import com.example.steamtracker.fake.FakeFeaturedCategoriesRequest
+import com.example.steamtracker.fake.FakeSteamworksApiService
+import com.example.steamtracker.fake.FakeStoreApiService
+import com.example.steamtracker.fake.FakeStoreSearchRequest
 import com.example.steamtracker.model.FeaturedCategoriesRequest
 import com.example.steamtracker.model.RegularCategory
 import com.example.steamtracker.model.SpotlightCategory
-import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.room.dao.AppDetailsDao
+import com.example.steamtracker.room.dao.NewsAppsDao
+import com.example.steamtracker.room.dao.SteamworksDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppInfoEntity
+import com.example.steamtracker.room.entities.AppNewsEntity
+import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
+import com.example.steamtracker.room.relations.AppNewsWithDetails
+import com.example.steamtracker.room.relations.AppNewsWithItems
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
-import com.example.steamtracker.utils.isDataOutdated
-import com.example.steamtracker.utils.toAppDetails
-import com.example.steamtracker.utils.toAppDetailsEntity
 import com.example.steamtracker.utils.toAppInfoEntityList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import com.example.steamtracker.utils.toNewsItemEntity
+import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 import kotlin.collections.component1
 import kotlin.collections.component2
 
-class FakeNetworkStoreRepository(
-): StoreRepository {
-    override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        flow {
-            emit(
-                mapRequestToEntities(FakeFeaturedCategoriesRequest.response).map {
-                    FeaturedCategoryWithDetails(
-                        category = it,
-                        appItems = mapAppInfoToEntities(FakeFeaturedCategoriesRequest.response),
-                        spotlightItems = mapSpotlightItemsToEntities(FakeFeaturedCategoriesRequest.response)
-                    )
-                }
+class NetworkStoreRepositoryTest {
+    private lateinit var repository: NetworkStoreRepository
+    private lateinit var mockStoreDao: StoreDao
+    private lateinit var mockAppDetailsDao: AppDetailsDao
+
+    @Before
+    fun setup() {
+        MockitoAnnotations.openMocks(this)
+        mockStoreDao = Mockito.mock(StoreDao::class.java)
+        mockAppDetailsDao = Mockito.mock(AppDetailsDao::class.java)
+    }
+
+    @Test
+    fun networkStoreRepository_getAllFeaturedCategories_verifyFeaturedCategoriesCorrect() =
+        runTest {
+            val fakeFeaturedCategoriesWithDetails = mapRequestToEntities(
+                FakeFeaturedCategoriesRequest.response
+            ).map {
+                FeaturedCategoryWithDetails(
+                    category = it,
+                    appItems = mapAppInfoToEntities(FakeFeaturedCategoriesRequest.response),
+                    spotlightItems = mapSpotlightItemsToEntities(FakeFeaturedCategoriesRequest.response)
+                )
+            }
+
+            // Mock DAO behavior
+            `when`(mockStoreDao.getAllFeaturedCategories()).thenReturn(
+                flowOf(fakeFeaturedCategoriesWithDetails)
+            )
+
+            repository = NetworkStoreRepository(
+                storeApiService = FakeStoreApiService(),
+                storeDao = mockStoreDao,
+                appDetailsDao = mockAppDetailsDao
+            )
+
+            assertEquals(
+               fakeFeaturedCategoriesWithDetails,
+                repository.allFeaturedCategories.first()
             )
         }
 
-    /**
-     * Refresh featured categories with API and update Room Database
-     */
-    override suspend fun refreshFeaturedCategories() {
-    }
+    @Test
+    fun networkStoreRepository_getAppDetails_verifyAppDetailsCorrect() =
+        runTest {
+            val appId = 0
 
-    /**
-     * Maps the categories of a FeaturedCategoriesRequest to a list of database entities
-     */
+            // Mock DAO behavior
+            `when`(mockAppDetailsDao.getAppDetails(appId)).thenReturn(null)
+
+            repository = NetworkStoreRepository(
+                storeApiService = FakeStoreApiService(),
+                storeDao = mockStoreDao,
+                appDetailsDao = mockAppDetailsDao
+            )
+
+            assertEquals(
+                FakeAppDetailsRequest.response["$appId"]!!.appDetails,
+                repository.getAppDetails(appId)
+            )
+        }
+
+    @Test
+    fun networkStoreRepository_getSearchResults_verifySearchResultsCorrect() =
+        runTest {
+            val query = ""
+
+            repository = NetworkStoreRepository(
+                storeApiService = FakeStoreApiService(),
+                storeDao = mockStoreDao,
+                appDetailsDao = mockAppDetailsDao
+            )
+
+            assertEquals(
+                FakeStoreSearchRequest.response,
+                repository.getSearchResults(query)
+            )
+        }
+
     private fun mapRequestToEntities(request: FeaturedCategoriesRequest): List<FeaturedCategoryEntity> {
         val entities = mutableListOf<FeaturedCategoryEntity>()
 
@@ -115,35 +184,5 @@ class FakeNetworkStoreRepository(
         }
 
         return spotlightEntities
-    }
-
-    /**
-     * Returns an AppDetails object for the game corresponding to the
-     * provided App ID, or null if no app is found
-     */
-    override suspend fun getAppDetails(appId: Int): AppDetails? {
-        return FakeAppDetailsRequest.response["0"]!!.appDetails
-    }
-
-    /**
-     * Returns an AppDetails object for the game corresponding to the
-     * provided App ID, or null if no app is found. Always makes an
-     * API call, passing the database
-     */
-    override suspend fun getAppDetailsFresh(appId: Int): AppDetails? {
-        return FakeAppDetailsRequest.response["0"]!!.appDetails
-    }
-
-    /**
-     * Returns a StoreSearchRequest object based on the query provided
-     */
-    override suspend fun getSearchResults(query: String): StoreSearchRequest = withContext(Dispatchers.IO) {
-        return@withContext FakeStoreSearchRequest.response
-    }
-
-    /**
-     * Clears all existing entries for featured categories
-     */
-    override suspend fun clearFeaturedCategories() {
     }
 }
