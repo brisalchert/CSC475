@@ -13,23 +13,22 @@ import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.toAppInfoEntityList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 
 class FakeNetworkStoreRepository(
 ): StoreRepository {
     override val allFeaturedCategories: Flow<List<FeaturedCategoryWithDetails>> =
-        flow {
-            emit(
-                mapRequestToEntities(FakeFeaturedCategoriesRequest.response).map {
-                    FeaturedCategoryWithDetails(
-                        category = it,
-                        appItems = mapAppInfoToEntities(FakeFeaturedCategoriesRequest.response),
-                        spotlightItems = mapSpotlightItemsToEntities(FakeFeaturedCategoriesRequest.response)
-                    )
-                }
-            )
-        }
+        flowOf(
+            mapRequestToEntities(FakeFeaturedCategoriesRequest.response).map {
+                FeaturedCategoryWithDetails(
+                    category = it,
+                    appItems = mapAppInfoToEntities(FakeFeaturedCategoriesRequest.response),
+                    spotlightItems = mapSpotlightItemsToEntities(FakeFeaturedCategoriesRequest.response)
+                )
+            }
+        )
+
 
     /**
      * Refresh featured categories with API and update Room Database

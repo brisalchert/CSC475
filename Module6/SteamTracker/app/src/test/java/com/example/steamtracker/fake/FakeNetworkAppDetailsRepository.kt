@@ -5,14 +5,12 @@ import com.example.steamtracker.model.AppDetails
 import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.utils.toAppDetailsEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkAppDetailsRepository(
 ) : AppDetailsRepository {
     override val allAppDetails: Flow<List<AppDetailsEntity>> =
-        flow {
-            emit(listOf(FakeAppDetailsRequest.response["0"]!!.appDetails!!.toAppDetailsEntity()))
-        }
+        flowOf(listOf(FakeAppDetailsRequest.response["0"]!!.appDetails!!.toAppDetailsEntity()))
 
     override suspend fun insertAppDetails(appDetails: AppDetails) {
     }

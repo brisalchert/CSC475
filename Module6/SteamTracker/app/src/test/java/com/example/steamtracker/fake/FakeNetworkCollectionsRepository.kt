@@ -7,12 +7,13 @@ import com.example.steamtracker.room.entities.CollectionEntity
 import com.example.steamtracker.room.relations.CollectionWithApps
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkCollectionsRepository (
 ): CollectionsRepository {
     override val allCollections: Flow<List<CollectionWithApps>> =
-        flow {
-            emit(listOf(
+        flowOf(
+            listOf(
                 CollectionWithApps(
                     collection = CollectionEntity(
                         name = FakeCollectionApp.response.collectionName
@@ -23,8 +24,8 @@ class FakeNetworkCollectionsRepository (
                         index = FakeCollectionApp.response.index
                     ))
                 )
-            ))
-        }
+            )
+        )
 
     override suspend fun insertCollection(name: String) {
     }

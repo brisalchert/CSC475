@@ -9,14 +9,13 @@ import com.example.steamtracker.room.relations.AppNewsWithItems
 import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkSteamworksRepository(
 ): SteamworksRepository {
     // List of apps specified by the user for tracking
     override val newsApps: Flow<List<Int>> =
-        flow {
-            emit(listOf(0))
-        }
+        flowOf(listOf(0))
 
     override suspend fun refreshAppNews() {
     }

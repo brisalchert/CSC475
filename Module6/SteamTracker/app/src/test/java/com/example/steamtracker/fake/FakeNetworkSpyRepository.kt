@@ -7,12 +7,13 @@ import com.example.steamtracker.room.relations.SteamSpyAppWithTags
 import com.example.steamtracker.utils.toSteamSpyAppEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkSpyRepository(
 ): SpyRepository {
     override val topSales: Flow<List<SteamSpyAppWithTags>> =
-        flow {
-            emit(listOf(
+        flowOf(
+            listOf(
                 SteamSpyAppWithTags(
                     app = FakeSteamSpyAppRequest.response["gameId"]!!.toSteamSpyAppEntity(),
                     tags = FakeSteamSpyAppRequest.response["gameId"]!!.tags?.map {
@@ -23,8 +24,8 @@ class FakeNetworkSpyRepository(
                         )
                     } ?: emptyList()
                 )
-            ))
-        }
+            )
+        )
 
     override suspend fun refreshTopSales() {
     }
