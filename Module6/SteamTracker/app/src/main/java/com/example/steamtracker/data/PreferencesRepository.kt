@@ -1,6 +1,5 @@
 package com.example.steamtracker.data
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -24,14 +23,12 @@ class PreferencesRepository(
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.FAVORITE_GENRES] = genres
         }
-        Log.d("Preferences", "Current DataStore: ${dataStore.data}")
     }
 
     suspend fun saveFavoriteTags(tags: Set<String>) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.FAVORITE_TAGS] = tags
         }
-        Log.d("Preferences", "Current DataStore: ${dataStore.data}")
     }
 
     fun getFavoriteGenres(): Flow<Set<String>> {
