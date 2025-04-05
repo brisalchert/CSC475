@@ -189,7 +189,7 @@ fun CollectionsMenu(
         }
 
         LazyColumn(
-            modifier = modifier.testTag("CollectionList")
+            modifier = modifier.testTag("CollectionsList")
         ) {
             items(items = collections.entries.toList()) { collection ->
                 // Sort collection apps by their index

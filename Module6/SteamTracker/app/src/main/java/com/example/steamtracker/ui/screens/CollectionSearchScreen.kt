@@ -173,7 +173,7 @@ fun CollectionSearchResults(
 ) {
     if (searchResults.isNotEmpty()) {
         LazyColumn(
-            modifier = modifier.testTag("CollectionSearchList"),
+            modifier = modifier.testTag("CollectionsSearchList"),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
