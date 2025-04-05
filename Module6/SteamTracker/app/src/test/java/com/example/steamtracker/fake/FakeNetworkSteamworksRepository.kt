@@ -8,7 +8,6 @@ import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.room.relations.AppNewsWithItems
 import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkSteamworksRepository(

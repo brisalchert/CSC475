@@ -15,7 +15,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
-import kotlin.jvm.Throws
 
 class AppDetailsDaoTest {
     private lateinit var appDetailsDao: AppDetailsDao

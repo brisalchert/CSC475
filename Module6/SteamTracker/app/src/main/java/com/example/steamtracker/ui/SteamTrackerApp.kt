@@ -79,8 +79,8 @@ import com.example.steamtracker.ui.screens.NotificationsViewModel
 import com.example.steamtracker.ui.screens.PreferencesScreen
 import com.example.steamtracker.ui.screens.SearchScreen
 import com.example.steamtracker.ui.screens.SettingsScreen
-import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.screens.SettingsViewModel
+import com.example.steamtracker.ui.screens.StoreScreen
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 enum class TrackerMainScreens {

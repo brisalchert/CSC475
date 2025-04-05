@@ -41,7 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.steamtracker.model.SearchAppInfo
-import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest

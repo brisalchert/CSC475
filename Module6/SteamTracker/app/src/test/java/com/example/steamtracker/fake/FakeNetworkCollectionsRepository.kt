@@ -6,7 +6,6 @@ import com.example.steamtracker.room.entities.CollectionAppEntity
 import com.example.steamtracker.room.entities.CollectionEntity
 import com.example.steamtracker.room.relations.CollectionWithApps
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkCollectionsRepository (

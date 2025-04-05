@@ -1,16 +1,10 @@
 package com.example.steamtracker.data
 
 import com.example.steamtracker.model.AppDetails
-import com.example.steamtracker.model.FeaturedCategoriesRequest
-import com.example.steamtracker.model.RegularCategory
-import com.example.steamtracker.model.SpotlightCategory
 import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
 import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.StoreDao
-import com.example.steamtracker.room.entities.AppInfoEntity
-import com.example.steamtracker.room.entities.FeaturedCategoryEntity
-import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.isDataOutdated
 import com.example.steamtracker.utils.mapToAppInfoEntities
@@ -18,7 +12,6 @@ import com.example.steamtracker.utils.mapToFeaturedCategoryEntities
 import com.example.steamtracker.utils.mapToSpotlightItemEntities
 import com.example.steamtracker.utils.toAppDetails
 import com.example.steamtracker.utils.toAppDetailsEntity
-import com.example.steamtracker.utils.toAppInfoEntityList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

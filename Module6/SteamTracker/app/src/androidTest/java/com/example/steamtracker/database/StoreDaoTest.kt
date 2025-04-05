@@ -8,8 +8,8 @@ import com.example.steamtracker.TestDatabase
 import com.example.steamtracker.fake.FakeFeaturedCategoriesRequest
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
-import com.example.steamtracker.utils.mapToFeaturedCategoryEntities
 import com.example.steamtracker.utils.mapToAppInfoEntities
+import com.example.steamtracker.utils.mapToFeaturedCategoryEntities
 import com.example.steamtracker.utils.mapToSpotlightItemEntities
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

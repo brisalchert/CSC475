@@ -35,7 +35,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.steamtracker.R
 import com.example.steamtracker.model.CollectionApp
-import com.example.steamtracker.model.Platforms
 import com.example.steamtracker.model.SearchAppInfo
 import com.example.steamtracker.ui.preview.FakeCollectionsRepository
 import com.example.steamtracker.ui.preview.FakeStoreRepository

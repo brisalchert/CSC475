@@ -1,18 +1,14 @@
 package com.example.steamtracker.data
 
-import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.network.SteamworksApiService
 import com.example.steamtracker.room.dao.NewsAppsDao
 import com.example.steamtracker.room.dao.SteamworksDao
-import com.example.steamtracker.room.entities.AppNewsEntity
-import com.example.steamtracker.room.entities.AppNewsRequestEntity
 import com.example.steamtracker.room.entities.NewsAppEntity
 import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.utils.toAppNewsEntity
 import com.example.steamtracker.utils.toAppNewsRequestEntity
 import com.example.steamtracker.utils.toNewsItemEntities
-import com.example.steamtracker.utils.toNewsItemEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.time.Instant

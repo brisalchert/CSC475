@@ -10,13 +10,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.StoreRepository
 import com.example.steamtracker.model.FeaturedCategoriesRequest
-import com.example.steamtracker.model.RegularCategory
-import com.example.steamtracker.model.SpotlightCategory
-import com.example.steamtracker.model.SpotlightItem
-import com.example.steamtracker.model.StaticCategory
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.mapToFeaturedCategoriesRequest
-import com.example.steamtracker.utils.toAppInfo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

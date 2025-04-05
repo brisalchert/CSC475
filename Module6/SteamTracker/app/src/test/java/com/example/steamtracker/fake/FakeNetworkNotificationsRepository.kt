@@ -10,7 +10,6 @@ import com.example.steamtracker.room.relations.WishlistNotificationWithDetails
 import com.example.steamtracker.utils.toAppDetailsNotificationEntity
 import com.example.steamtracker.utils.toNewsItemNotificationEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class FakeNetworkNotificationsRepository(

@@ -14,12 +14,9 @@ import androidx.work.WorkManager
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.background.NewsNotificationWorker
 import com.example.steamtracker.data.SteamworksRepository
-import com.example.steamtracker.model.AppNews
-import com.example.steamtracker.model.AppNewsRequest
 import com.example.steamtracker.model.NewsItem
 import com.example.steamtracker.room.relations.AppNewsWithDetails
 import com.example.steamtracker.utils.toAppNewsRequest
-import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

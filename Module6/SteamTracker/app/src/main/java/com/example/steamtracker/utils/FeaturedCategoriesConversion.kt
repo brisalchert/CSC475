@@ -9,9 +9,6 @@ import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.FeaturedCategoryEntity
 import com.example.steamtracker.room.entities.SpotlightItemEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
-import java.util.Collections.addAll
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 fun FeaturedCategoriesRequest.mapToFeaturedCategoryEntities(): List<FeaturedCategoryEntity> {
     val entities = mutableListOf<FeaturedCategoryEntity>()

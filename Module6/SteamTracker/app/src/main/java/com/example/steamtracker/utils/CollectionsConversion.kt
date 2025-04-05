@@ -2,7 +2,6 @@ package com.example.steamtracker.utils
 
 import com.example.steamtracker.model.CollectionApp
 import com.example.steamtracker.room.relations.CollectionWithApps
-import kotlin.collections.forEach
 
 fun mapCollectionEntitiesToCollections(entities: List<CollectionWithApps>): Map<String, List<CollectionApp>> {
     val collections = mutableMapOf<String, List<CollectionApp>>()

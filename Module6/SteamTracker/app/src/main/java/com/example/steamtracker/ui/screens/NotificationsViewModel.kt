@@ -10,12 +10,8 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.NotificationsRepository
 import com.example.steamtracker.model.NewsNotification
 import com.example.steamtracker.model.WishlistNotification
-import com.example.steamtracker.room.relations.NewsNotificationWithDetails
-import com.example.steamtracker.room.relations.WishlistNotificationWithDetails
 import com.example.steamtracker.utils.mapToNewsNotification
 import com.example.steamtracker.utils.mapToWishlistNotification
-import com.example.steamtracker.utils.toAppDetails
-import com.example.steamtracker.utils.toNewsItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

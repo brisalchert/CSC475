@@ -21,9 +21,7 @@ import com.example.steamtracker.model.Screenshot
 import com.example.steamtracker.model.SupportInfo
 import com.example.steamtracker.model.SystemRequirements
 import com.example.steamtracker.model.WishlistNotification
-import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.room.entities.AppDetailsNotificationEntity
-import com.example.steamtracker.room.entities.NewsItemEntity
 import com.example.steamtracker.room.entities.NewsItemNotificationEntity
 import com.example.steamtracker.room.entities.NewsNotificationEntity
 import com.example.steamtracker.room.entities.WishlistNotificationEntity
