@@ -26,24 +26,23 @@ class SalesGameTest {
         }
 
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("On Sale"),
-            timeoutMillis = 5000
+            hasText("On Sale")
         )
 
         composeTestRule.onNodeWithText("On Sale").performClick()
 
+        // Wait for the Sales tab to load
         composeTestRule.waitUntilExactlyOneExists(
-            hasTestTag("SalesGamesList"),
-            timeoutMillis = 5000
+            hasTestTag("SalesGamesList")
         )
 
         composeTestRule.onNodeWithTag("SalesGamesList")
             .performScrollToIndex(5)
             .performClick()
 
+        // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS"),
-            timeoutMillis = 5000
+            hasText("SCREENSHOTS")
         )
     }
 }

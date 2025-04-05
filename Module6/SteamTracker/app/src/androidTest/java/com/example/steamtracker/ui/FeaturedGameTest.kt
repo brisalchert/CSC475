@@ -24,17 +24,17 @@ class FeaturedGameTest {
             }
         }
 
+        // Wait for the Featured tab to load
         composeTestRule.waitUntilExactlyOneExists(
-            hasTestTag("FeaturedGamesList"),
-            timeoutMillis = 5000
+            hasTestTag("FeaturedGamesList")
         )
 
         composeTestRule.onNodeWithTag("FeaturedGamesList")
             .performScrollToIndex(3).performClick()
 
+        // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS"),
-            timeoutMillis = 5000
+            hasText("SCREENSHOTS")
         )
     }
 }
