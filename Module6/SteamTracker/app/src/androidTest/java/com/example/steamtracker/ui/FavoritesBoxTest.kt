@@ -19,7 +19,7 @@ class FavoritesBoxTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun recommendedGame_verifyAppPageShows() {
+    fun favoritesBox_verifyFavoriteAddedRemoved() {
         composeTestRule.setContent {
             SteamTrackerTheme {
                 SteamTrackerApp()

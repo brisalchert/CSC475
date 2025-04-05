@@ -19,7 +19,7 @@ class WishlistBoxTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun recommendedGame_verifyAppPageShows() {
+    fun wishlistBox_verifyWishlistGameAddedRemoved() {
         composeTestRule.setContent {
             SteamTrackerTheme {
                 SteamTrackerApp()

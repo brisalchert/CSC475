@@ -20,7 +20,7 @@ class ScreenshotTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun recommendedGame_verifyAppPageShows() {
+    fun screenshot_verifyFullscreenScreenshotAndBackButton() {
         composeTestRule.setContent {
             SteamTrackerTheme {
                 SteamTrackerApp()

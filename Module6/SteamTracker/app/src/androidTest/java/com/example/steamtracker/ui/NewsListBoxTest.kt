@@ -19,7 +19,7 @@ class NewsListBoxTest {
 
     @OptIn(ExperimentalTestApi::class)
     @Test
-    fun recommendedGame_verifyAppPageShows() {
+    fun newsListBox_verifyTrackedAppAddedRemoved() {
         composeTestRule.setContent {
             SteamTrackerTheme {
                 SteamTrackerApp()
