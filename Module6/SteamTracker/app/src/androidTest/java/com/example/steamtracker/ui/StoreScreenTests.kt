@@ -4,12 +4,10 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -107,7 +105,7 @@ class StoreScreenTests {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun wishlistBox_verifyWishlistGameAddedRemoved() {
-        // Wait for the Recommended tab to load
+        // Wait for the Featured tab to load
         composeTestRule.waitUntilExactlyOneExists(
             hasTestTag("FeaturedGamesList")
         )
@@ -141,7 +139,7 @@ class StoreScreenTests {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun favoritesBox_verifyFavoriteAddedRemoved() {
-        // Wait for the Recommended tab to load
+        // Wait for the Featured tab to load
         composeTestRule.waitUntilExactlyOneExists(
             hasTestTag("FeaturedGamesList")
         )
@@ -175,13 +173,13 @@ class StoreScreenTests {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun newsListBox_verifyTrackedAppAddedRemoved() {
-        // Wait for the Recommended tab to load
+        // Wait for the Featured tab to load
         composeTestRule.waitUntilExactlyOneExists(
             hasTestTag("FeaturedGamesList")
         )
 
         composeTestRule.onNodeWithTag("FeaturedGamesList")
-            .performScrollToIndex(1)
+            .onChildAt(0)
             .performClick()
 
         // Verify App Page text exists
@@ -189,7 +187,7 @@ class StoreScreenTests {
             hasText("Track News")
         )
 
-        // Add game to wishlist
+        // Add game to news list
         composeTestRule.onNodeWithText("Track News")
             .performClick()
 
@@ -197,7 +195,7 @@ class StoreScreenTests {
         composeTestRule.onNodeWithContentDescription("Added to News list")
             .assertExists()
 
-        // Remove game from wishlist
+        // Remove game from news list
         composeTestRule.onNodeWithText("Track News")
             .performClick()
 
@@ -209,7 +207,7 @@ class StoreScreenTests {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun screenshot_verifyFullscreenScreenshotAndBackButton() {
-        // Wait for the Recommended tab to load
+        // Wait for the Featured tab to load
         composeTestRule.waitUntilExactlyOneExists(
             hasTestTag("FeaturedGamesList")
         )
