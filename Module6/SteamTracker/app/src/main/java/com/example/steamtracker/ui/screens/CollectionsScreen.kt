@@ -281,6 +281,19 @@ fun CreateCollectionDialog(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun CreateCollectionDialogPreview() {
+    SteamTrackerTheme {
+        CreateCollectionDialog(
+            collectionName = "",
+            onNameChange = {},
+            onDismiss = {},
+            onSubmit = {}
+        )
+    }
+}
+
 @Composable
 fun CollectionsErrorScreen(
     modifier: Modifier = Modifier

@@ -16,7 +16,7 @@
       <SelectionState runConfigName="Tests in 'com.example.steamtracker.ui'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="wishlist_verifyWishlistGameAddedRemoved()">
+      <SelectionState runConfigName="collections_verifyCollectionAddedRemoved()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

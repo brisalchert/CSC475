@@ -151,7 +151,7 @@ fun CollectionRemoveAlert(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Remove Collection",
+                    text = "Remove from Collections",
                     style = MaterialTheme.typography.titleMedium
                 )
 
