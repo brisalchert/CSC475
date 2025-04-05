@@ -72,9 +72,9 @@ fun Genre(
             }
 
             val contentDescription = if (favoriteGenres.contains(genre)) {
-                "Added to Favorites"
+                "Genre Added to Favorites"
             } else {
-                "Not on Favorites"
+                "Genre not on Favorites"
             }
 
             Icon(

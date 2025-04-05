@@ -72,9 +72,9 @@ fun Tag(
             }
 
             val contentDescription = if (favoriteTags.contains(tag)) {
-                "Added to Favorites"
+                "Tag Added to Favorites"
             } else {
-                "Not on Favorites"
+                "Tag not on Favorites"
             }
 
             Icon(

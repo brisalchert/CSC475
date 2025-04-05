@@ -516,6 +516,7 @@ fun GenresRow(
         LazyRow(
             state = listState,
             modifier = Modifier
+                .testTag("GenresList")
                 .padding(horizontal = 8.dp)
                 .fillMaxWidth()
                 .horizontalScrollbar(
@@ -567,6 +568,7 @@ fun TagsRow(
         LazyRow(
             state = listState,
             modifier = Modifier
+                .testTag("TagsList")
                 .padding(horizontal = 8.dp)
                 .fillMaxWidth()
                 .horizontalScrollbar(
