@@ -55,7 +55,7 @@ class CollectionsScreenTests {
         composeTestRule.onNodeWithContentDescription("Add App")
             .performClick()
 
-        // Search for App to add
+        // Search for app to add
         composeTestRule.onNodeWithText("Search the Steam Store")
             .performClick()
             .performTextInput("Elden")
@@ -80,7 +80,49 @@ class CollectionsScreenTests {
         composeTestRule.onNodeWithContentDescription("Back Button")
             .performClick()
 
-        // Verify App in wishlist
+        // Verify app in wishlist
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("ELDEN RING")
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun favorites_verifyFavoriteGameAddedRemoved() {
+        // Select Favorites
+        composeTestRule.onNodeWithText("Favorites")
+            .performClick()
+
+        // Select Add App
+        composeTestRule.onNodeWithContentDescription("Add App")
+            .performClick()
+
+        // Search for app to add
+        composeTestRule.onNodeWithText("Search the Steam Store")
+            .performClick()
+            .performTextInput("Elden")
+        composeTestRule.onNodeWithText("Elden")
+            .performKeyInput {
+                pressKey(Key.Enter)
+            }
+
+        // Wait for search results
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("CollectionsSearchList")
+        )
+
+        // Add app to favorites
+        composeTestRule.onNodeWithTag("CollectionsSearchList")
+            .onChildAt(0)
+            .onChild()
+            .assertContentDescriptionEquals("Add to Collection")
+            .performClick()
+
+        // Go back to favorites
+        composeTestRule.onNodeWithContentDescription("Back Button")
+            .performClick()
+
+        // Verify app in favorites
         composeTestRule.waitUntilExactlyOneExists(
             hasText("ELDEN RING")
         )
