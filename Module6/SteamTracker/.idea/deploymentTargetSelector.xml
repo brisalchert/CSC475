@@ -13,7 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="myTest()">
+      <SelectionState runConfigName="Tests in 'com.example.steamtracker.ui'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
