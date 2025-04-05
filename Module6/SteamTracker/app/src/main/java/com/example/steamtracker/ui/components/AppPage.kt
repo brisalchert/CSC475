@@ -459,6 +459,7 @@ fun ScreenshotsRow(
 
         LazyRow(
             modifier = Modifier
+                .testTag("ScreenshotsRow")
                 .padding(horizontal = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
