@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -83,7 +84,9 @@ fun MenuScreen(
             )
 
             LazyColumn(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .testTag("MenuList"),
                 verticalArrangement = Arrangement.Top
             ) {
                 itemsIndexed(icons.entries.toList()) { index, (label, icon) ->

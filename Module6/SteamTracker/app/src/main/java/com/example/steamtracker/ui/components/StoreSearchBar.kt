@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -180,7 +181,9 @@ fun SearchAutoComplete(
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyColumn(
-        modifier = modifier.height(300.dp),
+        modifier = modifier
+            .height(300.dp)
+            .testTag("AutocompleteList"),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
