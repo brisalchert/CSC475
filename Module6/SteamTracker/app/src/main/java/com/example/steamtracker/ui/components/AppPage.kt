@@ -113,7 +113,7 @@ fun AppPage(
                 Box(
                     modifier = modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .background(MaterialTheme.colorScheme.outline)
                 ) {
                     ScreenshotsRow(
                         appDetails = appDetails,
@@ -128,7 +128,7 @@ fun AppPage(
             Box(
                 modifier = modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.outlineVariant)
+                    .background(MaterialTheme.colorScheme.surfaceTint)
             ) {
                 GenresRow(
                     appDetails,
@@ -440,17 +440,23 @@ fun ScreenshotsRow(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "SCREENSHOTS",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = modifier.padding(horizontal = 12.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.inversePrimary)
+        ) {
+            Text(
+                text = "SCREENSHOTS",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            )
+        }
 
         LazyRow(
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
