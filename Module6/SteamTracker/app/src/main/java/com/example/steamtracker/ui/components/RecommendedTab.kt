@@ -40,6 +40,7 @@ fun RecommendedTab(
     getFeatured: () -> Unit,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
+    allowRecommendations: Boolean,
     modifier: Modifier = Modifier
 ) {
     when (featuredUiState) {
@@ -47,21 +48,28 @@ fun RecommendedTab(
         is FeaturedUiState.Success ->
             when (salesUiState) {
                 is SalesUiState.Success -> {
-                    PersonalRecommendationsList(
-                        salesGames = salesUiState.salesGames,
-                        salesAppDetails = salesAppDetails,
-                        featuredCategories = featuredUiState.featuredCategories,
-                        preferencesViewModel = preferencesViewModel,
-                        navigateApp = navigateApp,
-                        onAppSelect = onAppSelect,
-                        modifier = modifier
-                    )
+                    if (allowRecommendations) {
+                        PersonalRecommendationsList(
+                            salesGames = salesUiState.salesGames,
+                            salesAppDetails = salesAppDetails,
+                            featuredCategories = featuredUiState.featuredCategories,
+                            preferencesViewModel = preferencesViewModel,
+                            navigateApp = navigateApp,
+                            onAppSelect = onAppSelect,
+                            modifier = modifier
+                        )
+                    } else {
+                        RecommendedCategoriesList(
+                            featuredCategories = featuredUiState.featuredCategories,
+                            navigateApp = navigateApp,
+                            onAppSelect = onAppSelect
+                        )
+                    }
                 }
                 else -> RecommendedCategoriesList(
                     featuredCategories = featuredUiState.featuredCategories,
                     navigateApp = navigateApp,
-                    onAppSelect = onAppSelect,
-                    modifier = modifier
+                    onAppSelect = onAppSelect
                 )
             }
 
@@ -89,7 +97,8 @@ fun RecommendedTabPreview() {
             ),
             getFeatured = {},
             navigateApp = {},
-            onAppSelect = {}
+            onAppSelect = {},
+            allowRecommendations = true
         )
     }
 }
@@ -190,8 +199,7 @@ fun PersonalRecommendationsList(
 fun RecommendedCategoriesList(
     featuredCategories: FeaturedCategoriesRequest,
     navigateApp: () -> Unit,
-    onAppSelect: (appId: Int) -> Unit,
-    modifier: Modifier = Modifier
+    onAppSelect: (appId: Int) -> Unit
 ) {
     featuredCategories.newReleases?.let {
         RecommendedGamesList(

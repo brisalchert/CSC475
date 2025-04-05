@@ -33,6 +33,7 @@ fun FeaturedTab(
     getFeatured: () -> Unit,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
+    showTopSellers: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -42,6 +43,7 @@ fun FeaturedTab(
             featuredCategories = featuredUiState.featuredCategories,
             navigateApp = navigateApp,
             onAppSelect = onAppSelect,
+            showTopSellers = showTopSellers,
             modifier = modifier,
             contentPadding = contentPadding
         )
@@ -62,7 +64,8 @@ fun FeaturedTabPreview() {
             ),
             getFeatured = {},
             navigateApp = {},
-            onAppSelect = {}
+            onAppSelect = {},
+            showTopSellers = true
         )
     }
 }
@@ -73,6 +76,7 @@ fun FeaturedCategoriesList(
     featuredCategories: FeaturedCategoriesRequest,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
+    showTopSellers: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -80,6 +84,7 @@ fun FeaturedCategoriesList(
         featuredCategories = featuredCategories,
         navigateApp = navigateApp,
         onAppSelect = onAppSelect,
+        showTopSellers = showTopSellers,
         modifier = modifier,
         contentPadding = contentPadding
     )
@@ -91,6 +96,7 @@ fun FeaturedGamesList(
     featuredCategories: FeaturedCategoriesRequest,
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
+    showTopSellers: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -134,31 +140,33 @@ fun FeaturedGamesList(
             )
         }
 
-        stickyHeader {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-                    .shadow(8.dp, RoundedCornerShape(0.dp))
-                    .background(MaterialTheme.colorScheme.primaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "TOP SELLERS",
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    textAlign = TextAlign.Center
+        if (showTopSellers) {
+            stickyHeader {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .shadow(8.dp, RoundedCornerShape(0.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "TOP SELLERS",
+                        fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
+            items(items = featuredCategories.topSellers?.items!!) { game ->
+                FeaturedApp(
+                    appInfo = game,
+                    navigateApp = navigateApp,
+                    onAppSelect = onAppSelect,
+                    modifier = modifier
                 )
             }
-        }
-
-        items(items = featuredCategories.topSellers?.items!!) { game ->
-            FeaturedApp(
-                appInfo = game,
-                navigateApp = navigateApp,
-                onAppSelect = onAppSelect,
-                modifier = modifier
-            )
         }
     }
 }

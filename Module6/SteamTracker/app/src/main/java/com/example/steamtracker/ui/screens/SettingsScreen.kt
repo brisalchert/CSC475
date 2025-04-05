@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,8 +28,10 @@ import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 @Composable
 fun SettingsScreen(
-    isDarkMode: Boolean,
-    onToggleTheme: () -> Unit,
+    allowRecommendations: Boolean,
+    onToggleRecommendations: () -> Unit,
+    showTopSellers: Boolean,
+    onToggleTopSellers: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -72,13 +75,37 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Set app theme to dark mode",
-                        style = MaterialTheme.typography.bodyLarge
+                        text = "Allow personalized recommendations (using favorite tags/genres)",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 12.dp)
                     )
 
                     Switch(
-                        checked = isDarkMode,
-                        onCheckedChange = { onToggleTheme() }
+                        checked = allowRecommendations,
+                        onCheckedChange = { onToggleRecommendations() }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Show top sellers on \"Featured\" page",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 12.dp)
+                    )
+
+                    Switch(
+                        checked = showTopSellers,
+                        onCheckedChange = { onToggleTopSellers() }
                     )
                 }
             }
@@ -91,8 +118,10 @@ fun SettingsScreen(
 fun SettingsScreenPreview() {
     SteamTrackerTheme {
         SettingsScreen(
-            isDarkMode = false,
-            onToggleTheme = {}
+            allowRecommendations = false,
+            onToggleRecommendations = {},
+            showTopSellers = false,
+            onToggleTopSellers = {}
         )
     }
 }

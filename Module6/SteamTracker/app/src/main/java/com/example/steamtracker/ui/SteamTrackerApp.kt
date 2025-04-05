@@ -80,7 +80,7 @@ import com.example.steamtracker.ui.screens.PreferencesScreen
 import com.example.steamtracker.ui.screens.SearchScreen
 import com.example.steamtracker.ui.screens.SettingsScreen
 import com.example.steamtracker.ui.screens.StoreScreen
-import com.example.steamtracker.ui.screens.ThemeViewModel
+import com.example.steamtracker.ui.screens.SettingsViewModel
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 
 enum class TrackerMainScreens {
@@ -112,7 +112,7 @@ fun SteamTrackerApp(
     newsAppsViewModel: NewsAppsViewModel = viewModel(factory = NewsAppsViewModel.Factory),
     collectionsViewModel: CollectionsViewModel = viewModel(factory = CollectionsViewModel.Factory),
     notificationsViewModel: NotificationsViewModel = viewModel(factory = NotificationsViewModel.Factory),
-    themeViewModel: ThemeViewModel = viewModel(factory = ThemeViewModel.Factory),
+    settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
     imageViewModel: ImageViewModel = viewModel(),
     preferencesViewModel: PreferencesViewModel = viewModel(factory = PreferencesViewModel.Factory),
     navController: NavHostController = rememberNavController()
@@ -184,7 +184,8 @@ fun SteamTrackerApp(
     val appInitializer = AppInitializer(context, appContainer)
 
     // SharedPreferences for simple settings
-    val isDarkMode by themeViewModel.isDarkMode.collectAsState()
+    val allowRecommendations by settingsViewModel.allowRecommendations.collectAsState()
+    val showTopSellers by settingsViewModel.showTopSellers.collectAsState()
 
     // Ensure database wiped on first launch
     LaunchedEffect(Unit) {
@@ -265,7 +266,9 @@ fun SteamTrackerApp(
                             }
                         },
                         onAppSelect = appDetailsViewModel::getAppDetails,
-                        preferencesViewModel = preferencesViewModel
+                        preferencesViewModel = preferencesViewModel,
+                        allowRecommendations = allowRecommendations,
+                        showTopSellers = showTopSellers
                     )
                 }
                 composable(
@@ -470,8 +473,10 @@ fun SteamTrackerApp(
                     route = TrackerOtherScreens.Settings.name
                 ) {
                     SettingsScreen(
-                        isDarkMode = isDarkMode,
-                        onToggleTheme = themeViewModel::toggleTheme
+                        allowRecommendations = allowRecommendations,
+                        onToggleRecommendations = settingsViewModel::toggleRecommendations,
+                        showTopSellers = showTopSellers,
+                        onToggleTopSellers = settingsViewModel::toggleTopSellers
                     )
                 }
                 composable(

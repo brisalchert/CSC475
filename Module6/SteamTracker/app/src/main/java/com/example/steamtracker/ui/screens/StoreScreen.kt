@@ -57,6 +57,8 @@ fun StoreScreen(
     navigateApp: () -> Unit,
     onAppSelect: (appId: Int) -> Unit,
     preferencesViewModel: PreferencesViewModel,
+    allowRecommendations: Boolean,
+    showTopSellers: Boolean,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -106,6 +108,7 @@ fun StoreScreen(
                     getFeatured = getFeatured,
                     navigateApp = navigateApp,
                     onAppSelect = onAppSelect,
+                    showTopSellers = showTopSellers,
                     modifier = modifier,
                     contentPadding = contentPadding
                 )
@@ -126,6 +129,7 @@ fun StoreScreen(
                     getFeatured = getFeatured,
                     navigateApp = navigateApp,
                     onAppSelect = onAppSelect,
+                    allowRecommendations = allowRecommendations,
                     modifier = modifier
                 )
             }
@@ -156,7 +160,9 @@ fun StoreScreenPreview() {
             onAppSelect = {},
             preferencesViewModel = PreferencesViewModel(
                 NetworkPreferencesRepository(LocalContext.current.dataStore)
-            )
+            ),
+            allowRecommendations = true,
+            showTopSellers = true
         )
     }
 }
