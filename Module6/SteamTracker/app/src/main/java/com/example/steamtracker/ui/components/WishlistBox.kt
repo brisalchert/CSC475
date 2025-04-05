@@ -75,9 +75,15 @@ fun WishlistBox(
                 Icons.Default.Add
             }
 
+            val contentDescription = if (onList) {
+                "Added to Wishlist"
+            } else {
+                "Not on Wishlist"
+            }
+
             Icon(
                 imageVector = image,
-                contentDescription = "Wishlist Status",
+                contentDescription = contentDescription,
                 tint = colorResource(R.color.collections_text)
             )
 

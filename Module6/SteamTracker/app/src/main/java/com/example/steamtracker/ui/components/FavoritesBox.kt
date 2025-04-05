@@ -75,9 +75,15 @@ fun FavoritesBox(
                 Icons.Default.Add
             }
 
+            val contentDescription = if (onList) {
+                "Added to Favorites"
+            } else {
+                "Not on Favorites"
+            }
+
             Icon(
                 imageVector = image,
-                contentDescription = "Favorites Status",
+                contentDescription = contentDescription,
                 tint = colorResource(R.color.collections_text)
             )
 

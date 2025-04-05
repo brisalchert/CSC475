@@ -71,9 +71,15 @@ fun Genre(
                 Icons.Default.Add
             }
 
+            val contentDescription = if (favoriteGenres.contains(genre)) {
+                "Added to Favorites"
+            } else {
+                "Not on Favorites"
+            }
+
             Icon(
                 imageVector = imageVector,
-                contentDescription = "Check Icon",
+                contentDescription = contentDescription,
                 tint = colorResource(R.color.genre_text)
             )
 

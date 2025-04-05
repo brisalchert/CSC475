@@ -71,9 +71,15 @@ fun Tag(
                 Icons.Default.Add
             }
 
+            val contentDescription = if (favoriteTags.contains(tag)) {
+                "Added to Favorites"
+            } else {
+                "Not on Favorites"
+            }
+
             Icon(
                 imageVector = imageVector,
-                contentDescription = "Check Icon",
+                contentDescription = contentDescription,
                 tint = colorResource(R.color.tag_text)
             )
 

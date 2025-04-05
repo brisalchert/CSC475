@@ -74,9 +74,15 @@ fun NewsListBox(
                 Icons.Default.Add
             }
 
+            val contentDescription = if (onList) {
+                "Added to News list"
+            } else {
+                "Not on News list"
+            }
+
             Icon(
                 imageVector = image,
-                contentDescription = "News List Status",
+                contentDescription = contentDescription,
                 tint = colorResource(R.color.collections_text)
             )
 
