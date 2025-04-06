@@ -16,7 +16,9 @@ import com.example.steamtracker.model.WishlistNotification
 import com.example.steamtracker.setupMockWebServer
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
 import com.example.steamtracker.utils.toNewsItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.tls.internal.TlsUtil
 import org.junit.After
@@ -68,23 +70,28 @@ class NotificationsScreenTests {
                         context.container.storeRepository.getAppDetails(374320)!!,
                         context.container.storeRepository.getAppDetails(2001120)!!
                     ),
-                    timestamp = 0L
+                    timestamp = System.currentTimeMillis()
                 )
             )
 
             // Add Split Fiction to news list
             context.container.steamworksRepository.addNewsApp(2001120)
-            context.container.steamworksRepository.refreshAppNews()
+
+            withContext(Dispatchers.IO) {
+                context.container.steamworksRepository.refreshAppNews()
+            }
+
+            val newPosts = context.container.steamworksRepository
+                .getAllAppNews()
+                .firstNotNullOf { if (it.appNewsWithItems.newsitems.isNotEmpty()) it else null }
+                .appNewsWithItems
+                .newsitems
+                .map { it.toNewsItem() }
 
             context.container.notificationsRepository.insertNewsNotification(
                 NewsNotification(
-                    newPosts = context.container.steamworksRepository
-                        .getAllAppNews()
-                        .first()
-                        .appNewsWithItems
-                        .newsitems
-                        .map { it.toNewsItem() },
-                    timestamp = 0L
+                    newPosts = newPosts,
+                    timestamp = System.currentTimeMillis()
                 )
             )
         }
@@ -92,8 +99,6 @@ class NotificationsScreenTests {
         // Switch to notifications screen
         composeTestRule.onNodeWithContentDescription("Notifications")
             .performClick()
-
-        composeTestRule.waitForIdle()
 
         // Wait for collections to show
         composeTestRule.waitUntilExactlyOneExists(

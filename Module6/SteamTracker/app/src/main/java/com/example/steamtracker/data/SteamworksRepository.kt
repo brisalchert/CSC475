@@ -65,9 +65,11 @@ class NetworkSteamworksRepository(
             val newsItemEntities = filteredResponseList.map { it.toNewsItemEntities() }.flatten()
 
             // Insert into Room Database using transactions
-            steamworksDao.insertAppNewsRequests(appNewsRequestEntities)
-            steamworksDao.insertAppNews(appNewsEntities)
-            steamworksDao.insertNews(newsItemEntities)
+            steamworksDao.insertAppNewsWithDetails(
+                appNewsRequestEntities,
+                appNewsEntities,
+                newsItemEntities
+            )
         }
     }
 

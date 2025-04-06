@@ -91,7 +91,7 @@ class StoreScreenTests {
 
         // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS")
+            hasTestTag("AppPageList")
         )
     }
 
@@ -117,7 +117,7 @@ class StoreScreenTests {
 
         // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS")
+            hasTestTag("AppPageList")
         )
     }
 
@@ -143,7 +143,7 @@ class StoreScreenTests {
 
         // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS")
+            hasTestTag("AppPageList")
         )
     }
 
@@ -263,7 +263,7 @@ class StoreScreenTests {
 
         // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
-            hasText("SCREENSHOTS")
+            hasTestTag("AppPageList")
         )
 
         // Scroll and click on screenshot

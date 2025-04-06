@@ -26,6 +26,17 @@ interface SteamworksDao {
     suspend fun insertAppNewsRequests(appnews: List<AppNewsRequestEntity>)
 
     @Transaction
+    suspend fun insertAppNewsWithDetails(
+        appNewsRequests: List<AppNewsRequestEntity>,
+        appNews: List<AppNewsEntity>,
+        newsItems: List<NewsItemEntity>
+    ) {
+        insertAppNewsRequests(appNewsRequests)
+        insertAppNews(appNews)
+        insertNews(newsItems)
+    }
+
+    @Transaction
     @Query("SELECT * FROM app_news_requests")
     fun getAllAppNews(): Flow<List<AppNewsWithDetails>>
 
