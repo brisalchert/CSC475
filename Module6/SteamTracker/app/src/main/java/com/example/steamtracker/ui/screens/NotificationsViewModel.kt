@@ -10,12 +10,16 @@ import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.data.NotificationsRepository
 import com.example.steamtracker.model.NewsNotification
 import com.example.steamtracker.model.WishlistNotification
+import com.example.steamtracker.room.relations.NewsNotificationWithDetails
+import com.example.steamtracker.room.relations.WishlistNotificationWithDetails
 import com.example.steamtracker.utils.mapToNewsNotification
 import com.example.steamtracker.utils.mapToWishlistNotification
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface NotificationsUiState {
@@ -30,6 +34,15 @@ sealed interface NotificationsUiState {
 class NotificationsViewModel(
     private val notificationsRepository: NotificationsRepository,
 ): ViewModel() {
+    /** Observe state of flow objects from repository */
+    val newsNotifications: StateFlow<List<NewsNotificationWithDetails>> =
+        notificationsRepository.newsNotifications
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    val wishlistNotifications: StateFlow<List<WishlistNotificationWithDetails>> =
+        notificationsRepository.wishlistNotifications
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     /** The mutable StateFlow that stores the status of the notifications screen */
     private val _notificationsUiState = MutableStateFlow<NotificationsUiState>(NotificationsUiState.Loading)
     val notificationsUiState: StateFlow<NotificationsUiState> = _notificationsUiState.asStateFlow()
@@ -45,8 +58,8 @@ class NotificationsViewModel(
         viewModelScope.launch {
             // Combine flows to enable collecting both at once
             val notificationsFlow = combine(
-                notificationsRepository.newsNotifications,
-                notificationsRepository.wishlistNotifications
+                newsNotifications,
+                wishlistNotifications
             ) { newsNotifications, wishlistNotifications ->
                 Pair(newsNotifications, wishlistNotifications)
             }

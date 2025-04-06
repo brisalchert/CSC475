@@ -56,7 +56,7 @@ fun WishlistNotificationListItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceDim
         ),
-        onClick = {  }
+        onClick = { showNotificationDialog = true }
     ) {
         Row(
             modifier = Modifier
@@ -98,6 +98,15 @@ fun WishlistNotificationListItem(
                 )
             }
         }
+    }
+
+    if (showNotificationDialog) {
+        WishlistNotificationDialog(
+            wishlistNotification = wishlistNotification,
+            navigateApp = navigateApp,
+            onAppSelect = onAppSelect,
+            onDismiss = { showNotificationDialog = false }
+        )
     }
 }
 
