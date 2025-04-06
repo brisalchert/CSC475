@@ -74,6 +74,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.gson)
 
+    // MockWebServer for mocking HTTP requests
+    testImplementation(libs.mockwebserver)
+
     // Room Database
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
