@@ -16,7 +16,7 @@
       <SelectionState runConfigName="Tests in 'com.example.steamtracker.ui'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collections_verifyCollectionAddedRemoved()">
+      <SelectionState runConfigName="MenuScreenTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
