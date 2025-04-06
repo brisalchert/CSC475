@@ -132,8 +132,6 @@ class CollectionsScreenTests {
         // Go back to favorites
         composeTestRule.onNodeWithContentDescription("Back Button")
             .performClick()
-        composeTestRule.onNodeWithText("Remove App")
-            .performClick()
 
         // Verify app in favorites
         composeTestRule.waitUntilExactlyOneExists(
@@ -142,6 +140,8 @@ class CollectionsScreenTests {
 
         // Remove app from favorites
         composeTestRule.onNodeWithText("Remove")
+            .performClick()
+        composeTestRule.onNodeWithText("Remove App")
             .performClick()
 
         // Verify app removed

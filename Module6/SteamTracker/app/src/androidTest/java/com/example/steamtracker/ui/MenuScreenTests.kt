@@ -185,10 +185,12 @@ class MenuScreenTests {
             .performClick()
 
         // Verify genre and tag removed
-        composeTestRule.onNodeWithText("Add genres to see them here!")
-            .assertExists()
-        composeTestRule.onNodeWithText("Add tags to see them here!")
-            .assertExists()
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Add genres to see them here!")
+        )
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Add tags to see them here!")
+        )
     }
 
     @OptIn(ExperimentalTestApi::class)

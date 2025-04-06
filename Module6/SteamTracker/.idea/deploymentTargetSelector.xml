@@ -19,7 +19,7 @@
       <SelectionState runConfigName="MenuScreenTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="menuSettings_verifyTopSellersToggled()">
+      <SelectionState runConfigName="menuPreferences_verifyPreferencesAddedRemoved()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
