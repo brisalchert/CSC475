@@ -33,6 +33,7 @@ interface SpyDao {
         }
     }
 
+    @Transaction
     @Query("SELECT * FROM steam_spy_apps WHERE appid = :appId")
     suspend fun getSpyInfo(appId: Int): SteamSpyAppWithTags?
 

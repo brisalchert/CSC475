@@ -31,6 +31,7 @@ interface CollectionsDao {
     @Query("SELECT * FROM collections")
     fun getAllCollections(): Flow<List<CollectionWithApps>>
 
+    @Transaction
     @Query("SELECT * FROM collections WHERE name = :collectionName")
     suspend fun getCollectionByName(collectionName: String): CollectionWithApps?
 }
