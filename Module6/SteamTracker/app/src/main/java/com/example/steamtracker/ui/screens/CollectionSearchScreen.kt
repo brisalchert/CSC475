@@ -95,7 +95,7 @@ fun CollectionSearchScreen(
                 )
                 is SearchUiState.Error -> StoreErrorScreen(
                     retryAction = navigateSearch,
-                    modifier = modifier
+                    modifier = modifier.fillMaxSize()
                 )
             }
         }
