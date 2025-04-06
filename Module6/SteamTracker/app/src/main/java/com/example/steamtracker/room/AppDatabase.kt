@@ -1,8 +1,6 @@
 package com.example.steamtracker.room
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.steamtracker.room.dao.AppDetailsDao
@@ -14,6 +12,7 @@ import com.example.steamtracker.room.dao.SteamworksDao
 import com.example.steamtracker.room.dao.StoreDao
 import com.example.steamtracker.room.entities.AppDetailsEntity
 import com.example.steamtracker.room.entities.AppDetailsNotificationEntity
+import com.example.steamtracker.room.entities.AppIdAliasEntity
 import com.example.steamtracker.room.entities.AppInfoEntity
 import com.example.steamtracker.room.entities.AppNewsEntity
 import com.example.steamtracker.room.entities.AppNewsRequestEntity
@@ -46,9 +45,10 @@ import com.example.steamtracker.room.entities.WishlistNotificationEntity
         NewsNotificationEntity::class,
         NewsItemNotificationEntity::class,
         WishlistNotificationEntity::class,
-        AppDetailsNotificationEntity::class
+        AppDetailsNotificationEntity::class,
+        AppIdAliasEntity::class
     ],
-    version = 4,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

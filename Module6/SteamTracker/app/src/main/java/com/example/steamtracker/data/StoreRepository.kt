@@ -5,6 +5,7 @@ import com.example.steamtracker.model.StoreSearchRequest
 import com.example.steamtracker.network.StoreApiService
 import com.example.steamtracker.room.dao.AppDetailsDao
 import com.example.steamtracker.room.dao.StoreDao
+import com.example.steamtracker.room.entities.AppIdAliasEntity
 import com.example.steamtracker.room.relations.FeaturedCategoryWithDetails
 import com.example.steamtracker.utils.isDataOutdated
 import com.example.steamtracker.utils.mapToAppInfoEntities
@@ -70,14 +71,32 @@ class NetworkStoreRepository(
      * provided App ID, or null if no app is found
      */
     override suspend fun getAppDetails(appId: Int): AppDetails? {
-        // Check the database first
-        val databaseResponse = appDetailsDao.getAppDetails(appId)
+        // Check the database first, checking for ID alias
+        val canonicalId = appDetailsDao.getCanonicalId(appId)
+
+        val correctedAppId = canonicalId ?: appId
+
+        val databaseResponse = appDetailsDao.getAppDetails(correctedAppId)
 
         if (databaseResponse != null && !isDataOutdated(databaseResponse.lastUpdated)) {
             return databaseResponse.toAppDetails()
         }
 
         val apiResponse = storeApiService.getAppDetails(appId)
+
+        val topLevelKey = apiResponse.keys.firstOrNull()?.toInt()
+        val appDetails = apiResponse["$correctedAppId"]?.appDetails
+
+        // Check for ID mismatch
+        if (topLevelKey != appDetails?.steamAppId) {
+            // Add new alias to the alias table
+            appDetailsDao.insertIdMapping(
+                AppIdAliasEntity(
+                    aliasId = correctedAppId,
+                    canonicalId = appDetails!!.steamAppId
+                )
+            )
+        }
 
         // Add response to the database
         val appDetailsEntity = apiResponse["$appId"]?.appDetails?.toAppDetailsEntity()
@@ -86,7 +105,7 @@ class NetworkStoreRepository(
             appDetailsDao.insertAppDetails(appDetailsEntity)
         }
 
-        return apiResponse["$appId"]?.appDetails
+        return appDetails
     }
 
     /**

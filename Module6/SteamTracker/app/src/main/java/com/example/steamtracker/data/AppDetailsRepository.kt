@@ -30,7 +30,12 @@ class NetworkAppDetailsRepository(
     }
 
     override suspend fun getAppDetails(appId: Int): AppDetails? {
-        val entity = appDetailsDao.getAppDetails(appId)
+        // Check the database, checking for ID alias
+        val canonicalId = appDetailsDao.getCanonicalId(appId)
+
+        val correctedAppId = canonicalId ?: appId
+
+        val entity = appDetailsDao.getAppDetails(correctedAppId)
 
         if (entity != null) {
             return entity.toAppDetails()

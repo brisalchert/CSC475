@@ -13,13 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'com.example.steamtracker.ui'">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="MenuScreenTests">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="menuPreferences_verifyPreferencesAddedRemoved()">
+      <SelectionState runConfigName="Tests in 'com.example.steamtracker.database'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
