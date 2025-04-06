@@ -2,14 +2,22 @@ package com.example.steamtracker.ui
 
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onParent
+import androidx.compose.ui.test.onSibling
+import androidx.compose.ui.test.onSiblings
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performScrollToNode
@@ -180,6 +188,107 @@ class MenuScreenTests {
         composeTestRule.onNodeWithText("Add genres to see them here!")
             .assertExists()
         composeTestRule.onNodeWithText("Add tags to see them here!")
+            .assertExists()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun menuSettings_verifyRecommendationsToggled() {
+        // Switch to Settings screen
+        composeTestRule.onNodeWithTag("MenuList")
+            .onChildAt(6)
+            .assertTextEquals("Settings")
+            .performClick()
+
+        // Toggle recommendations off
+        composeTestRule.onNodeWithTag("RecommendationsSwitch")
+            .performClick()
+
+        // Navigate to recommended tab
+        composeTestRule.onNodeWithContentDescription("Store")
+            .performClick()
+        composeTestRule.onNodeWithText("Recommended")
+            .performClick()
+
+        // Verify "For You" header does not exist
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("RecommendationsList")
+        )
+        composeTestRule.onNodeWithText("FOR YOU")
+            .assertDoesNotExist()
+
+        // Navigate back to Settings screen
+        composeTestRule.onNodeWithContentDescription("Menu")
+            .performClick()
+        composeTestRule.onNodeWithTag("MenuList")
+            .onChildAt(6)
+            .assertTextEquals("Settings")
+            .performClick()
+
+        // Toggle recommendations back on
+        composeTestRule.onNodeWithTag("RecommendationsSwitch")
+            .performClick()
+
+        // Navigate back to recommended tab
+        composeTestRule.onNodeWithContentDescription("Store")
+            .performClick()
+        composeTestRule.onNodeWithText("Recommended")
+            .performClick()
+
+        // Verify "For You" header does exist
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("RecommendationsList")
+        )
+        composeTestRule.onNodeWithText("FOR YOU")
+            .assertExists()
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun menuSettings_verifyTopSellersToggled() {
+        // Switch to Settings screen
+        composeTestRule.onNodeWithTag("MenuList")
+            .onChildAt(6)
+            .assertTextEquals("Settings")
+            .performClick()
+
+        // Toggle top sellers off
+        composeTestRule.onNodeWithTag("TopSellersSwitch")
+            .performClick()
+
+        // Navigate to featured tab
+        composeTestRule.onNodeWithContentDescription("Store")
+            .performClick()
+
+        // Verify "Top Sellers" header does not exist
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("FeaturedGamesList")
+        )
+        composeTestRule.onAllNodes(hasText("TOP SELLERS"))
+            .assertCountEquals(0)
+
+        // Navigate back to Settings screen
+        composeTestRule.onNodeWithContentDescription("Menu")
+            .performClick()
+        composeTestRule.onNodeWithTag("MenuList")
+            .onChildAt(6)
+            .assertTextEquals("Settings")
+            .performClick()
+
+        // Toggle top sellers back on
+        composeTestRule.onNodeWithTag("TopSellersSwitch")
+            .performClick()
+
+        // Navigate back to featured tab
+        composeTestRule.onNodeWithContentDescription("Store")
+            .performClick()
+
+        // Verify "Top Sellers" header does exist
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("FeaturedGamesList")
+        )
+        composeTestRule.onNodeWithTag("FeaturedGamesList")
+            .performScrollToNode(hasText("TOP SELLERS"))
             .assertExists()
     }
 }
