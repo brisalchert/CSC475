@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.gson)
 
     // MockWebServer for mocking HTTP requests
-    testImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockwebserver)
 
     // Room Database
     implementation(libs.room.runtime)
