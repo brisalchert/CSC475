@@ -91,7 +91,7 @@ fun setupMockWebServer(mockWebServer: MockWebServer, sslSocketFactory: SSLSocket
                         .setResponseCode(200)
                         .setBody(loadJsonFromResources("storesearch_Elden_Ring.json"))
                 }
-                path == "/storesearch/?cc=us&l=en&term=Split Fiction" -> {
+                path == "/storesearch/?cc=us&l=en&term=Split%20Fiction" -> {
                     MockResponse()
                         .setResponseCode(200)
                         .setBody(loadJsonFromResources("storesearch_Split_Fiction.json"))
@@ -125,6 +125,11 @@ fun setupMockWebServer(mockWebServer: MockWebServer, sslSocketFactory: SSLSocket
                     MockResponse()
                         .setResponseCode(200)
                         .setBody(loadJsonFromResources("spydetails_3540920.json"))
+                }
+                path == "/ISteamNews/GetNewsForApp/v2/?feeds=steam_community_announcements&appid=2001120" -> {
+                    MockResponse()
+                        .setResponseCode(200)
+                        .setBody(loadJsonFromResources("appnews_2001120.json"))
                 }
                 path.contains("/appdetails?cc=us&l=en&appids=") == true -> {
                     MockResponse()
