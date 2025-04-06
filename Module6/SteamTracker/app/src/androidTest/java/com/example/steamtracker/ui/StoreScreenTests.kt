@@ -1,9 +1,7 @@
 package com.example.steamtracker.ui
 
-import android.util.Log
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
@@ -22,18 +20,14 @@ import androidx.compose.ui.test.pressKey
 import androidx.test.core.app.ApplicationProvider
 import com.example.steamtracker.SteamTrackerApplication
 import com.example.steamtracker.TestAppContainer
-import com.example.steamtracker.loadJsonFromResources
 import com.example.steamtracker.setupMockWebServer
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
-import kotlinx.coroutines.delay
-import okhttp3.internal.wait
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.tls.internal.TlsUtil
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.Thread.sleep
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 

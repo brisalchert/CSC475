@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -68,18 +67,15 @@ class WishlistNotificationWorker(
                     ) == PackageManager.PERMISSION_GRANTED) {
                     sendNotification(newSales)
                 } else {
-                    Log.e("NewsNotificationWorker", "Permission not granted")
                 }
             }
 
             return Result.success()
         } catch (e: IOException) {
             // No Internet connection -- no reason to retry
-            Log.e("WishlistNotificationWorker", "IOException occurred", e)
             return Result.failure()
         } catch (e: HttpException) {
             // Retry the work request, following the retry policy
-            Log.e("WishlistNotificationWorker", "HttpException occurred", e)
             return Result.retry()
         }
     }
@@ -104,7 +100,6 @@ class WishlistNotificationWorker(
             )
 
             // Send notification
-            Log.d("WishlistNotificationWorker", "Sending notification with ${newSales.size} new discounts.")
             notificationManager.notify(2, notification)
         }
     }

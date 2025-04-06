@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -62,18 +61,15 @@ class NewsNotificationWorker(
                     ) == PackageManager.PERMISSION_GRANTED) {
                     sendNotification(newPosts)
                 } else {
-                    Log.e("NewsNotificationWorker", "Permission not granted")
                 }
             }
 
             return Result.success()
         } catch (e: IOException) {
             // No Internet connection -- no reason to retry
-            Log.e("NewsNotificationWorker", "IOException occurred", e)
             return Result.failure()
         } catch (e: HttpException) {
             // Retry the work request, following the retry policy
-            Log.e("NewsNotificationWorker", "HttpException occurred", e)
             return Result.retry()
         }
     }
@@ -98,7 +94,6 @@ class NewsNotificationWorker(
             )
 
             // Send notification
-            Log.d("NewsNotificationWorker", "Sending notification with ${newPosts.size} new posts.")
             notificationManager.notify(1, notification)
         }
     }

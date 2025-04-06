@@ -1,6 +1,5 @@
 package com.example.steamtracker.ui.components
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -62,10 +61,8 @@ class FeaturedViewModel(
                     } catch (e: CancellationException) {
                         throw e // Don't suppress coroutine exceptions
                     } catch (e: IOException) {
-                        Log.d("Debug", "${e.message}")
                         _featuredUiState.value = FeaturedUiState.Error
                     } catch (e: HttpException) {
-                        Log.d("Debug", "${e.message}")
                         _featuredUiState.value = FeaturedUiState.Error
                     }
                 }
