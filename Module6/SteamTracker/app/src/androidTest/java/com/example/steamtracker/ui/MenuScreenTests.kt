@@ -16,18 +16,46 @@ import androidx.compose.ui.test.performKeyInput
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
+import androidx.test.core.app.ApplicationProvider
+import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.TestAppContainer
+import com.example.steamtracker.setupMockWebServer
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.tls.internal.TlsUtil
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.X509TrustManager
 
 class MenuScreenTests {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private lateinit var mockWebServer: MockWebServer
+
     @OptIn(ExperimentalTestApi::class)
     @Before
     fun setup() {
+        val context = ApplicationProvider.getApplicationContext<SteamTrackerApplication>()
+
+        // Generate an SSL certificate and private key using OkHttp-TLS
+        val certificateAndKey = TlsUtil.localhost()
+
+        // Get the SSLSocketFactory and X509TrustManager from the generated certificate and key
+        val sslSocketFactory: SSLSocketFactory = certificateAndKey.sslSocketFactory()
+        val trustManager: X509TrustManager = certificateAndKey.trustManager
+
+        // Initialize MockWebServer for HTTPS requests
+        mockWebServer = MockWebServer()
+        setupMockWebServer(mockWebServer, sslSocketFactory)
+        mockWebServer.start()
+
+        // Inject TestAppContainer into the application
+        context.container = TestAppContainer(context, mockWebServer, sslSocketFactory, trustManager)
+
         // Set up the User interface for tests
         composeTestRule.setContent {
             SteamTrackerTheme {
@@ -43,6 +71,11 @@ class MenuScreenTests {
         composeTestRule.waitUntilExactlyOneExists(
             hasTestTag("MenuList")
         )
+    }
+
+    @After
+    fun teardown() {
+        mockWebServer.shutdown()
     }
 
     @OptIn(ExperimentalTestApi::class)

@@ -1,5 +1,6 @@
 package com.example.steamtracker.ui
 
+import android.util.Log
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertContentDescriptionEquals
@@ -18,23 +19,60 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.pressKey
+import androidx.test.core.app.ApplicationProvider
+import com.example.steamtracker.SteamTrackerApplication
+import com.example.steamtracker.TestAppContainer
+import com.example.steamtracker.loadJsonFromResources
+import com.example.steamtracker.setupMockWebServer
 import com.example.steamtracker.ui.theme.SteamTrackerTheme
+import kotlinx.coroutines.delay
+import okhttp3.internal.wait
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.tls.internal.TlsUtil
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.lang.Thread.sleep
+import javax.net.ssl.SSLSocketFactory
+import javax.net.ssl.X509TrustManager
 
 class StoreScreenTests {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private lateinit var mockWebServer: MockWebServer
+
     @Before
     fun setup() {
+        val context = ApplicationProvider.getApplicationContext<SteamTrackerApplication>()
+
+        // Generate an SSL certificate and private key using OkHttp-TLS
+        val certificateAndKey = TlsUtil.localhost()
+
+        // Get the SSLSocketFactory and X509TrustManager from the generated certificate and key
+        val sslSocketFactory: SSLSocketFactory = certificateAndKey.sslSocketFactory()
+        val trustManager: X509TrustManager = certificateAndKey.trustManager
+
+        // Initialize MockWebServer for HTTPS requests
+        mockWebServer = MockWebServer()
+        setupMockWebServer(mockWebServer, sslSocketFactory)
+        mockWebServer.start()
+
+        // Inject TestAppContainer into the application
+        context.container = TestAppContainer(context, mockWebServer, sslSocketFactory, trustManager)
+
         // Set up the User interface for tests
         composeTestRule.setContent {
             SteamTrackerTheme {
                 SteamTrackerApp()
             }
         }
+    }
+
+    @After
+    fun teardown() {
+        mockWebServer.shutdown()
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -46,7 +84,10 @@ class StoreScreenTests {
         )
 
         composeTestRule.onNodeWithTag("FeaturedGamesList")
-            .performScrollToIndex(3).performClick()
+            .performScrollToNode(
+                hasText("Red Dead Redemption 2")
+            )
+            .performClick()
 
         // Verify App Page text exists
         composeTestRule.waitUntilExactlyOneExists(
@@ -69,7 +110,9 @@ class StoreScreenTests {
         )
 
         composeTestRule.onNodeWithTag("SalesGamesList")
-            .performScrollToIndex(5)
+            .performScrollToNode(
+                hasText("Frostpunk")
+            )
             .performClick()
 
         // Verify App Page text exists
@@ -93,7 +136,9 @@ class StoreScreenTests {
         )
 
         composeTestRule.onNodeWithTag("RecommendationsList")
-            .performScrollToIndex(5)
+            .performScrollToNode(
+                hasText("Frogstool")
+            )
             .performClick()
 
         // Verify App Page text exists
@@ -269,20 +314,20 @@ class StoreScreenTests {
             )
 
         // Add genre to favorites
-        composeTestRule.onNodeWithTag("GenresList")
-            .onChildAt(0)
+        composeTestRule.onNode(hasText("Action").and(hasContentDescription("Genre not on Favorites")))
             .performClick()
 
         // Verify Added status and remove genre from favorites
-        composeTestRule.onNodeWithTag("GenresList")
-            .onChildAt(0)
-            .assertContentDescriptionEquals("Genre Added to Favorites")
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Action").and(hasContentDescription("Genre Added to Favorites"))
+        )
+        composeTestRule.onNode(hasText("Action").and(hasContentDescription("Genre Added to Favorites")))
             .performClick()
 
         // Verify Removed status
-        composeTestRule.onNodeWithTag("GenresList")
-            .onChildAt(0)
-            .assertContentDescriptionEquals("Genre not on Favorites")
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Action").and(hasContentDescription("Genre not on Favorites"))
+        )
     }
 
     @OptIn(ExperimentalTestApi::class)
@@ -314,20 +359,20 @@ class StoreScreenTests {
             )
 
         // Add tag to favorites
-        composeTestRule.onNodeWithTag("TagsList")
-            .onChildAt(0)
+        composeTestRule.onNodeWithText("Souls-like")
             .performClick()
 
         // Verify Added status and remove tag from favorites
-        composeTestRule.onNodeWithTag("TagsList")
-            .onChildAt(0)
-            .assertContentDescriptionEquals("Tag Added to Favorites")
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Souls-like").and(hasContentDescription("Tag Added to Favorites"))
+        )
+        composeTestRule.onNodeWithText("Souls-like")
             .performClick()
 
         // Verify Removed status
-        composeTestRule.onNodeWithTag("TagsList")
-            .onChildAt(0)
-            .assertContentDescriptionEquals("Tag not on Favorites")
+        composeTestRule.waitUntilExactlyOneExists(
+            hasText("Souls-like").and(hasContentDescription("Tag not on Favorites"))
+        )
     }
 
     @OptIn(ExperimentalTestApi::class)

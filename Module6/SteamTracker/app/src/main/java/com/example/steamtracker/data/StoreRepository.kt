@@ -88,12 +88,12 @@ class NetworkStoreRepository(
         val appDetails = apiResponse["$correctedAppId"]?.appDetails
 
         // Check for ID mismatch
-        if (topLevelKey != appDetails?.steamAppId) {
+        if (appDetails != null && topLevelKey != appDetails.steamAppId) {
             // Add new alias to the alias table
             appDetailsDao.insertIdMapping(
                 AppIdAliasEntity(
                     aliasId = correctedAppId,
-                    canonicalId = appDetails!!.steamAppId
+                    canonicalId = appDetails.steamAppId
                 )
             )
         }

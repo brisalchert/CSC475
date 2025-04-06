@@ -16,6 +16,9 @@
       <SelectionState runConfigName="Tests in 'com.example.steamtracker'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="StoreScreenTests">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

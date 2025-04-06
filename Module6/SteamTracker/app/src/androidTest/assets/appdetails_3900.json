@@ -1,0 +1,180 @@
+{
+  "3900": {
+    "success": true,
+    "data": {
+      "type": "game",
+      "name": "Sid Meier's Civilization® IV",
+      "steam_appid": 3900,
+      "required_age": 0,
+      "is_free": false,
+      "detailed_description": "With over 6 million units sold and unprecedented critical acclaim from fans and press around the world, Sid Meier's Civilization is recognized as one of the greatest PC game franchises of all-time. Now, Sid Meier and Firaxis Games will take this incredibly fun and addictive game to new heights by adding new ways to play and win, new tools to manage and expand your civilization, all-new easy to use mod capabilities and intense multiplayer modes and options*. Civilization IV will come to life like never before in a beautifully detailed, living 3D world that will elevate the gameplay experience to a whole new level. Civilization IV has already been heralded as one of the top ten games of 2005, and a must-have for gamers around the globe!\u003Cbr\u003E\u003Cbr\u003E\u003Cstrong\u003E*Mac version's Online Multiplayer is no longer supported.\u003C/strong\u003E",
+      "about_the_game": "With over 6 million units sold and unprecedented critical acclaim from fans and press around the world, Sid Meier's Civilization is recognized as one of the greatest PC game franchises of all-time. Now, Sid Meier and Firaxis Games will take this incredibly fun and addictive game to new heights by adding new ways to play and win, new tools to manage and expand your civilization, all-new easy to use mod capabilities and intense multiplayer modes and options*. Civilization IV will come to life like never before in a beautifully detailed, living 3D world that will elevate the gameplay experience to a whole new level. Civilization IV has already been heralded as one of the top ten games of 2005, and a must-have for gamers around the globe!\u003Cbr\u003E\u003Cbr\u003E\u003Cstrong\u003E*Mac version's Online Multiplayer is no longer supported.\u003C/strong\u003E",
+      "short_description": "With over 6 million units sold and unprecedented critical acclaim from fans and press around the world, Sid Meier's Civilization is recognized as one of the greatest PC game franchises of all-time. Now, Sid Meier and Firaxis Games will take this incredibly fun and addictive game to new heights by adding new ways to play and win, new...",
+      "supported_languages": "English, French, German, Italian, Spanish - Spain",
+      "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/header.jpg?t=1724341287",
+      "capsule_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/capsule_231x87.jpg?t=1724341287",
+      "capsule_imagev5": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/capsule_184x69.jpg?t=1724341287",
+      "website": "http://www.2kgames.com/civ4/home.htm",
+      "pc_requirements": {
+        "minimum": "\u003Cstrong\u003EMinimum:\u003C/strong\u003E Windows 2000/XP, 1.2GHz Intel Pentium 4 or AMD Athlon processor or equivalent, 256MB RAM, 64 MB Video Card w/ Hardware T&amp;L (GeForce 2/Radeon 7500 or better) DirectX7 compatible sound card, 1.7GB of free hard drive space, DirectX9.0c (included)\u003Cbr\u003E\t\t\t\t\t\u003Cstrong\u003ERecommended:\u003C/strong\u003E Windows 2000/XP, 1.8GHz Intel Pentium 4 or AMD Athlon processor or equivalent/better, 512 MB RAM, 128 MB Video Card w/ DirectX 8 support (pixel and vertex shaders), DirectX7 compatible sound card, 1.7GB of free hard drive space, DirectX9.0c (included)"
+      },
+      "mac_requirements": {
+        "minimum": "\u003Cstrong\u003ERecommended:\u003C/strong\u003E\u003Cbr\u003E\u003Cul class=\"bb_ul\"\u003E\u003Cli\u003E\u003Cstrong\u003EOS:\u003C/strong\u003E 10.12 (Sierra)\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EProcessor:\u003C/strong\u003E Intel chipset\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003ECPU Speed:\u003C/strong\u003E 2.0 GHz\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EMemory:\u003C/strong\u003E 512 MB RAM\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EHard Disk Space:\u003C/strong\u003E 3.5 GB free disk space\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EVideo Card:\u003C/strong\u003E (ATI): Radeon 9600 Video Card (NVidia): GeForce FX 5200 \u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EVideo Memory:\u003C/strong\u003E (VRam): 128 MB RAM\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EMultiplayer:\u003C/strong\u003E Internet (TCP/IP) and LAN (TCP/IP) play supported. Internet play requires broadband connection.\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003EMedia Required:\u003C/strong\u003E DVD Drive Supported Video cards: NVIDIA GeForce 5200, 6600, 6800, 7800 ATI Radeon 9600, 9650, 9700, 9800, X600, X800, X850, X1600\u003Cbr\u003E\t\u003C/li\u003E\u003Cli\u003E\u003Cstrong\u003ENOTICE:\u003C/strong\u003E This game is not supported on volumes formatted as Mac OS Extended (Case Sensitive).\u003C/li\u003E\u003C/ul\u003E"
+      },
+      "linux_requirements": [],
+      "legal_notice": "© 2007-2013 Take-Two Interactive Software and its subsidiaries. Developed by Firaxis Games. Sid Meier’s Civilization V, Civilization, 2K Games, Firaxis Games, Take-Two Interactive Software and their respective logos are all trademarks and/or registered trademarks of Take-Two Interactive Software, Inc. The ratings icon is a trademark of the Entertainment Software Association. All rights reserved.",
+      "developers": [
+        "Firaxis Games"
+      ],
+      "publishers": [
+        "2K"
+      ],
+      "price_overview": {
+        "currency": "USD",
+        "initial": 2999,
+        "final": 599,
+        "discount_percent": 80,
+        "initial_formatted": "$29.99",
+        "final_formatted": "$5.99"
+      },
+      "packages": [4319, 4323],
+      "package_groups": [
+        {
+          "name": "default",
+          "title": "Buy Sid Meier's Civilization® IV",
+          "description": "",
+          "selection_text": "Select a purchase option",
+          "save_text": "",
+          "display_type": 0,
+          "is_recurring_subscription": "false",
+          "subs": [
+            {
+              "packageid": 4323,
+              "percent_savings_text": "-80% ",
+              "percent_savings": 0,
+              "option_text": "Sid Meier's Civilization IV: The Complete Edition - \u003Cspan class=\"discount_original_price\"\u003E$29.99\u003C/span\u003E $5.99",
+              "option_description": "",
+              "can_get_free_license": "0",
+              "is_free_license": false,
+              "price_in_cents_with_discount": 599
+            },
+            {
+              "packageid": 4319,
+              "percent_savings_text": " ",
+              "percent_savings": 0,
+              "option_text": "Sid Meier's Civilization IV - $19.99",
+              "option_description": "",
+              "can_get_free_license": "0",
+              "is_free_license": false,
+              "price_in_cents_with_discount": 1999
+            }
+          ]
+        }
+      ],
+      "platforms": {
+        "windows": true,
+        "mac": true,
+        "linux": false
+      },
+      "metacritic": {
+        "score": 94,
+        "url": "https://www.metacritic.com/game/pc/sid-meiers-civilization-iv?ftag=MCD-06-10aaa1f"
+      },
+      "categories": [
+        {
+          "id": 2,
+          "description": "Single-player"
+        },
+        {
+          "id": 1,
+          "description": "Multi-player"
+        },
+        {
+          "id": 17,
+          "description": "Includes level editor"
+        },
+        {
+          "id": 62,
+          "description": "Family Sharing"
+        }
+      ],
+      "genres": [
+        {
+          "id": "2",
+          "description": "Strategy"
+        }
+      ],
+      "screenshots": [
+        {
+          "id": 0,
+          "path_thumbnail": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000712.600x338.jpg?t=1724341287",
+          "path_full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000712.1920x1080.jpg?t=1724341287"
+        },
+        {
+          "id": 1,
+          "path_thumbnail": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000713.600x338.jpg?t=1724341287",
+          "path_full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000713.1920x1080.jpg?t=1724341287"
+        },
+        {
+          "id": 2,
+          "path_thumbnail": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000714.600x338.jpg?t=1724341287",
+          "path_full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000714.1920x1080.jpg?t=1724341287"
+        },
+        {
+          "id": 3,
+          "path_thumbnail": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000715.600x338.jpg?t=1724341287",
+          "path_full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000715.1920x1080.jpg?t=1724341287"
+        },
+        {
+          "id": 4,
+          "path_thumbnail": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000716.600x338.jpg?t=1724341287",
+          "path_full": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3900/0000000716.1920x1080.jpg?t=1724341287"
+        }
+      ],
+      "recommendations": {
+        "total": 2514
+      },
+      "release_date": {
+        "coming_soon": false,
+        "date": "Oct 25, 2006"
+      },
+      "support_info": {
+        "url": "http://support.2kgames.com/",
+        "email": ""
+      },
+      "background": "https://store.akamai.steamstatic.com/images/storepagebackground/app/3900?t=1724341287",
+      "background_raw": "https://store.akamai.steamstatic.com/images/storepagebackground/app/3900?t=1724341287",
+      "content_descriptors": {
+        "ids": [],
+        "notes": null
+      },
+      "ratings": {
+        "esrb": {
+          "rating": "e10",
+          "descriptors": "Alcohol and Tobacco Reference\r\n\r\nViolence"
+        },
+        "pegi": {
+          "rating": "12"
+        },
+        "usk": {
+          "rating": "6"
+        },
+        "oflc": {
+          "rating": "pg",
+          "descriptors": "Mild violence\r\n\r\nMild themes"
+        },
+        "nzoflc": {
+          "rating": "pg",
+          "descriptors": "Mild violence\r\n\r\nMild themes"
+        },
+        "kgrb": {
+          "rating": "12",
+          "descriptors": "내용정보표지사항: -\r\n제명:  문명 4 컴플리트 에디션\r\n이용등급: 12세이용가\r\n등급분류번호: CC-NP-120323-005\r\n등급분류일자: 20120323\r\n상호: 테이크투인터렉티브유한회사\r\n제작.배급업 신고번호: 제 2009-00016호\r\n----------------------------------\r\nGame Descriptive: -\r\nTitle Name: Sid Meier's Civilization IV: The Complete Edition\r\nAge: 12+\r\nCertificate #: CC-NP-120323-005\r\nIssue date: 20120323\r\nCompany Name:테이크투인터렉티브유한회사\r\nDistributor No,: 제 2009-00016호"
+        },
+        "crl": {
+          "rating": "12"
+        }
+      }
+    }
+  }
+}
