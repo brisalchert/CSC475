@@ -11,7 +11,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "SteamTracker"
+        applicationId = "com.example.steamtracker"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
